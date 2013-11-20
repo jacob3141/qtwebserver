@@ -8,7 +8,7 @@ QT       += core network
 
 QT -= gui
 
-TARGET = shark
+TARGET = ../bin/shark
 CONFIG   += console
 CONFIG   -= app_bundle
 

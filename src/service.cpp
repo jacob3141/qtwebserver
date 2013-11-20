@@ -5,16 +5,13 @@
 
 Service::Service()
     : QTcpServer() {
-    initialize();
-    std::cout << "init" << std::flush;
 }
 
 Service::~Service() {
-
 }
 
 void Service::initialize() {
-    QSettings settings("shark.settings", QSettings::IniFormat);
+    QSettings settings("../etc/shark.settings", QSettings::IniFormat);
     settings.beginGroup("service");
     _port = settings.value("port", 80).toInt();
     _threads = settings.value("threads", 4).toInt();
@@ -43,7 +40,7 @@ void Service::initialize() {
     listen(QHostAddress::Any, _port);
 }
 
-void Service::incomingConnection(int handle) {
+void Service::incomingConnection(qintptr handle) {
     QMetaObject::invokeMethod(_webServiceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
     _nextRequestDelegatedTo++;
     if(_nextRequestDelegatedTo >= _webServiceThreads.size()) {

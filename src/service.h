@@ -12,11 +12,13 @@ public:
     Service();
     virtual ~Service();
 
+    void initialize();
+
+
 protected:
-    void incomingConnection(int handle);
+    void incomingConnection(qintptr handle);
 
 private:
-    void initialize();
 
     int _port;
     int _threads;

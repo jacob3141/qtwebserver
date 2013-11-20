@@ -4,8 +4,8 @@
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
-    Service service();
-    Q_UNUSED(service);
+    Service *service = new Service();
+    service->initialize();
     return a.exec();
 }
 
