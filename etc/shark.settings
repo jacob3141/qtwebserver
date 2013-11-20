@@ -1,0 +1,4 @@
+[service]
+url	=	localhost
+port	=	80
+threads = 	4
