@@ -31,9 +31,13 @@ TEMPLATE = app
 SOURCES += \
     service.cpp \
     webservicethread.cpp \
-    main.cpp
+    main.cpp \
+    httprequest.cpp \
+    httpresponse.cpp
 
 HEADERS += \
     service.h \
     webservicethread.h \
-    statuscodes.h
+    httprequest.h \
+    httpresponse.h \
+    httpstatuscodes.h

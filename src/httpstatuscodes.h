@@ -17,8 +17,10 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef STATUSCODES_H
-#define STATUSCODES_H
+#ifndef HTTPSTATUSCODES_H
+#define HTTPSTATUSCODES_H
+
+namespace Http {
 
 // RFC 2616 HTTP Status Codes
 enum StatusCodes {
@@ -69,4 +71,6 @@ enum StatusCodes {
     HTTPVersionNotSupported     = 505
 };
 
-#endif // STATUSCODES_H
+} // namespace Http
+
+#endif // HTTPSTATUSCODES_H
