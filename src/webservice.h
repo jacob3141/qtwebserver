@@ -23,22 +23,29 @@
 #include <QTcpServer>
 #include <QVector>
 
-#include "webservicethread.h"
+#include "httpresponder.h"
 
-class Service : public QTcpServer {
+class WebServiceThread;
+class WebService : public QTcpServer {
     Q_OBJECT
 public:
-    Service();
-    virtual ~Service();
+    WebService();
+    virtual ~WebService();
 
     void initialize();
 
+    Http::Responder httpResponder();
+    void setHttpResponder(Http::Responder httpResponder);
 
 protected:
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    void incomingConnection(int handle);
+#else
     void incomingConnection(qintptr handle);
+#endif
 
 private:
-
+    Http::Responder _httpResponder;
     int _port;
     int _threads;
 

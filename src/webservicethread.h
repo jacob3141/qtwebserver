@@ -23,19 +23,21 @@
 #include <QThread>
 #include <QMutex>
 
+#include "webservice.h"
+
 class WebServiceThread : public QThread {
     Q_OBJECT
 public:
-    WebServiceThread(QObject *parent = 0);
+    WebServiceThread(WebService& webService);
     virtual ~WebServiceThread();
 
-    enum WebServiceState {
+    enum WebServiceThreadState {
         Idle,
         ProcessingRequest,
         ProcessingResponse
     };
 
-    WebServiceState webServiceState();
+    WebServiceThreadState webServiceThreadState();
 public slots:
     void serve(int socketHandle);
 
@@ -44,10 +46,11 @@ private slots:
     void discardClient();
 
 private:
-    void setWebServiceState(WebServiceState state);
+    void setWebServiceThreadState(WebServiceThreadState state);
 
-    QMutex          _webServiceStateMutex;
-    WebServiceState _webServiceState;
+    WebService&             _webService;
+    QMutex                  _webServiceStateMutex;
+    WebServiceThreadState   _webServiceThreadState;
 };
 
 #endif // WEBSERVICETHREAD_H

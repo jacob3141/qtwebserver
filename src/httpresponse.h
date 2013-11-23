@@ -20,12 +20,24 @@
 #ifndef HTTPRESPONSE_H
 #define HTTPRESPONSE_H
 
+#include <QByteArray>
+
+#include "httpstatuscode.h"
+
 namespace Http {
 
 class Response
 {
 public:
     Response();
+
+    QByteArray toByteArray();
+
+    Http::StatusCode statusCode();
+    void setStatusCode(Http::StatusCode statusCode);
+
+private:
+    Http::StatusCode _statusCode;
 };
 
 } // namespace Http

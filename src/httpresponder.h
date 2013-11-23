@@ -17,14 +17,25 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <QCoreApplication>
-#include "webservice.h"
-#include <iostream>
+#ifndef HTTPRESPONDER_H
+#define HTTPRESPONDER_H
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
-    WebService *service = new WebService();
-    service->initialize();
-    return a.exec();
-}
+#include "httprequest.h"
+#include "httpresponse.h"
 
+namespace Http {
+
+/**
+ * @brief The Responder class
+ */
+class Responder {
+public:
+    virtual void respond(Request& request, Response& response) {
+        Q_UNUSED(request);
+        response.setStatusCode(Http::NotFound);
+    }
+};
+
+} // namespace Http
+
+#endif // HTTPRESPONDER_H

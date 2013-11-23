@@ -20,10 +20,13 @@
 #ifndef HTTPSTATUSCODES_H
 #define HTTPSTATUSCODES_H
 
+#include <QMap>
+#include <QString>
+
 namespace Http {
 
 // RFC 2616 HTTP Status Codes
-enum StatusCodes {
+enum StatusCode {
     Continue                    = 100,
     SwitchingProtocols          = 101,
 
@@ -70,6 +73,15 @@ enum StatusCodes {
     GatewayTimeout              = 504,
     HTTPVersionNotSupported     = 505
 };
+
+typedef struct {
+    StatusCode statusCode;
+    const char* reasonPhrase;
+} ReasonPhrasePair;
+
+extern ReasonPhrasePair reasonPhrasePairMap[41];
+
+QString reasonPhrase(Http::StatusCode statusCode);
 
 } // namespace Http
 

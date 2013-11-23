@@ -19,16 +19,17 @@
 
 #include <QSettings>
 #include <QMetaObject>
-#include "service.h"
+#include "webservice.h"
+#include "webservicethread.h"
 
-Service::Service()
+WebService::WebService()
     : QTcpServer() {
 }
 
-Service::~Service() {
+WebService::~WebService() {
 }
 
-void Service::initialize() {
+void WebService::initialize() {
     QSettings settings("../etc/shark.settings", QSettings::IniFormat);
     settings.beginGroup("service");
     _port = settings.value("port", 80).toInt();
@@ -46,7 +47,7 @@ void Service::initialize() {
     // Create the specified number of threads and store them in a set
     int thread = _threads;
     while(thread > 0) {
-        WebServiceThread* webServiceThread = new WebServiceThread();
+        WebServiceThread* webServiceThread = new WebServiceThread(*this);
         webServiceThread->start();
         _webServiceThreads.append(webServiceThread);
         thread--;
@@ -58,7 +59,19 @@ void Service::initialize() {
     listen(QHostAddress::Any, _port);
 }
 
+Http::Responder WebService::httpResponder() {
+    return _httpResponder;
+}
+
+void WebService::setHttpResponder(Http::Responder httpResponder) {
+    _httpResponder = httpResponder;
+}
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+void WebService::incomingConnection(int handle) {
+#else
 void Service::incomingConnection(qintptr handle) {
+#endif
     QMetaObject::invokeMethod(_webServiceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
     _nextRequestDelegatedTo++;
     if(_nextRequestDelegatedTo >= _webServiceThreads.size()) {

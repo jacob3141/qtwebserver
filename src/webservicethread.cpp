@@ -24,26 +24,25 @@
 #include <QDateTime>
 #include <QTimer>
 
-#include <iostream>
-
-WebServiceThread::WebServiceThread(QObject *parent)
-    : QThread(parent) {
-    _webServiceState = Idle;
+WebServiceThread::WebServiceThread(WebService &webService)
+    : QThread(0),
+      _webService(webService) {
+    _webServiceThreadState = Idle;
 }
 
 WebServiceThread::~WebServiceThread() {
 }
 
-WebServiceThread::WebServiceState WebServiceThread::webServiceState() {
+WebServiceThread::WebServiceThreadState WebServiceThread::webServiceThreadState() {
     _webServiceStateMutex.lock();
-    WebServiceState state = _webServiceState;
+    WebServiceThreadState state = _webServiceThreadState;
     _webServiceStateMutex.unlock();
     return state;
 }
 
-void WebServiceThread::setWebServiceState(WebServiceThread::WebServiceState state) {
+void WebServiceThread::setWebServiceThreadState(WebServiceThread::WebServiceThreadState state) {
     _webServiceStateMutex.lock();
-    _webServiceState = state;
+    _webServiceThreadState = state;
     _webServiceStateMutex.unlock();
 }
 
@@ -62,7 +61,7 @@ void WebServiceThread::readClient() {
     requestTimer.setInterval(10000);
     requestTimer.start();
 
-    while(requestTimer.remainingTime() > 0) {
+    while(requestTimer.isActive() > 0) {
         if(socket->canReadLine()) {
             QString line = socket->readLine();
             httpRequest.append(line);
@@ -74,13 +73,11 @@ void WebServiceThread::readClient() {
     }
 
     if(requestCompleted) {
-        QTextStream os(socket);
-        os.setAutoDetectUnicode(true);
-        os << "HTTP/1.0 200 Ok\r\n"
-        "Content-Type: text/html; charset=\"utf-8\"\r\n"
-        "\r\n"
-        "<h1>Nothing to see here</h1>\n"
-        << QDateTime::currentDateTime().toString() << "\n";
+        Http::Request request(httpRequest);
+        Http::Response response;
+        _webService.httpResponder().respond(request, response);
+        socket->write(response.toByteArray());
+        socket->waitForBytesWritten(10000);
     }
 
     socket->close();

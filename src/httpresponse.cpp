@@ -17,11 +17,31 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <QStringBuilder>
+
 #include "httpresponse.h"
 
 namespace Http {
 
 Response::Response() {
+}
+
+QByteArray Response::toByteArray() {
+    QString response = "";
+
+    response += QString("HTTP/1.1 %1 %2\r\n").arg(_statusCode).arg(Http::reasonPhrase(_statusCode));
+    response += "Content-Type: text/html; charset=\"utf-8\"\r\n";
+    response += "\r\n";
+
+    return response.toUtf8();
+}
+
+Http::StatusCode Response::statusCode() {
+    return _statusCode;
+}
+
+void Response::setStatusCode(Http::StatusCode statusCode) {
+    _statusCode = statusCode;
 }
 
 } // namespace Http
