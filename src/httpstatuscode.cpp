@@ -21,7 +21,7 @@
 
 namespace Http {
 
-ReasonPhrasePair reasonPhrasePairMap[41] = {
+ReasonPhrasePair reasonPhrasePairMap[STATUS_CODE_COUNT] = {
     {Continue,                      "Continue"},
     {SwitchingProtocols,            "Switching Protocols"},
 
@@ -70,7 +70,7 @@ ReasonPhrasePair reasonPhrasePairMap[41] = {
 };
 
 QString reasonPhrase(Http::StatusCode statusCode) {
-    for(int i = 0; i < 41; i++) {
+    for(int i = 0; i < STATUS_CODE_COUNT; i++) {
         if(reasonPhrasePairMap[i].statusCode == statusCode) {
             return reasonPhrasePairMap[i].reasonPhrase;
         }

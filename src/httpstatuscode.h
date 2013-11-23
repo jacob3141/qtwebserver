@@ -25,7 +25,9 @@
 
 namespace Http {
 
-// RFC 2616 HTTP Status Codes
+/**
+ * @brief The StatusCode enum
+ */
 enum StatusCode {
     Continue                    = 100,
     SwitchingProtocols          = 101,
@@ -74,14 +76,29 @@ enum StatusCode {
     HTTPVersionNotSupported     = 505
 };
 
+/**
+ * @brief ReasonPhrasePair
+ */
 typedef struct {
     StatusCode statusCode;
     const char* reasonPhrase;
 } ReasonPhrasePair;
 
-extern ReasonPhrasePair reasonPhrasePairMap[41];
+#define STATUS_CODE_COUNT 41
 
+/**
+ * @brief reasonPhrasePairMap
+ */
+extern ReasonPhrasePair reasonPhrasePairMap[STATUS_CODE_COUNT];
+
+/**
+ * @brief reasonPhrase
+ * @param statusCode
+ * @return
+ */
 QString reasonPhrase(Http::StatusCode statusCode);
+
+#define HTML(x) #x
 
 } // namespace Http
 

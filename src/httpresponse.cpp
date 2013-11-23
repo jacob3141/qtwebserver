@@ -24,16 +24,28 @@
 namespace Http {
 
 Response::Response() {
+    _statusCode = Http::Ok;
+    _contentType = "text/html";
+    _characterEncoding = Utf8;
+    _body = "";
 }
 
 QByteArray Response::toByteArray() {
+    QString characterEncodingString = "";
+    switch(_characterEncoding) {
+        case Utf8: characterEncodingString = "utf-8"; break;
+    }
+
     QString response = "";
-
     response += QString("HTTP/1.1 %1 %2\r\n").arg(_statusCode).arg(Http::reasonPhrase(_statusCode));
-    response += "Content-Type: text/html; charset=\"utf-8\"\r\n";
+    response += QString("Content-Type: %1; charset=\"%2\"\r\n").arg(_contentType).arg(characterEncodingString);
     response += "\r\n";
+    response += _body;
 
-    return response.toUtf8();
+    switch(_characterEncoding) {
+        default:
+        case Utf8: return response.toUtf8();
+    }
 }
 
 Http::StatusCode Response::statusCode() {
@@ -42,6 +54,30 @@ Http::StatusCode Response::statusCode() {
 
 void Response::setStatusCode(Http::StatusCode statusCode) {
     _statusCode = statusCode;
+}
+
+QString Response::contentType() {
+    return _contentType;
+}
+
+void Response::setContentType(QString contentType) {
+    _contentType = contentType;
+}
+
+Response::CharacterEncoding Response::characterEncoding() {
+    return _characterEncoding;
+}
+
+void Response::setCharacterEncoding(CharacterEncoding characterEncoding) {
+    _characterEncoding = characterEncoding;
+}
+
+QString Response::body() {
+    return _body;
+}
+
+void Response::setBody(QString body) {
+    _body = body;
 }
 
 } // namespace Http

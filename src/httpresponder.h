@@ -27,12 +27,28 @@ namespace Http {
 
 /**
  * @brief The Responder class
+ * @author Jacob Dawid
+ * @date 23.11.2013
  */
 class Responder {
 public:
+    /**
+     * @brief respond
+     * @param request
+     * @param response
+     */
     virtual void respond(Request& request, Response& response) {
         Q_UNUSED(request);
-        response.setStatusCode(Http::NotFound);
+        response.setBody(HTML(
+            <html>
+             <head>
+              <title>Shark default responder page</title>
+             </head>
+             <body>
+              <p>This is the default responder message.</p>
+             </body>
+            </html>
+        ));
     }
 };
 

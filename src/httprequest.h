@@ -24,6 +24,11 @@
 
 namespace Http {
 
+/**
+ * @brief The Request class
+ * @author Jacob Dawid
+ * @date 23.11.2013
+ */
 class Request {
 public:
     Request();

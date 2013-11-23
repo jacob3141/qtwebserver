@@ -26,21 +26,54 @@
 #include "httpresponder.h"
 
 class WebServiceThread;
+
+/**
+ * @brief The WebService class
+ * @author Jacob Dawid
+ * @date 23.11.2013
+ */
 class WebService : public QTcpServer {
     Q_OBJECT
 public:
+    /**
+     * @brief WebService
+     */
     WebService();
+
+    /**
+     * @brief ~WebService
+     */
     virtual ~WebService();
 
+    /**
+     * @brief initialize
+     */
     void initialize();
 
+    /**
+     * @brief httpResponder
+     * @return
+     */
     Http::Responder httpResponder();
+
+    /**
+     * @brief setHttpResponder
+     * @param httpResponder
+     */
     void setHttpResponder(Http::Responder httpResponder);
 
 protected:
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+    /**
+     * @brief incomingConnection
+     * @param handle
+     */
     void incomingConnection(int handle);
 #else
+    /**
+     * @brief incomingConnection
+     * @param handle
+     */
     void incomingConnection(qintptr handle);
 #endif
 

@@ -25,27 +25,63 @@
 
 #include "webservice.h"
 
+/**
+ * @brief The WebServiceThread class
+ * @author Jacob Dawid
+ * @date 23.11.2013
+ */
 class WebServiceThread : public QThread {
     Q_OBJECT
 public:
+    /**
+     * @brief WebServiceThread
+     * @param webService
+     */
     WebServiceThread(WebService& webService);
+
+    /**
+     * @brief ~WebServiceThread
+     */
     virtual ~WebServiceThread();
 
+    /**
+     * @brief The WebServiceThreadState enum
+     */
     enum WebServiceThreadState {
         Idle,
         ProcessingRequest,
         ProcessingResponse
     };
 
+    /**
+     * @brief webServiceThreadState
+     * @return
+     */
     WebServiceThreadState webServiceThreadState();
+
 public slots:
+    /**
+     * @brief serve
+     * @param socketHandle
+     */
     void serve(int socketHandle);
 
 private slots:
+    /**
+     * @brief readClient
+     */
     void readClient();
+
+    /**
+     * @brief discardClient
+     */
     void discardClient();
 
 private:
+    /**
+     * @brief setWebServiceThreadState
+     * @param state
+     */
     void setWebServiceThreadState(WebServiceThreadState state);
 
     WebService&             _webService;
