@@ -70,7 +70,7 @@ void WebService::setHttpResponder(Http::Responder httpResponder) {
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 void WebService::incomingConnection(int handle) {
 #else
-void Service::incomingConnection(qintptr handle) {
+void WebService::incomingConnection(qintptr handle) {
 #endif
     QMetaObject::invokeMethod(_webServiceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
     _nextRequestDelegatedTo++;
