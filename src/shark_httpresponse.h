@@ -20,9 +20,13 @@
 #ifndef HTTPRESPONSE_H
 #define HTTPRESPONSE_H
 
+// Qt includes
 #include <QByteArray>
 
-#include "httpstatuscode.h"
+// Own includes
+#include "shark_httpstatuscode.h"
+
+namespace Shark {
 
 namespace Http {
 
@@ -106,5 +110,7 @@ private:
 };
 
 } // namespace Http
+
+} // namespace Shark
 
 #endif // HTTPRESPONSE_H

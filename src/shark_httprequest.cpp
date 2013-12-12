@@ -17,24 +17,20 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef HTTPREQUEST_H
-#define HTTPREQUEST_H
+// Own includes
+#include "shark_httprequest.h"
 
-#include <QString>
+namespace Shark {
 
 namespace Http {
 
-/**
- * @brief The Request class
- * @author Jacob Dawid
- * @date 23.11.2013
- */
-class Request {
-public:
-    Request();
-    Request(QString request);
-};
+Request::Request() {
+}
 
-} // namspace Http
+Request::Request(QString request) {
+    Q_UNUSED(request);
+}
 
-#endif // HTTPREQUEST_H
+} // namespace Http
+
+} // namespace Shark

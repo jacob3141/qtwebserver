@@ -29,17 +29,17 @@ TEMPLATE = app
 
 
 SOURCES += \
-    webservicethread.cpp \
     main.cpp \
-    httprequest.cpp \
-    httpresponse.cpp \
-    webservice.cpp \
-    httpstatuscode.cpp
+    shark_httprequest.cpp \
+    shark_httpresponse.cpp \
+    shark_httpstatuscode.cpp \
+    shark_webservice.cpp \
+    shark_webservicethread.cpp
 
 HEADERS += \
-    webservicethread.h \
-    httprequest.h \
-    httpresponse.h \
-    httpresponder.h \
-    webservice.h \
-    httpstatuscode.h
+    shark_httprequest.h \
+    shark_httpresponder.h \
+    shark_httpstatuscode.h \
+    shark_httpresponse.h \
+    shark_webservice.h \
+    shark_webservicethread.h

@@ -17,10 +17,15 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Qt includes
 #include <QSettings>
 #include <QMetaObject>
-#include "webservice.h"
-#include "webservicethread.h"
+
+// Own includes
+#include "shark_webservice.h"
+#include "shark_webservicethread.h"
+
+namespace Shark {
 
 WebService::WebService()
     : QTcpServer() {
@@ -78,3 +83,5 @@ void WebService::incomingConnection(qintptr handle) {
         _nextRequestDelegatedTo = 0;
     }
 }
+
+} // namespace Shark

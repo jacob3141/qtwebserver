@@ -17,7 +17,10 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "httpstatuscode.h"
+// Own includes
+#include "shark_httpstatuscode.h"
+
+namespace Shark {
 
 namespace Http {
 
@@ -79,3 +82,5 @@ QString reasonPhrase(Http::StatusCode statusCode) {
 }
 
 } // namespace Http
+
+} // namespace Shark

@@ -17,12 +17,16 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "webservicethread.h"
-
+// Qt includes
 #include <QTcpSocket>
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
+
+// Own includes
+#include "shark_webservicethread.h"
+
+namespace Shark {
 
 WebServiceThread::WebServiceThread(WebService &webService)
     : QThread(0),
@@ -90,3 +94,5 @@ void WebServiceThread::discardClient() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     socket->deleteLater();
 }
+
+} // namespace Shark

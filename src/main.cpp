@@ -23,7 +23,7 @@
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
-    WebService *service = new WebService();
+    Shark::WebService *service = new Shark::WebService();
     service->initialize();
     return a.exec();
 }

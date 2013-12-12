@@ -17,9 +17,13 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// Qt includes
 #include <QStringBuilder>
 
-#include "httpresponse.h"
+// Own includes
+#include "shark_httpresponse.h"
+
+namespace Shark {
 
 namespace Http {
 
@@ -81,3 +85,5 @@ void Response::setBody(QString body) {
 }
 
 } // namespace Http
+
+} // namespace Shark

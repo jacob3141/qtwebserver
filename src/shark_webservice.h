@@ -20,10 +20,14 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+// Qt includes
 #include <QTcpServer>
 #include <QVector>
 
-#include "httpresponder.h"
+// Own includes
+#include "shark_httpresponder.h"
+
+namespace Shark {
 
 class WebServiceThread;
 
@@ -85,5 +89,7 @@ private:
     int _nextRequestDelegatedTo;
     QVector<WebServiceThread*> _webServiceThreads;
 };
+
+} // namespace Shark
 
 #endif // SERVICE_H

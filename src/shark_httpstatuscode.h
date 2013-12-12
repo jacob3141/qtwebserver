@@ -20,8 +20,11 @@
 #ifndef HTTPSTATUSCODES_H
 #define HTTPSTATUSCODES_H
 
+// Qt includes
 #include <QMap>
 #include <QString>
+
+namespace Shark {
 
 namespace Http {
 
@@ -101,5 +104,7 @@ QString reasonPhrase(Http::StatusCode statusCode);
 #define HTML(x) #x
 
 } // namespace Http
+
+} // namespace Shark
 
 #endif // HTTPSTATUSCODES_H

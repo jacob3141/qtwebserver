@@ -17,41 +17,29 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef HTTPRESPONDER_H
-#define HTTPRESPONDER_H
+#ifndef HTTPREQUEST_H
+#define HTTPREQUEST_H
 
-#include "httprequest.h"
-#include "httpresponse.h"
+// Qt includes
+#include <QString>
+
+namespace Shark {
 
 namespace Http {
 
 /**
- * @brief The Responder class
+ * @brief The Request class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class Responder {
+class Request {
 public:
-    /**
-     * @brief respond
-     * @param request
-     * @param response
-     */
-    virtual void respond(Request& request, Response& response) {
-        Q_UNUSED(request);
-        response.setBody(HTML(
-            <html>
-             <head>
-              <title>Shark default responder page</title>
-             </head>
-             <body>
-              <p>This is the default responder message.</p>
-             </body>
-            </html>
-        ));
-    }
+    Request();
+    Request(QString request);
 };
 
-} // namespace Http
+} // namspace Http
 
-#endif // HTTPRESPONDER_H
+} // namespace Shark
+
+#endif // HTTPREQUEST_H

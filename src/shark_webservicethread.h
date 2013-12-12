@@ -20,10 +20,14 @@
 #ifndef WEBSERVICETHREAD_H
 #define WEBSERVICETHREAD_H
 
+// Qt includes
 #include <QThread>
 #include <QMutex>
 
-#include "webservice.h"
+// Own includes
+#include "shark_webservice.h"
+
+namespace Shark {
 
 /**
  * @brief The WebServiceThread class
@@ -88,5 +92,7 @@ private:
     QMutex                  _webServiceStateMutex;
     WebServiceThreadState   _webServiceThreadState;
 };
+
+} // namespace Shark
 
 #endif // WEBSERVICETHREAD_H
