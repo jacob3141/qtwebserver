@@ -18,7 +18,7 @@
 //
 
 #include <QCoreApplication>
-#include "webservice.h"
+#include "shark_webservice.h"
 #include <iostream>
 
 int main(int argc, char *argv[]) {
