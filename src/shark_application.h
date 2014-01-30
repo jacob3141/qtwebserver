@@ -17,25 +17,33 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// Qt includes
-#include <QCoreApplication>
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-// Own includes
-#include "shark_application.h"
-#include "shark_webservice.h"
+#include <QString>
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+#include "shark_httpresponder.h"
 
-    // Create our Shark application
-    Shark::Application *application = new Shark::Application("../applications/demo");
+namespace Shark {
 
-    // Set up a web service
-    Shark::WebService *service = new Shark::WebService();
+/**
+ * @brief The Application class
+ */
+class Application : public Http::Responder {
+public:
+    Application(QString rootDirectory);
 
-    // Configure our application to respond through the web service
-    service->setHttpResponder(application);
-    service->initialize();
-    return a.exec();
-}
+    /**
+     * @brief respond
+     * @param request
+     * @param response
+     */
+    void respond(Http::Request& request, Http::Response& response);
 
+private:
+    QString _rootDirectory;
+};
+
+} // namespace Shark
+
+#endif // APPLICATION_H

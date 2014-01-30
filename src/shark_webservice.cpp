@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //
@@ -37,7 +37,7 @@ WebService::~WebService() {
 void WebService::initialize() {
     QSettings settings("../etc/shark.settings", QSettings::IniFormat);
     settings.beginGroup("service");
-    _port = settings.value("port", 80).toInt();
+    _port = settings.value("port", 1337).toInt();
     _threads = settings.value("threads", 4).toInt();
     settings.endGroup();
 
@@ -64,11 +64,11 @@ void WebService::initialize() {
     listen(QHostAddress::Any, _port);
 }
 
-Http::Responder WebService::httpResponder() {
+Http::Responder *WebService::httpResponder() {
     return _httpResponder;
 }
 
-void WebService::setHttpResponder(Http::Responder httpResponder) {
+void WebService::setHttpResponder(Http::Responder *httpResponder) {
     _httpResponder = httpResponder;
 }
 

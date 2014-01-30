@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //
@@ -58,13 +58,13 @@ public:
      * @brief httpResponder
      * @return
      */
-    Http::Responder httpResponder();
+    Http::Responder *httpResponder();
 
     /**
      * @brief setHttpResponder
      * @param httpResponder
      */
-    void setHttpResponder(Http::Responder httpResponder);
+    void setHttpResponder(Http::Responder *httpResponder);
 
 protected:
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -82,7 +82,7 @@ protected:
 #endif
 
 private:
-    Http::Responder _httpResponder;
+    Http::Responder *_httpResponder;
     int _port;
     int _threads;
 

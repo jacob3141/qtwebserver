@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //
@@ -43,12 +43,13 @@ public:
     virtual void respond(Request& request, Response& response) {
         Q_UNUSED(request);
         response.setBody(HTML(
+            <!DOCTYPE html>
             <html>
              <head>
-              <title>Shark default responder page</title>
+              <title>Shark Web Application Server</title>
              </head>
              <body>
-              <p>This is the default responder message.</p>
+              <p>There has no responder been set up.</p>
              </body>
             </html>
         ));

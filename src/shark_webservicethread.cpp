@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //
@@ -79,7 +79,7 @@ void WebServiceThread::readClient() {
     if(requestCompleted) {
         Http::Request request(httpRequest);
         Http::Response response;
-        _webService.httpResponder().respond(request, response);
+        _webService.httpResponder()->respond(request, response);
         socket->write(response.toByteArray());
         socket->waitForBytesWritten(10000);
     }

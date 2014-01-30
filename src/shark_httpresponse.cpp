@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //

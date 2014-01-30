@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
 //
@@ -34,8 +34,48 @@ namespace Http {
  */
 class Request {
 public:
-    Request();
-    Request(QString request);
+    enum Method {
+        Unknown,
+        Options,
+        Get,
+        Head,
+        Post,
+        Put,
+        Delete,
+        Trace,
+        Connect
+    };
+
+    Request(QString requestString);
+
+    /**
+     * This method is used to indicate whether a request could not be
+     * interpreted correctly. You are supposed to check this first before
+     * using any other methods.
+     * @returns true, if the request has been valid, false otherwise.
+     */
+    bool validRequest();
+
+    /**
+     * @returns the method for this request.
+     */
+    Method method();
+
+    /**
+     * @returns the URI for this request.
+     */
+    QString uniqueResourceIdentifier();
+
+    /**
+     * @returns the HTTP version for this request.
+     */
+    QString httpVersion();
+
+private:
+    Method _method;
+    QString _uniqueResourceIdentifier;
+    QString _httpVersion;
+    bool _validRequest;
 };
 
 } // namspace Http

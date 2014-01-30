@@ -1,4 +1,4 @@
-//
+/*
 // Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 //
 // This file is part of Shark.
@@ -15,27 +15,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
-//
+*/
 
-// Qt includes
-#include <QCoreApplication>
-
-// Own includes
-#include "shark_application.h"
-#include "shark_webservice.h"
-
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
-
-    // Create our Shark application
-    Shark::Application *application = new Shark::Application("../applications/demo");
-
-    // Set up a web service
-    Shark::WebService *service = new Shark::WebService();
-
-    // Configure our application to respond through the web service
-    service->setHttpResponder(application);
-    service->initialize();
-    return a.exec();
+/*
+ * Compatiblity options in order to circumvent browser differences.
+ */
+* {
+    width: 		100%;
+    height: 		100%;
+    margin: 		0;
+    padding: 		0;
+    color: 		rgb(0, 0, 0);
+    background-color: 	rgb(255, 255, 255);
 }
-

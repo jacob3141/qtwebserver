@@ -1,5 +1,5 @@
 #
-# Copyright 2010-2013 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+# Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
 #
 # This file is part of Shark.
 #
@@ -34,7 +34,8 @@ SOURCES += \
     shark_httpresponse.cpp \
     shark_httpstatuscode.cpp \
     shark_webservice.cpp \
-    shark_webservicethread.cpp
+    shark_webservicethread.cpp \
+    shark_application.cpp
 
 HEADERS += \
     shark_httprequest.h \
@@ -42,4 +43,8 @@ HEADERS += \
     shark_httpstatuscode.h \
     shark_httpresponse.h \
     shark_webservice.h \
-    shark_webservicethread.h
+    shark_webservicethread.h \
+    shark_application.h
+
+RESOURCES += \
+    web_resources.qrc
