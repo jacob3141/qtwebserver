@@ -22,11 +22,16 @@
 
 // Qt includes
 #include <QObject>
+#include <QStack>
+#include <QString>
 
 namespace Shark {
 
 /**
- * @brief The WebAPI class
+ * The WebAPI class represents an object in the global script
+ * environment. QtScript exposes its slots as functions into the
+ * script space, where it can be accessed through the global "$$"
+ * property. Thus, Shark WebAPI is just an extension to JS.
  */
 class WebAPI : public QObject {
     Q_OBJECT
@@ -34,7 +39,15 @@ public:
     WebAPI(QObject *parent = 0);
 
 public slots:
+    bool isEmpty();
+    QString clear();
+    void push(QString contents);
+    QString pop();
+
     QString time();
+
+private:
+    QStack<QString> _stack;
 };
 
 } // namespace Shark

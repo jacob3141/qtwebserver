@@ -24,12 +24,13 @@ namespace Shark {
 
 Engine::Engine() {
     QScriptValue webAPIObject = _scriptEngine.newQObject(&_webAPI);
-    _scriptEngine.globalObject().setProperty("shark", webAPIObject);
+    _scriptEngine.globalObject().setProperty("$$", webAPIObject);
 }
 
 QString Engine::evaluate(QString program) {
-   QScriptValue result = _scriptEngine.evaluate(program);
-   return result.toString();
+    _webAPI.clear();
+    _scriptEngine.evaluate(program);
+    return _webAPI.clear();
 }
 
 }

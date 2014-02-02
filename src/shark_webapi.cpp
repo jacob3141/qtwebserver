@@ -29,6 +29,26 @@ WebAPI::WebAPI(QObject *parent)
     : QObject(parent) {
 }
 
+bool WebAPI::isEmpty() {
+    return _stack.isEmpty();
+}
+
+QString WebAPI::clear() {
+    QString stackContents = "";
+    while(!_stack.isEmpty()) {
+        stackContents.prepend(_stack.pop());
+    }
+    return stackContents;
+}
+
+void WebAPI::push(QString contents) {
+    _stack.push(contents);
+}
+
+QString WebAPI::pop() {
+    return _stack.isEmpty() ? "" : _stack.pop();
+}
+
 QString WebAPI::time() {
     return QDateTime::currentDateTime().toString();
 }
