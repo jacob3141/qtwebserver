@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef SHARK_SERVICE_H
+#define SHARK_SERVICE_H
 
 // Qt includes
 #include <QTcpServer>
@@ -92,4 +92,4 @@ private:
 
 } // namespace Shark
 
-#endif // SERVICE_H
+#endif // SHARK_SERVICE_H

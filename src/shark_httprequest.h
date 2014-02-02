@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef HTTPREQUEST_H
-#define HTTPREQUEST_H
+#ifndef SHARK_HTTPREQUEST_H
+#define SHARK_HTTPREQUEST_H
 
 // Qt includes
 #include <QString>
@@ -71,7 +71,13 @@ public:
      */
     QString httpVersion();
 
+    /**
+     * @returns the original request string.
+     */
+    QString requestString();
+
 private:
+    QString _requestString;
     Method _method;
     QString _uniqueResourceIdentifier;
     QString _httpVersion;
@@ -82,4 +88,4 @@ private:
 
 } // namespace Shark
 
-#endif // HTTPREQUEST_H
+#endif // SHARK_HTTPREQUEST_H

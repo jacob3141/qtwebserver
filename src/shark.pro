@@ -17,7 +17,7 @@
 # along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-QT += core network
+QT += core network script
 
 QT -= gui
 
@@ -35,7 +35,10 @@ SOURCES += \
     shark_httpstatuscode.cpp \
     shark_webservice.cpp \
     shark_webservicethread.cpp \
-    shark_application.cpp
+    shark_application.cpp \
+    shark_resourcecache.cpp \
+    shark_engine.cpp \
+    shark_webapi.cpp
 
 HEADERS += \
     shark_httprequest.h \
@@ -44,7 +47,10 @@ HEADERS += \
     shark_httpresponse.h \
     shark_webservice.h \
     shark_webservicethread.h \
-    shark_application.h
+    shark_application.h \
+    shark_resourcecache.h \
+    shark_engine.h \
+    shark_webapi.h
 
 RESOURCES += \
     web_resources.qrc

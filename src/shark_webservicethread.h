@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef WEBSERVICETHREAD_H
-#define WEBSERVICETHREAD_H
+#ifndef SHARK_WEBSERVICETHREAD_H
+#define SHARK_WEBSERVICETHREAD_H
 
 // Qt includes
 #include <QThread>
@@ -95,4 +95,4 @@ private:
 
 } // namespace Shark
 
-#endif // WEBSERVICETHREAD_H
+#endif // SHARK_WEBSERVICETHREAD_H

@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef HTTPRESPONDER_H
-#define HTTPRESPONDER_H
+#ifndef SHARK_HTTPRESPONDER_H
+#define SHARK_HTTPRESPONDER_H
 
 // Own includes
 #include "shark_httprequest.h"
@@ -60,4 +60,4 @@ public:
 
 } // namespace Shark
 
-#endif // HTTPRESPONDER_H
+#endif // SHARK_HTTPRESPONDER_H

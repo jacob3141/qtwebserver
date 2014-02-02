@@ -20,27 +20,39 @@
 // Own includes
 #include "shark_application.h"
 
+// Qt includes
+#include <QScriptValue>
+
 namespace Shark {
 
 Application::Application(QString rootDirectory)
     : Http::Responder() {
     _rootDirectory = rootDirectory;
+    _resourceCache = new ResourceCache(_rootDirectory);
 }
 
 void Application::respond(Http::Request& request, Http::Response& response) {
-    response.setBody(QString(HTML(
-        <!DOCTYPE html>
-        <html>
-         <head>
-          <title>Shark Web Application Server</title>
-         </head>
-         <body>))
-            + request.httpVersion() +
+    QString uri = request.uniqueResourceIdentifier();
 
-                     QString(HTML(
-         </body>
-        </html>
-    )));
+    // Deliver HTML sites directly from the cache
+    if(uri.endsWith("html") || uri.endsWith("htm")) {
+        response.setBody(_resourceCache->read(uri));
+    } else if(uri.endsWith(".js")) {
+        response.setBody(_engine.evaluate(_resourceCache->read(uri)));
+    } else {
+        response.setBody(QString(HTML(
+            <!DOCTYPE html>
+            <html>
+             <head>
+              <title>Shark Web Application Server</title>
+             </head>
+             <body>))
+                + request.httpVersion() +
+                         QString(HTML(
+             </body>
+            </html>
+        )));
+    }
 }
 
 } // namespace Shark

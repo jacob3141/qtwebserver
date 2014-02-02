@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef HTTPRESPONSE_H
-#define HTTPRESPONSE_H
+#ifndef SHARK_HTTPRESPONSE_H
+#define SHARK_HTTPRESPONSE_H
 
 // Qt includes
 #include <QByteArray>
@@ -113,4 +113,4 @@ private:
 
 } // namespace Shark
 
-#endif // HTTPRESPONSE_H
+#endif // SHARK_HTTPRESPONSE_H

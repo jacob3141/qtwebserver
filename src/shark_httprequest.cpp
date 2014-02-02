@@ -28,6 +28,7 @@ namespace Shark {
 namespace Http {
 
 Request::Request(QString requestString) {
+    _requestString = requestString;
     _validRequest = true;
     _method = Unknown;
     _uniqueResourceIdentifier = "";
@@ -93,6 +94,11 @@ QString Request::uniqueResourceIdentifier() {
 QString Request::httpVersion() {
     return _httpVersion;
 }
+
+QString Request::requestString() {
+    return _requestString;
+}
+
 
 } // namespace Http
 

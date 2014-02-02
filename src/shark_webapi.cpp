@@ -17,40 +17,20 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_APPLICATION_H
-#define SHARK_APPLICATION_H
-
 // Own includes
-#include "shark_httpresponder.h"
-#include "shark_resourcecache.h"
-#include "shark_engine.h"
+#include "shark_webapi.h"
 
 // Qt includes
-#include <QString>
-#include <QScriptEngine>
+#include <QDateTime>
 
 namespace Shark {
 
-/**
- * @brief The Application class
- */
-class Application : public Http::Responder {
-public:
-    Application(QString rootDirectory);
+WebAPI::WebAPI(QObject *parent)
+    : QObject(parent) {
+}
 
-    /**
-     * @brief respond
-     * @param request
-     * @param response
-     */
-    void respond(Http::Request& request, Http::Response& response);
-
-private:
-    QString _rootDirectory;
-    Engine _engine;
-    ResourceCache *_resourceCache;
-};
+QString WebAPI::time() {
+    return QDateTime::currentDateTime().toString();
+}
 
 } // namespace Shark
-
-#endif // SHARK_APPLICATION_H
