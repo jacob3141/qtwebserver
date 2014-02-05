@@ -35,6 +35,14 @@ class Engine {
 public:
     Engine(Application *application);
 
+    /**
+     * Transfers the given QObject to script space. That means, that you will
+     * also lose ownership over the object. The script engine automatically will
+     * handle deletion at an appropriate time.
+     * @param object The Qt object you want to transfer into script space.
+     * @return The script value handle to the object in script space.
+     */
+    QScriptValue transferToScriptSpace(QObject *object);
     bool evaluate(QString program, Http::Request& request, Http::Response& response);
 
 private:

@@ -22,10 +22,13 @@
 
 // Own includes
 #include "shark_http_response.h"
+#include "shark_engine.h"
 
 // Qt includes
 #include <QObject>
 #include <QString>
+#include <QDomDocument>
+#include <QScriptValue>
 
 namespace Shark {
 
@@ -34,16 +37,19 @@ namespace Js {
 class ResponseAPI : public QObject {
     Q_OBJECT
 public:
-    ResponseAPI(Http::Response& response, QObject *parent = 0);
+    ResponseAPI(Shark::Engine& engine, Http::Response& response, QObject *parent = 0);
+    virtual ~ResponseAPI();
 
     void compile();
 
 public slots:
-    void html(QString html);
+    QScriptValue documentElement();
 
 private:
     QString _responseBody;
+    QDomDocument *_responseDomDocument;
     Http::Response& _response;
+    Shark::Engine& _engine;
 };
 
 } // namespace Js

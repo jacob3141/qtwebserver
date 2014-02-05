@@ -17,34 +17,16 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// Own includes
-#include "shark_js_requestapi.h"
-#include "shark_engine.h"
+#include "shark_js_domelement.h"
 
 namespace Shark {
 
 namespace Js {
 
-RequestAPI::RequestAPI(Shark::Engine& engine, Http::Request &request, QObject *parent)
+DomElement::DomElement(Engine &engine, QDomElement domElement, QObject *parent)
     : QObject(parent),
-      _request(request),
       _engine(engine) {
-}
-
-QStringList RequestAPI::parameters() {
-    return _request.availableQueryParameters();
-}
-
-QString RequestAPI::parameter(QString name) {
-    if(hasParameter(name)) {
-        return _request.queryParameter(name);
-    } else {
-        return "";
-    }
-}
-
-bool RequestAPI::hasParameter(QString name) {
-    return _request.availableQueryParameters().contains(name);
+    _domElement = domElement;
 }
 
 } // namespace Js

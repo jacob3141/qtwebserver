@@ -31,9 +31,14 @@ Engine::Engine(Application *application) {
     _application = application;
 }
 
+
+QScriptValue Engine::transferToScriptSpace(QObject *object) {
+    return _scriptEngine.newQObject(object, QScriptEngine::ScriptOwnership);
+}
+
 bool Engine::evaluate(QString program, Http::Request &request, Http::Response &response) {
-    Js::ResponseAPI *responseAPI = new Js::ResponseAPI(response);
-    Js::RequestAPI *requestAPI = new Js::RequestAPI(request);
+    Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
+    Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
     QScriptValue responseJsObject = _scriptEngine.newQObject(responseAPI);
     QScriptValue requestJsObject = _scriptEngine.newQObject(requestAPI);
@@ -43,6 +48,10 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
 
     _scriptEngine.evaluate(program);
     responseAPI->compile();
+
+    responseAPI->deleteLater();
+    requestAPI->deleteLater();
+
     return !_scriptEngine.hasUncaughtException();
 }
 

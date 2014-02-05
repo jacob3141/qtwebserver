@@ -22,6 +22,7 @@
 
 // Own includes
 #include "shark_http_request.h"
+#include "shark_engine.h"
 
 // Qt includes
 #include <QObject>
@@ -35,7 +36,7 @@ namespace Js {
 class RequestAPI : public QObject {
     Q_OBJECT
 public:
-    RequestAPI(Http::Request& request, QObject *parent = 0);
+    RequestAPI(Shark::Engine& engine, Http::Request& request, QObject *parent = 0);
 
 public slots:
     QStringList parameters();
@@ -46,6 +47,7 @@ public slots:
 
 private:
     Http::Request& _request;
+    Shark::Engine& _engine;
 };
 
 } // namespace Js

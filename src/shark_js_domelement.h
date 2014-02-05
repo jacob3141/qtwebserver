@@ -17,36 +17,32 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef SHARK_JS_DOMELEMENT_H
+#define SHARK_JS_DOMELEMENT_H
+
 // Own includes
-#include "shark_js_requestapi.h"
 #include "shark_engine.h"
+
+// Qt includes
+#include <QObject>
+#include <QDomElement>
 
 namespace Shark {
 
 namespace Js {
 
-RequestAPI::RequestAPI(Shark::Engine& engine, Http::Request &request, QObject *parent)
-    : QObject(parent),
-      _request(request),
-      _engine(engine) {
-}
+class DomElement : public QObject {
+    Q_OBJECT
+public:
+    DomElement(Shark::Engine& engine, QDomElement domElement, QObject *parent = 0);
 
-QStringList RequestAPI::parameters() {
-    return _request.availableQueryParameters();
-}
-
-QString RequestAPI::parameter(QString name) {
-    if(hasParameter(name)) {
-        return _request.queryParameter(name);
-    } else {
-        return "";
-    }
-}
-
-bool RequestAPI::hasParameter(QString name) {
-    return _request.availableQueryParameters().contains(name);
-}
+private:
+    Shark::Engine& _engine;
+    QDomElement _domElement;
+};
 
 } // namespace Js
 
 } // namespace Shark
+
+#endif // SHARK_JS_DOMELEMENT_H

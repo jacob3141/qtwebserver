@@ -19,23 +19,44 @@
 
 // Own includes
 #include "shark_js_responseapi.h"
+#include "shark_js_domelement.h"
+
+// Qt includes
+#include <QScriptEngine>
 
 namespace Shark {
 
 namespace Js {
 
-ResponseAPI::ResponseAPI(Http::Response &response, QObject *parent)
+ResponseAPI::ResponseAPI(Shark::Engine& engine, Http::Response &response, QObject *parent)
     : QObject(parent),
-      _response(response) {
+      _response(response),
+      _engine(engine) {
     _responseBody = "";
+    _responseDomDocument = new QDomDocument(HTML(
+        "<!DOCTYPE html>"
+        "<html>"
+        "    <head>"
+        "    </head>"
+        "    <body>"
+        "    </body>"
+        "</html>"
+    ));
+}
+
+ResponseAPI::~ResponseAPI() {
+    delete _responseDomDocument;
 }
 
 void ResponseAPI::compile() {
-    _response.setBody(_responseBody);
+    // Do not confuse the response body with the html body.
+    // The body of the response includes the whole html document.
+    _response.setBody(_responseDomDocument->toString(4));
 }
 
-void ResponseAPI::html(QString html) {
-    _responseBody.append(html);
+QScriptValue ResponseAPI::documentElement() {
+    DomElement *domElement = new DomElement(_engine, _responseDomDocument->documentElement());
+    return _engine.transferToScriptSpace(domElement);
 }
 
 } // namespace Js
