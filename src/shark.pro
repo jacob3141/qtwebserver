@@ -30,27 +30,29 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    shark_httprequest.cpp \
-    shark_httpresponse.cpp \
-    shark_httpstatuscode.cpp \
     shark_webservice.cpp \
     shark_webservicethread.cpp \
     shark_application.cpp \
     shark_resourcecache.cpp \
     shark_engine.cpp \
-    shark_webapi.cpp
+    shark_js_responseapi.cpp \
+    shark_http_request.cpp \
+    shark_http_response.cpp \
+    shark_http_statuscodes.cpp \
+    shark_js_requestapi.cpp
 
 HEADERS += \
-    shark_httprequest.h \
-    shark_httpresponder.h \
-    shark_httpstatuscode.h \
-    shark_httpresponse.h \
     shark_webservice.h \
     shark_webservicethread.h \
     shark_application.h \
     shark_resourcecache.h \
     shark_engine.h \
-    shark_webapi.h
+    shark_js_responseapi.h \
+    shark_http_request.h \
+    shark_http_responder.h \
+    shark_http_response.h \
+    shark_http_statuscodes.h \
+    shark_js_requestapi.h
 
 RESOURCES += \
     web_resources.qrc

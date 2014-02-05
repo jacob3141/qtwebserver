@@ -19,6 +19,7 @@
 
 // Own includes
 #include "shark_application.h"
+#include "shark_engine.h"
 
 // Qt includes
 #include <QScriptValue>
@@ -28,6 +29,7 @@ namespace Shark {
 Application::Application(QString rootDirectory)
     : Http::Responder() {
     _rootDirectory = rootDirectory;
+    _engine = new Engine(this);
     _resourceCache = new ResourceCache(_rootDirectory);
 }
 
@@ -38,7 +40,8 @@ void Application::respond(Http::Request& request, Http::Response& response) {
     if(uri.endsWith("html") || uri.endsWith("htm")) {
         response.setBody(_resourceCache->read(uri));
     } else if(uri.endsWith(".js")) {
-        response.setBody(_engine.evaluate(_resourceCache->read(uri)));
+        _engine->evaluate(_resourceCache->read(uri), request, response);
+
     } else {
         response.setBody(QString(HTML(
             <!DOCTYPE html>
@@ -47,7 +50,7 @@ void Application::respond(Http::Request& request, Http::Response& response) {
               <title>Shark Web Application Server</title>
              </head>
              <body>))
-                + request.httpVersion() +
+                         + "<p>This resource is no supported.</p>" +
                          QString(HTML(
              </body>
             </html>

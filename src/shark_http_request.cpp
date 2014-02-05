@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "shark_httprequest.h"
+#include "shark_http_request.h"
 
 // Qt includes
 #include <QStringList>
@@ -75,7 +75,21 @@ Request::Request(QString requestString) {
         _method = Unknown;
     }
 
-    _uniqueResourceIdentifier = requestLine.at(1);
+    QStringList splittedURI = requestLine.at(1).split('?', QString::SkipEmptyParts);
+    _queryString = "";
+    if(splittedURI.size() > 1) {
+        _queryString = splittedURI.at(1);
+        QStringList queryParameterAssignmentList = _queryString.split('&', QString::SkipEmptyParts);
+        foreach(QString queryParameterAssignment, queryParameterAssignmentList) {
+            QStringList assignment = queryParameterAssignment.split('=', QString::SkipEmptyParts);
+            if(assignment.size() > 0) {
+                _queryParameters[assignment.at(0)] = assignment.at(1);
+            }
+        }
+    }
+
+    _uniqueResourceIdentifier = splittedURI.at(0);
+
     _httpVersion = requestLine.at(2);
 }
 
@@ -99,6 +113,21 @@ QString Request::requestString() {
     return _requestString;
 }
 
+QString Request::queryString() {
+    return _queryString;
+}
+
+QStringList Request::availableQueryParameters() {
+    return _queryParameters.keys();
+}
+
+QString Request::queryParameter(QString parameter) {
+    if(_queryParameters.contains(parameter)) {
+        return _queryParameters[parameter];
+    } else {
+        return "";
+    }
+}
 
 } // namespace Http
 

@@ -17,39 +17,47 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_WEBAPI_H
-#define SHARK_WEBAPI_H
+#ifndef SHARK_HTTP_RESPONDER_H
+#define SHARK_HTTP_RESPONDER_H
 
-// Qt includes
-#include <QObject>
-#include <QStack>
-#include <QString>
+// Own includes
+#include "shark_http_request.h"
+#include "shark_http_response.h"
 
 namespace Shark {
 
+namespace Http {
+
 /**
- * The WebAPI class represents an object in the global script
- * environment. QtScript exposes its slots as functions into the
- * script space, where it can be accessed through the global "$$"
- * property. Thus, Shark WebAPI is just an extension to JS.
+ * @brief The Responder class
+ * @author Jacob Dawid
+ * @date 23.11.2013
  */
-class WebAPI : public QObject {
-    Q_OBJECT
+class Responder {
 public:
-    WebAPI(QObject *parent = 0);
-
-public slots:
-    bool isEmpty();
-    QString clear();
-    void push(QString contents);
-    QString pop();
-
-    QString time();
-
-private:
-    QStack<QString> _stack;
+    /**
+     * @brief respond
+     * @param request
+     * @param response
+     */
+    virtual void respond(Request& request, Response& response) {
+        Q_UNUSED(request);
+        response.setBody(HTML(
+            <!DOCTYPE html>
+            <html>
+             <head>
+              <title>Shark Web Application Server</title>
+             </head>
+             <body>
+              <p>There has no responder been set up.</p>
+             </body>
+            </html>
+        ));
+    }
 };
+
+} // namespace Http
 
 } // namespace Shark
 
-#endif // SHARK_WEBAPI_H
+#endif // SHARK_HTTP_RESPONDER_H

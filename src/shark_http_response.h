@@ -17,14 +17,14 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTPRESPONSE_H
-#define SHARK_HTTPRESPONSE_H
+#ifndef SHARK_HTTP_RESPONSE_H
+#define SHARK_HTTP_RESPONSE_H
+
+// Own includes
+#include "shark_http_statuscodes.h"
 
 // Qt includes
 #include <QByteArray>
-
-// Own includes
-#include "shark_httpstatuscode.h"
 
 namespace Shark {
 
@@ -113,4 +113,4 @@ private:
 
 } // namespace Shark
 
-#endif // SHARK_HTTPRESPONSE_H
+#endif // SHARK_HTTP_RESPONSE_H

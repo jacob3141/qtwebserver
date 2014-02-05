@@ -18,32 +18,26 @@
 //
 
 // Own includes
-#include "shark_engine.h"
 #include "shark_js_responseapi.h"
-#include "shark_js_requestapi.h"
-
-// Qt includes
-#include <QStringList>
 
 namespace Shark {
 
-Engine::Engine(Application *application) {
-    _application = application;
+namespace Js {
+
+ResponseAPI::ResponseAPI(Http::Response &response, QObject *parent)
+    : QObject(parent),
+      _response(response) {
+    _responseBody = "";
 }
 
-bool Engine::evaluate(QString program, Http::Request &request, Http::Response &response) {
-    Js::ResponseAPI *responseAPI = new Js::ResponseAPI(response);
-    Js::RequestAPI *requestAPI = new Js::RequestAPI(request);
-
-    QScriptValue responseJsObject = _scriptEngine.newQObject(responseAPI);
-    QScriptValue requestJsObject = _scriptEngine.newQObject(requestAPI);
-
-    _scriptEngine.globalObject().setProperty("response", responseJsObject);
-    _scriptEngine.globalObject().setProperty("request", requestJsObject);
-
-    _scriptEngine.evaluate(program);
-    responseAPI->compile();
-    return !_scriptEngine.hasUncaughtException();
+void ResponseAPI::compile() {
+    _response.setBody(_responseBody);
 }
 
+void ResponseAPI::html(QString html) {
+    _responseBody.append(html);
 }
+
+} // namespace Js
+
+} // namespace Shark

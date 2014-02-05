@@ -35,6 +35,7 @@ ResourceCache::ResourceCache(QString rootDirectory, QObject *parent)
 
     connect(&_fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(onFileChanged(QString)));
     connect(&_fileSystemWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(onDirectoryChanged(QString)));
+    _cachingOptions = ResourceCache::Off;
 }
 
 void ResourceCache::updateCache(QString uniqueResourceIdentifier) {
@@ -67,7 +68,7 @@ void ResourceCache::indexRecursively(QString directory) {
 }
 
 QString ResourceCache::read(QString uniqueResourceIdentifier) {
-    if(!_cache.contains(uniqueResourceIdentifier)) {
+    if(!_cache.contains(uniqueResourceIdentifier) || _cachingOptions & ResourceCache::Off) {
         updateCache(uniqueResourceIdentifier);
     }
     return _cache[uniqueResourceIdentifier].contents;

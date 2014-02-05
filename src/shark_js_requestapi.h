@@ -17,40 +17,39 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef SHARK_JS_REQUESTAPI_H
+#define SHARK_JS_REQUESTAPI_H
+
 // Own includes
-#include "shark_webapi.h"
+#include "shark_http_request.h"
 
 // Qt includes
-#include <QDateTime>
+#include <QObject>
+#include <QString>
+#include <QStringList>
 
 namespace Shark {
 
-WebAPI::WebAPI(QObject *parent)
-    : QObject(parent) {
-}
+namespace Js {
 
-bool WebAPI::isEmpty() {
-    return _stack.isEmpty();
-}
+class RequestAPI : public QObject {
+    Q_OBJECT
+public:
+    RequestAPI(Http::Request& request, QObject *parent = 0);
 
-QString WebAPI::clear() {
-    QString stackContents = "";
-    while(!_stack.isEmpty()) {
-        stackContents.prepend(_stack.pop());
-    }
-    return stackContents;
-}
+public slots:
+    QStringList parameters();
 
-void WebAPI::push(QString contents) {
-    _stack.push(contents);
-}
+    QString parameter(QString name);
 
-QString WebAPI::pop() {
-    return _stack.isEmpty() ? "" : _stack.pop();
-}
+    bool hasParameter(QString name);
 
-QString WebAPI::time() {
-    return QDateTime::currentDateTime().toString();
-}
+private:
+    Http::Request& _request;
+};
+
+} // namespace Js
 
 } // namespace Shark
+
+#endif // SHARK_JS_REQUESTAPI_H

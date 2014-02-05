@@ -17,11 +17,12 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTPREQUEST_H
-#define SHARK_HTTPREQUEST_H
+#ifndef SHARK_HTTP_REQUEST_H
+#define SHARK_HTTP_REQUEST_H
 
 // Qt includes
 #include <QString>
+#include <QMap>
 
 namespace Shark {
 
@@ -76,16 +77,25 @@ public:
      */
     QString requestString();
 
+    QString queryString();
+
+    QStringList availableQueryParameters();
+
+    QString queryParameter(QString parameter);
+
 private:
     QString _requestString;
+    QString _queryString;
+    QString _fragment;
     Method _method;
     QString _uniqueResourceIdentifier;
     QString _httpVersion;
     bool _validRequest;
+    QMap<QString, QString> _queryParameters;
 };
 
 } // namspace Http
 
 } // namespace Shark
 
-#endif // SHARK_HTTPREQUEST_H
+#endif // SHARK_HTTP_REQUEST_H

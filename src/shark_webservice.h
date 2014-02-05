@@ -20,12 +20,12 @@
 #ifndef SHARK_SERVICE_H
 #define SHARK_SERVICE_H
 
+// Own includes
+#include "shark_http_responder.h"
+
 // Qt includes
 #include <QTcpServer>
 #include <QVector>
-
-// Own includes
-#include "shark_httpresponder.h"
 
 namespace Shark {
 

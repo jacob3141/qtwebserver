@@ -21,15 +21,16 @@
 #define SHARK_APPLICATION_H
 
 // Own includes
-#include "shark_httpresponder.h"
+#include "shark_http_responder.h"
 #include "shark_resourcecache.h"
-#include "shark_engine.h"
 
 // Qt includes
 #include <QString>
 #include <QScriptEngine>
 
 namespace Shark {
+
+class Engine;
 
 /**
  * @brief The Application class
@@ -47,7 +48,7 @@ public:
 
 private:
     QString _rootDirectory;
-    Engine _engine;
+    Engine *_engine;
     ResourceCache *_resourceCache;
 };
 

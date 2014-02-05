@@ -17,47 +17,37 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTPRESPONDER_H
-#define SHARK_HTTPRESPONDER_H
+#ifndef SHARK_JS_RESPONSEAPI_H
+#define SHARK_JS_RESPONSEAPI_H
 
 // Own includes
-#include "shark_httprequest.h"
-#include "shark_httpresponse.h"
+#include "shark_http_response.h"
+
+// Qt includes
+#include <QObject>
+#include <QString>
 
 namespace Shark {
 
-namespace Http {
+namespace Js {
 
-/**
- * @brief The Responder class
- * @author Jacob Dawid
- * @date 23.11.2013
- */
-class Responder {
+class ResponseAPI : public QObject {
+    Q_OBJECT
 public:
-    /**
-     * @brief respond
-     * @param request
-     * @param response
-     */
-    virtual void respond(Request& request, Response& response) {
-        Q_UNUSED(request);
-        response.setBody(HTML(
-            <!DOCTYPE html>
-            <html>
-             <head>
-              <title>Shark Web Application Server</title>
-             </head>
-             <body>
-              <p>There has no responder been set up.</p>
-             </body>
-            </html>
-        ));
-    }
+    ResponseAPI(Http::Response& response, QObject *parent = 0);
+
+    void compile();
+
+public slots:
+    void html(QString html);
+
+private:
+    QString _responseBody;
+    Http::Response& _response;
 };
 
-} // namespace Http
+} // namespace Js
 
 } // namespace Shark
 
-#endif // SHARK_HTTPRESPONDER_H
+#endif // SHARK_JS_RESPONSEAPI_H

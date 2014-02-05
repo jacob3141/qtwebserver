@@ -32,8 +32,10 @@ class ResourceCache : public QObject {
     Q_OBJECT
 public:
     enum CachingOption {
-        Minify = 0x001
+        Off    = 0x001,
+        Minify = 0x002
     };
+
     Q_DECLARE_FLAGS(CachingOptions, CachingOption)
 
     struct Resource {

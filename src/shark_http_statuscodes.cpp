@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "shark_httpstatuscode.h"
+#include "shark_http_statuscodes.h"
 
 namespace Shark {
 

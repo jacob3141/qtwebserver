@@ -21,7 +21,9 @@
 #define SHARK_ENGINE_H
 
 // Own includes
-#include "shark_webapi.h"
+#include "shark_application.h"
+#include "shark_http_request.h"
+#include "shark_http_response.h"
 
 // Qt includes
 #include <QScriptEngine>
@@ -31,13 +33,13 @@ namespace Shark {
 
 class Engine {
 public:
-    Engine();
+    Engine(Application *application);
 
-    QString evaluate(QString program);
+    bool evaluate(QString program, Http::Request& request, Http::Response& response);
 
 private:
+    Application *_application;
     QScriptEngine _scriptEngine;
-    WebAPI _webAPI;
 };
 
 } // namespace Shark

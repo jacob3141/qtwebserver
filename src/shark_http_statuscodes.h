@@ -17,8 +17,8 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTPSTATUSCODES_H
-#define SHARK_HTTPSTATUSCODES_H
+#ifndef SHARK_HTTP_STATUSCODES_H
+#define SHARK_HTTP_STATUSCODES_H
 
 // Qt includes
 #include <QMap>
@@ -107,4 +107,4 @@ QString reasonPhrase(Http::StatusCode statusCode);
 
 } // namespace Shark
 
-#endif // SHARK_HTTPSTATUSCODES_H
+#endif // SHARK_HTTP_STATUSCODES_H
