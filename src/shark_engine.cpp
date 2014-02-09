@@ -36,6 +36,10 @@ QScriptValue Engine::transferToScriptSpace(QObject *object) {
     return _scriptEngine.newQObject(object, QScriptEngine::ScriptOwnership);
 }
 
+QScriptValue Engine::createArray() {
+    return _scriptEngine.newArray();
+}
+
 bool Engine::evaluate(QString program, Http::Request &request, Http::Response &response) {
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);

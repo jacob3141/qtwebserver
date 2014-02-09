@@ -40,10 +40,16 @@ public:
     ResponseAPI(Shark::Engine& engine, Http::Response& response, QObject *parent = 0);
     virtual ~ResponseAPI();
 
+    /**
+     * Compiles the response to serialized data.
+     */
     void compile();
 
 public slots:
-    QScriptValue documentElement();
+    /**
+     * @returns the dom document.
+     */
+    QScriptValue document();
 
 private:
     QString _responseBody;

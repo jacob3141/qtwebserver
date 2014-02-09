@@ -1,9 +1,25 @@
-response.html('<html>');
-response.html(' <head>');
-response.html(' </head>');
-response.html(' <body>');
-response.html('  <p>' + This is a test. + '</p>');
-response.html('  <p>' + request.parameters() '</p>');
-response.html(' </body>');
-response.html('</html>');
+//
+// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+//
+// This file is part of Shark.
+//
+// Shark is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Shark is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Shark.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+var doc	  = response.documentElement();
+var head  = doc.element('head');
+var body  = doc.element('body');
+var title = head.appendElement('title');
+
 

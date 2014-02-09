@@ -43,6 +43,9 @@ public:
      * @return The script value handle to the object in script space.
      */
     QScriptValue transferToScriptSpace(QObject *object);
+
+    QScriptValue createArray();
+
     bool evaluate(QString program, Http::Request& request, Http::Response& response);
 
 private:

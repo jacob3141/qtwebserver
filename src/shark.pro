@@ -40,7 +40,7 @@ SOURCES += \
     shark_http_response.cpp \
     shark_http_statuscodes.cpp \
     shark_js_requestapi.cpp \
-    shark_js_domelement.cpp
+    shark_js_domnode.cpp
 
 HEADERS += \
     shark_webservice.h \
@@ -54,7 +54,7 @@ HEADERS += \
     shark_http_response.h \
     shark_http_statuscodes.h \
     shark_js_requestapi.h \
-    shark_js_domelement.h
+    shark_js_domnode.h
 
 RESOURCES += \
     web_resources.qrc

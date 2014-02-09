@@ -39,10 +39,21 @@ public:
     RequestAPI(Shark::Engine& engine, Http::Request& request, QObject *parent = 0);
 
 public slots:
+    /**
+     * @returns a list of available query parameters.
+     */
     QStringList parameters();
 
+    /**
+     * @param name The parameter's name that is queried.
+     * @returns the parameter value of the specified parameter.
+     */
     QString parameter(QString name);
 
+    /**
+     * @param name The parameter's name that is queried.
+     * @returns true, when the specified parameter has been set.
+     */
     bool hasParameter(QString name);
 
 private:

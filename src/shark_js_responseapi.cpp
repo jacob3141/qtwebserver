@@ -19,7 +19,7 @@
 
 // Own includes
 #include "shark_js_responseapi.h"
-#include "shark_js_domelement.h"
+#include "shark_js_domnode.h"
 
 // Qt includes
 #include <QScriptEngine>
@@ -33,15 +33,15 @@ ResponseAPI::ResponseAPI(Shark::Engine& engine, Http::Response &response, QObjec
       _response(response),
       _engine(engine) {
     _responseBody = "";
-    _responseDomDocument = new QDomDocument(HTML(
-        "<!DOCTYPE html>"
-        "<html>"
-        "    <head>"
-        "    </head>"
-        "    <body>"
-        "    </body>"
-        "</html>"
-    ));
+    _responseDomDocument = new QDomDocument("html");
+    QDomNode htmlElement = _responseDomDocument->createElement("html");
+    _responseDomDocument->appendChild(htmlElement);
+
+    QDomNode headElement = _responseDomDocument->createElement("head");
+    htmlElement.appendChild(headElement);
+
+    QDomNode bodyElement = _responseDomDocument->createElement("body");
+    htmlElement.appendChild(bodyElement);
 }
 
 ResponseAPI::~ResponseAPI() {
@@ -54,8 +54,10 @@ void ResponseAPI::compile() {
     _response.setBody(_responseDomDocument->toString(4));
 }
 
-QScriptValue ResponseAPI::documentElement() {
-    DomElement *domElement = new DomElement(_engine, _responseDomDocument->documentElement());
+QScriptValue ResponseAPI::document() {
+    DomNode *domElement = new DomNode(*_responseDomDocument,
+                                      _engine,
+                                      _responseDomDocument->documentElement());
     return _engine.transferToScriptSpace(domElement);
 }
 
