@@ -38,49 +38,6 @@ public:
     DomNode(QDomDocument& domDocument, Shark::Engine& engine, QDomNode domNode, QObject *parent = 0);
 
 public slots:
-    /**
-     * Queries the specified attributes of this element.
-     * @param name The name of the specified attribute.
-     * @param defaultValue Default value in case the attribute does not exist.
-     * @returns the value of the specified attribute.
-     */
-    QString attribute(QString name, QString defaultValue = QString());
-
-    /**
-     * Sets the value of the specified attribute.
-     * @param name The name of the specified attribute.
-     * @param value The target value of the specified attribute.
-     */
-    void setAttribute(QString name, QString value);
-
-    /**
-     * Queries whether the specified attribute does exist.
-     * @param name The name of the specified attribute.
-     * @returns the value of the specified attribute.
-     */
-    bool hasAttribute(QString name);
-
-    /**
-     * @returns the parent element of this element.
-     */
-    QScriptValue parentElement();
-
-    /**
-     * @returns an array of all child elements.
-     */
-    QScriptValue elements();
-
-    /**
-     * Appends a new child to this node.
-     * @param childTagName The tag name of the new child.
-     * @return
-     */
-    QScriptValue appendElement(QString tagName);
-
-    QScriptValue element(QString tagName);
-
-    QScriptValue previous();
-    QScriptValue next();
 
 private:
     Shark::Engine& _engine;

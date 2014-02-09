@@ -26,7 +26,8 @@
 #include "shark_http_response.h"
 
 // Qt includes
-#include <QScriptEngine>
+#include <QJSEngine>
+#include <QJSValue>
 #include <QString>
 
 namespace Shark {
@@ -42,15 +43,15 @@ public:
      * @param object The Qt object you want to transfer into script space.
      * @return The script value handle to the object in script space.
      */
-    QScriptValue transferToScriptSpace(QObject *object);
+    QJSValue transferToScriptSpace(QObject *object);
 
-    QScriptValue createArray();
+    QJSValue createArray();
 
     bool evaluate(QString program, Http::Request& request, Http::Response& response);
 
 private:
     Application *_application;
-    QScriptEngine _scriptEngine;
+    QJSEngine _scriptEngine;
 };
 
 } // namespace Shark

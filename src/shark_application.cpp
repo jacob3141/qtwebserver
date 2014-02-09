@@ -22,7 +22,7 @@
 #include "shark_engine.h"
 
 // Qt includes
-#include <QScriptValue>
+#include <QJSValue>
 
 namespace Shark {
 

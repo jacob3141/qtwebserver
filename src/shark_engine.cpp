@@ -31,12 +31,11 @@ Engine::Engine(Application *application) {
     _application = application;
 }
 
-
-QScriptValue Engine::transferToScriptSpace(QObject *object) {
-    return _scriptEngine.newQObject(object, QScriptEngine::ScriptOwnership);
+QJSValue Engine::transferToScriptSpace(QObject *object) {
+    return _scriptEngine.newQObject(object);
 }
 
-QScriptValue Engine::createArray() {
+QJSValue Engine::createArray() {
     return _scriptEngine.newArray();
 }
 
@@ -44,19 +43,19 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
-    QScriptValue responseJsObject = _scriptEngine.newQObject(responseAPI);
-    QScriptValue requestJsObject = _scriptEngine.newQObject(requestAPI);
+    QJSValue responseJsObject = _scriptEngine.newQObject(responseAPI);
+    QJSValue requestJsObject = _scriptEngine.newQObject(requestAPI);
 
     _scriptEngine.globalObject().setProperty("response", responseJsObject);
     _scriptEngine.globalObject().setProperty("request", requestJsObject);
 
-    _scriptEngine.evaluate(program);
+    QJSValue result = _scriptEngine.evaluate(program);
     responseAPI->compile();
 
     responseAPI->deleteLater();
     requestAPI->deleteLater();
 
-    return !_scriptEngine.hasUncaughtException();
+    return !result.isError();
 }
 
 }

@@ -28,7 +28,7 @@
 #include <QObject>
 #include <QString>
 #include <QDomDocument>
-#include <QScriptValue>
+#include <QJSValue>
 
 namespace Shark {
 
@@ -49,7 +49,7 @@ public slots:
     /**
      * @returns the dom document.
      */
-    QScriptValue document();
+    QJSValue document();
 
 private:
     QString _responseBody;

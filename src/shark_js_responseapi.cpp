@@ -22,7 +22,7 @@
 #include "shark_js_domnode.h"
 
 // Qt includes
-#include <QScriptEngine>
+#include <QJSEngine>
 
 namespace Shark {
 
@@ -54,7 +54,7 @@ void ResponseAPI::compile() {
     _response.setBody(_responseDomDocument->toString(4));
 }
 
-QScriptValue ResponseAPI::document() {
+QJSValue ResponseAPI::document() {
     DomNode *domElement = new DomNode(*_responseDomDocument,
                                       _engine,
                                       _responseDomDocument->documentElement());
