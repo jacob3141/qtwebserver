@@ -31,7 +31,7 @@ Engine::Engine(Application *application) {
     _application = application;
 }
 
-QJSValue Engine::transferToScriptSpace(QObject *object) {
+QJSValue Engine::toJSValue(QObject *object) {
     return _scriptEngine.newQObject(object);
 }
 
@@ -43,11 +43,8 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
-    QJSValue responseJsObject = _scriptEngine.newQObject(responseAPI);
-    QJSValue requestJsObject = _scriptEngine.newQObject(requestAPI);
-
-    _scriptEngine.globalObject().setProperty("response", responseJsObject);
-    _scriptEngine.globalObject().setProperty("request", requestJsObject);
+    _scriptEngine.globalObject().setProperty("response", toJSValue(responseAPI));
+    _scriptEngine.globalObject().setProperty("request", toJSValue(requestAPI));
 
     QJSValue result = _scriptEngine.evaluate(program);
     responseAPI->compile();

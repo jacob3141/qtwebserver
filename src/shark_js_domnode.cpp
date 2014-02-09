@@ -24,11 +24,160 @@ namespace Shark {
 
 namespace Js {
 
-DomNode::DomNode(QDomDocument &domDocument, Engine &engine, QDomNode domNode, QObject *parent)
+DomNode::DomNode(Engine &engine, QDomNode domNode, QObject *parent)
     : QObject(parent),
-      _engine(engine),
-      _domDocument(domDocument) {
+      _engine(engine){
     _domNode = domNode;
+}
+
+QString DomNode::nodeName() {
+    return _domNode.nodeName();
+}
+
+QString DomNode::nodeType() {
+    switch(_domNode.nodeType()) {
+    case QDomNode::ElementNode:
+        return "element";
+        break;
+    case QDomNode::AttributeNode:
+        return "attribute";
+        break;
+    case QDomNode::TextNode:
+        return "text";
+        break;
+    case QDomNode::CDATASectionNode:
+        return "cdata-section";
+        break;
+    case QDomNode::EntityReferenceNode:
+        return "entity-reference";
+        break;
+    case QDomNode::EntityNode:
+        return "entity";
+        break;
+    case QDomNode::ProcessingInstructionNode:
+        return "processing-instruction";
+        break;
+    case QDomNode::CommentNode:
+        return "comment";
+        break;
+    case QDomNode::DocumentNode:
+        return "document";
+        break;
+    case QDomNode::DocumentTypeNode:
+        return "document-type";
+        break;
+    case QDomNode::DocumentFragmentNode:
+        return "document-fragment";
+        break;
+    case QDomNode::NotationNode:
+        return "notation";
+        break;
+    case QDomNode::BaseNode:
+        return "base";
+        break;
+    case QDomNode::CharacterDataNode:
+        return "character-data";
+        break;
+    }
+    return "unknown";
+}
+
+QJSValue DomNode::parentNode() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.parentNode()));
+}
+
+QJSValue DomNode::childNodes() {
+    /* TODO: Implement. */
+    return QJSValue();
+}
+
+QJSValue DomNode::firstChild() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.firstChild()));
+}
+
+QJSValue DomNode::lastChild() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.lastChild()));
+}
+
+QJSValue DomNode::previousSibling() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.previousSibling()));
+}
+
+QJSValue DomNode::nextSibling() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.nextSibling()));
+}
+
+QJSValue DomNode::attributes() {
+    /* TODO: Implement. */
+    return QJSValue();
+}
+
+QJSValue DomNode::ownerDocument() {
+    return _engine.toJSValue(new DomNode(_engine, _domNode.ownerDocument()));
+}
+
+QString DomNode::namespaceURI() {
+    return _domNode.namespaceURI();
+}
+
+QString DomNode::localName() {
+    return _domNode.localName();
+}
+
+bool DomNode::hasAttributes() {
+    return _domNode.hasAttributes();
+}
+
+bool DomNode::isAttr() {
+    return _domNode.isAttr();
+}
+
+bool DomNode::isCDATASection() {
+    return _domNode.isCDATASection();
+}
+
+bool DomNode::isDocumentFragment() {
+    return _domNode.isDocumentFragment();
+}
+
+bool DomNode::isDocument() {
+    return _domNode.isDocument();
+}
+
+bool DomNode::isDocumentType() {
+    return _domNode.isDocumentType();
+}
+
+bool DomNode::isElement() {
+    return _domNode.isElement();
+}
+
+bool DomNode::isEntityReference() {
+    return _domNode.isEntityReference();
+}
+
+bool DomNode::isText() {
+    return _domNode.isText();
+}
+
+bool DomNode::isEntity() {
+    return _domNode.isEntity();
+}
+
+bool DomNode::isNotation() {
+    return _domNode.isNotation();
+}
+
+bool DomNode::isProcessingInstruction() {
+    return _domNode.isProcessingInstruction();
+}
+
+bool DomNode::isCharacterData() {
+    return _domNode.isCharacterData();
+}
+
+bool DomNode::isComment() {
+    return _domNode.isComment();
 }
 
 } // namespace Js

@@ -43,7 +43,7 @@ public:
      * @param object The Qt object you want to transfer into script space.
      * @return The script value handle to the object in script space.
      */
-    QJSValue transferToScriptSpace(QObject *object);
+    QJSValue toJSValue(QObject *object);
 
     QJSValue createArray();
 

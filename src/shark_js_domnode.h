@@ -35,13 +35,42 @@ namespace Js {
 class DomNode : public QObject {
     Q_OBJECT
 public:
-    DomNode(QDomDocument& domDocument, Shark::Engine& engine, QDomNode domNode, QObject *parent = 0);
+    DomNode(Shark::Engine& engine, QDomNode domNode, QObject *parent = 0);
 
 public slots:
 
+    // DOM read-only attributes
+    QString nodeName();
+    QString nodeType();
+    QJSValue parentNode();
+    QJSValue childNodes();
+    QJSValue firstChild();
+    QJSValue lastChild();
+    QJSValue previousSibling();
+    QJSValue nextSibling();
+    QJSValue attributes();
+    QJSValue ownerDocument();
+    QString namespaceURI();
+    QString localName();
+    bool hasAttributes();
+
+    // Qt extensions
+    bool isAttr();
+    bool isCDATASection();
+    bool isDocumentFragment();
+    bool isDocument();
+    bool isDocumentType();
+    bool isElement();
+    bool isEntityReference();
+    bool isText();
+    bool isEntity();
+    bool isNotation();
+    bool isProcessingInstruction();
+    bool isCharacterData();
+    bool isComment();
+
 private:
     Shark::Engine& _engine;
-    QDomDocument _domDocument;
     QDomNode _domNode;
 };
 

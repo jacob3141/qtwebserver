@@ -55,10 +55,7 @@ void ResponseAPI::compile() {
 }
 
 QJSValue ResponseAPI::document() {
-    DomNode *domElement = new DomNode(*_responseDomDocument,
-                                      _engine,
-                                      _responseDomDocument->documentElement());
-    return _engine.transferToScriptSpace(domElement);
+    return _engine.toJSValue(new DomNode(_engine, _responseDomDocument->documentElement()));
 }
 
 } // namespace Js
