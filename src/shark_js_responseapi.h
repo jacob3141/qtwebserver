@@ -23,6 +23,7 @@
 // Own includes
 #include "shark_http_response.h"
 #include "shark_engine.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QObject>
@@ -34,7 +35,7 @@ namespace Shark {
 
 namespace Js {
 
-class ResponseAPI : public QObject {
+class ResponseAPI : public QObject, public Logger {
     Q_OBJECT
 public:
     ResponseAPI(Shark::Engine& engine, Http::Response& response, QObject *parent = 0);

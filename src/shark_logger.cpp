@@ -24,11 +24,9 @@ namespace Shark {
 
 Logger::Logger(QString name) {
     _name = name;
-    log("Created new instance.");
 }
 
 Logger::~Logger() {
-    log("Destroyed instance.");
 }
 
 void Logger::log(QString message, Log::EntryType entryType) {

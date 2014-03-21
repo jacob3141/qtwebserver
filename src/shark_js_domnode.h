@@ -22,6 +22,7 @@
 
 // Own includes
 #include "shark_engine.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QObject>
@@ -32,7 +33,7 @@ namespace Shark {
 
 namespace Js {
 
-class DomNode : public QObject {
+class DomNode : public QObject, public Logger {
     Q_OBJECT
 public:
     DomNode(Shark::Engine& engine, QDomNode domNode, QObject *parent = 0);

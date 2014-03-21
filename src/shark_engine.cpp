@@ -48,6 +48,9 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     _scriptEngine.globalObject().setProperty("request", toJSValue(requestAPI));
 
     QJSValue result = _scriptEngine.evaluate(program);
+    log(QString("Evaluated JS with return value \"%1\".").arg(result.toString()),
+        result.isError() ? Log::Error : Log::Information);
+
     responseAPI->compile();
 
     responseAPI->deleteLater();

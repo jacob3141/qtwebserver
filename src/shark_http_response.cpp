@@ -27,7 +27,8 @@ namespace Shark {
 
 namespace Http {
 
-Response::Response() {
+Response::Response()
+    : Logger("Shark::Http::Response") {
     _statusCode = Http::Ok;
     _contentType = "text/html";
     _characterEncoding = Utf8;

@@ -30,6 +30,7 @@ namespace Shark {
 
 WebServiceThread::WebServiceThread(WebService &webService)
     : QThread(0),
+      Logger(QString("Shark:WebServiceThread (%1)").arg((long)this)),
       _webService(webService) {
     _webServiceThreadState = Idle;
 }
@@ -58,13 +59,18 @@ void WebServiceThread::serve(int socketHandle) {
 }
 
 void WebServiceThread::readClient() {
+    setWebServiceThreadState(ProcessingRequest);
     QTcpSocket* socket = (QTcpSocket*)sender();
     QString httpRequest;
     bool requestCompleted = false;
-    QTimer requestTimer;
-    requestTimer.setInterval(10000);
-    requestTimer.start();
 
+    QTimer requestTimer, responseTimer;
+    const int timeoutInterval = 10000;
+    requestTimer.setInterval(timeoutInterval);
+    responseTimer.setInterval(timeoutInterval);
+
+    // Request
+    requestTimer.start();
     while(requestTimer.isActive() > 0) {
         if(socket->canReadLine()) {
             QString line = socket->readLine();
@@ -75,19 +81,29 @@ void WebServiceThread::readClient() {
             }
         }
     }
+    int requestTimePassed = timeoutInterval - requestTimer.remainingTime();
+    log(QString("Received request within %1 ms.").arg(requestTimePassed));
 
+    // Response
+    responseTimer.start();
     if(requestCompleted) {
+        setWebServiceThreadState(ProcessingResponse);
         Http::Request request(httpRequest);
         Http::Response response;
         _webService.httpResponder()->respond(request, response);
         socket->write(response.toByteArray());
         socket->waitForBytesWritten(10000);
     }
+    int responseTimePassed = timeoutInterval - responseTimer.remainingTime();
+    log(QString("Generated and sent response within %1 ms.").arg(responseTimePassed));
 
+    // Close connection
     socket->close();
-    if (socket->state() == QTcpSocket::UnconnectedState) {
+    if(socket->state() == QTcpSocket::UnconnectedState) {
         delete socket;
     }
+
+    setWebServiceThreadState(Idle);
 }
 
 void WebServiceThread::discardClient() {

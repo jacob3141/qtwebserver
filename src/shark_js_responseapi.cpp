@@ -30,6 +30,7 @@ namespace Js {
 
 ResponseAPI::ResponseAPI(Shark::Engine& engine, Http::Response &response, QObject *parent)
     : QObject(parent),
+      Logger("Shark::Js::ResponseAPI"),
       _response(response),
       _engine(engine) {
     _responseBody = "";

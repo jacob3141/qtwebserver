@@ -20,6 +20,9 @@
 #ifndef SHARK_RESOURCECACHE_H
 #define SHARK_RESOURCECACHE_H
 
+// Own includes
+#include "shark_logger.h"
+
 // Qt includes
 #include <QString>
 #include <QFileSystemWatcher>
@@ -28,7 +31,7 @@
 
 namespace Shark {
 
-class ResourceCache : public QObject {
+class ResourceCache : public QObject, public Logger {
     Q_OBJECT
 public:
     enum CachingOption {

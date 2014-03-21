@@ -28,7 +28,8 @@
 namespace Shark {
 
 WebService::WebService()
-    : QTcpServer() {
+    : QTcpServer(),
+      Logger("Shark::WebService") {
 }
 
 WebService::~WebService() {
@@ -61,7 +62,11 @@ void WebService::initialize() {
     _nextRequestDelegatedTo = 0;
 
     // Listen
-    listen(QHostAddress::Any, _port);
+    if(listen(QHostAddress::Any, _port)) {
+        log(QString("Listening on port %1.").arg(_port));
+    } else {
+        log(QString("Could not open port %1.").arg(_port), Log::Error);
+    }
 }
 
 Http::Responder *WebService::httpResponder() {

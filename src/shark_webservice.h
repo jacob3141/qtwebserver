@@ -22,6 +22,7 @@
 
 // Own includes
 #include "shark_http_responder.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QTcpServer>
@@ -36,7 +37,7 @@ class WebServiceThread;
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class WebService : public QTcpServer {
+class WebService : public QTcpServer, public Logger {
     Q_OBJECT
 public:
     /**

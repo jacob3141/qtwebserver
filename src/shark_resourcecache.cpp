@@ -29,7 +29,8 @@
 namespace Shark {
 
 ResourceCache::ResourceCache(QString rootDirectory, QObject *parent)
-    : QObject(parent) {
+    : QObject(parent),
+      Logger("Shark::ResourceCache") {
     _rootDirectory = rootDirectory;
     index();
 
@@ -39,6 +40,7 @@ ResourceCache::ResourceCache(QString rootDirectory, QObject *parent)
 }
 
 void ResourceCache::updateCache(QString uniqueResourceIdentifier) {
+    log(QString("Updating cache for resource identifier \"%1\".").arg(uniqueResourceIdentifier));
     QString fileSystemPath = _rootDirectory + uniqueResourceIdentifier;
     QFile file(fileSystemPath);
     file.open(QFile::ReadOnly);
@@ -70,6 +72,8 @@ void ResourceCache::indexRecursively(QString directory) {
 QString ResourceCache::read(QString uniqueResourceIdentifier) {
     if(!_cache.contains(uniqueResourceIdentifier) || _cachingOptions & ResourceCache::Off) {
         updateCache(uniqueResourceIdentifier);
+    } else {
+        log(QString("Cache hit for resource \"%1\".").arg(uniqueResourceIdentifier));
     }
     return _cache[uniqueResourceIdentifier].contents;
 }

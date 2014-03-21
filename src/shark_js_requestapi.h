@@ -23,6 +23,7 @@
 // Own includes
 #include "shark_http_request.h"
 #include "shark_engine.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QObject>
@@ -33,7 +34,11 @@ namespace Shark {
 
 namespace Js {
 
-class RequestAPI : public QObject {
+/**
+ * @brief Exposure of an HTTP request into script space
+ * This object is used to expose the HTPP request into script space.
+ */
+class RequestAPI : public QObject, public Logger {
     Q_OBJECT
 public:
     RequestAPI(Shark::Engine& engine, Http::Request& request, QObject *parent = 0);

@@ -26,7 +26,8 @@ namespace Js {
 
 DomNode::DomNode(Engine &engine, QDomNode domNode, QObject *parent)
     : QObject(parent),
-      _engine(engine){
+      Logger("Shark::Js::DomNode"),
+      _engine(engine) {
     _domNode = domNode;
 }
 

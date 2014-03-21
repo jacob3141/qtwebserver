@@ -27,6 +27,7 @@ namespace Js {
 
 RequestAPI::RequestAPI(Shark::Engine& engine, Http::Request &request, QObject *parent)
     : QObject(parent),
+      Logger("Shark::Js::RequestAPI"),
       _request(request),
       _engine(engine) {
 }

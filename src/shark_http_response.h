@@ -22,6 +22,7 @@
 
 // Own includes
 #include "shark_http_statuscodes.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QByteArray>
@@ -35,8 +36,7 @@ namespace Http {
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class Response
-{
+class Response : public Logger {
 public:
     /**
      * @brief The CharacterEncoding enum

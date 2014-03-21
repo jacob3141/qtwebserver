@@ -36,8 +36,20 @@ Log* Log::instance() {
 
 void Log::log(QString name, QString message, EntryType entryType) {
     Q_UNUSED(entryType);
-    std::cout << "[" << name.toStdString() << "] "
-              << message.toStdString() << std::endl;
+    switch (entryType) {
+    case Information:
+        std::cout << "[" << name.toStdString() << "] "
+                  << message.toStdString() << std::endl;
+        break;
+    case Warning:
+        std::cout << "[" << name.toStdString() << "] "
+                  << message.toStdString() << std::endl;
+        break;
+    case Error:
+        std::cout << "\033[1;31m[" << name.toStdString() << "] "
+                  << message.toStdString() << "\033[0m" << std::endl;
+        break;
+    }
 }
 
 Log::Log() {

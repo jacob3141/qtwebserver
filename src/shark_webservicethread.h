@@ -20,12 +20,13 @@
 #ifndef SHARK_WEBSERVICETHREAD_H
 #define SHARK_WEBSERVICETHREAD_H
 
+// Own includes
+#include "shark_webservice.h"
+#include "shark_logger.h"
+
 // Qt includes
 #include <QThread>
 #include <QMutex>
-
-// Own includes
-#include "shark_webservice.h"
 
 namespace Shark {
 
@@ -34,7 +35,7 @@ namespace Shark {
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class WebServiceThread : public QThread {
+class WebServiceThread : public QThread, public Logger {
     Q_OBJECT
 public:
     /**

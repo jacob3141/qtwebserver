@@ -40,8 +40,9 @@ void Application::respond(Http::Request& request, Http::Response& response) {
     if(uri.endsWith("html") || uri.endsWith("htm")) {
         response.setBody(_resourceCache->read(uri));
     } else if(uri.endsWith(".js")) {
-        _engine->evaluate(_resourceCache->read(uri), request, response);
-
+        if(!_engine->evaluate(_resourceCache->read(uri), request, response)) {
+            log("Error processing the requested resource", Log::Error);
+        }
     } else {
         response.setBody(QString(HTML(
             <!DOCTYPE html>
@@ -50,7 +51,7 @@ void Application::respond(Http::Request& request, Http::Response& response) {
               <title>Shark Web Application Server</title>
              </head>
              <body>))
-                         + "<p>This resource is no supported.</p>" +
+                         + "<p>This resource is not supported.</p>" +
                          QString(HTML(
              </body>
             </html>
