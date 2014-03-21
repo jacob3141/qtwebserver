@@ -27,7 +27,7 @@
 namespace Shark {
 
 Application::Application(QString rootDirectory)
-    : Http::Responder() {
+    : Logger("Shark::Application"), Http::Responder() {
     _rootDirectory = rootDirectory;
     _engine = new Engine(this);
     _resourceCache = new ResourceCache(_rootDirectory);

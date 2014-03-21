@@ -20,6 +20,9 @@
 #ifndef SHARK_HTTP_REQUEST_H
 #define SHARK_HTTP_REQUEST_H
 
+// Own includes
+#include "shark_logger.h"
+
 // Qt includes
 #include <QString>
 #include <QMap>
@@ -33,7 +36,7 @@ namespace Http {
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class Request {
+class Request : public Logger {
 public:
     enum Method {
         Unknown,

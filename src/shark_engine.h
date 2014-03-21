@@ -24,6 +24,7 @@
 #include "shark_application.h"
 #include "shark_http_request.h"
 #include "shark_http_response.h"
+#include "shark_logger.h"
 
 // Qt includes
 #include <QJSEngine>
@@ -32,7 +33,7 @@
 
 namespace Shark {
 
-class Engine {
+class Engine : public Logger {
 public:
     Engine(Application *application);
 

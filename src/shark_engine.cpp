@@ -27,7 +27,8 @@
 
 namespace Shark {
 
-Engine::Engine(Application *application) {
+Engine::Engine(Application *application)
+    : Logger("Shark::Engine") {
     _application = application;
 }
 

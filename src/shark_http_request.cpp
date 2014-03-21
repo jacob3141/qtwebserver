@@ -27,7 +27,8 @@ namespace Shark {
 
 namespace Http {
 
-Request::Request(QString requestString) {
+Request::Request(QString requestString)
+    : Logger("Shark::Http::Request") {
     _requestString = requestString;
     _validRequest = true;
     _method = Unknown;
