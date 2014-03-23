@@ -24,6 +24,22 @@ namespace Shark {
 
 namespace Js {
 
+const QString DomNode::NodeType::Element = "element";
+const QString DomNode::NodeType::Attribute = "attribute";
+const QString DomNode::NodeType::Text = "text";
+const QString DomNode::NodeType::CDATASection = "cdata-section";
+const QString DomNode::NodeType::EntityReference = "entity-reference";
+const QString DomNode::NodeType::Entity = "entity";
+const QString DomNode::NodeType::ProcessingInstruction = "processing-instruction";
+const QString DomNode::NodeType::Comment = "comment";
+const QString DomNode::NodeType::Document = "document";
+const QString DomNode::NodeType::DocumentType = "document-type";
+const QString DomNode::NodeType::DocumentFragment = "document-fragment";
+const QString DomNode::NodeType::Notation = "notation";
+const QString DomNode::NodeType::Base = "base";
+const QString DomNode::NodeType::CharacterData = "character-data";
+const QString DomNode::NodeType::Unknown = "unknown";
+
 DomNode::DomNode(Engine &engine, QDomDocument& domDocument, QDomNode domNode, QObject *parent)
     : QObject(parent),
       Logger("Shark::Js::DomNode"),
@@ -262,50 +278,22 @@ QString DomNode::nodeName() {
 
 QString DomNode::nodeType() {
     switch(_domNode.nodeType()) {
-    case QDomNode::ElementNode:
-        return "element";
-        break;
-    case QDomNode::AttributeNode:
-        return "attribute";
-        break;
-    case QDomNode::TextNode:
-        return "text";
-        break;
-    case QDomNode::CDATASectionNode:
-        return "cdata-section";
-        break;
-    case QDomNode::EntityReferenceNode:
-        return "entity-reference";
-        break;
-    case QDomNode::EntityNode:
-        return "entity";
-        break;
-    case QDomNode::ProcessingInstructionNode:
-        return "processing-instruction";
-        break;
-    case QDomNode::CommentNode:
-        return "comment";
-        break;
-    case QDomNode::DocumentNode:
-        return "document";
-        break;
-    case QDomNode::DocumentTypeNode:
-        return "document-type";
-        break;
-    case QDomNode::DocumentFragmentNode:
-        return "document-fragment";
-        break;
-    case QDomNode::NotationNode:
-        return "notation";
-        break;
-    case QDomNode::BaseNode:
-        return "base";
-        break;
-    case QDomNode::CharacterDataNode:
-        return "character-data";
-        break;
+    case QDomNode::ElementNode: return NodeType::Element;
+    case QDomNode::AttributeNode: return NodeType::Attribute;
+    case QDomNode::TextNode: return NodeType::Text;
+    case QDomNode::CDATASectionNode: return NodeType::CDATASection;
+    case QDomNode::EntityReferenceNode: return NodeType::EntityReference;
+    case QDomNode::EntityNode: return NodeType::Entity;
+    case QDomNode::ProcessingInstructionNode: return NodeType::ProcessingInstruction;
+    case QDomNode::CommentNode: return NodeType::Comment;
+    case QDomNode::DocumentNode: return NodeType::Document;
+    case QDomNode::DocumentTypeNode: return NodeType::DocumentType;
+    case QDomNode::DocumentFragmentNode: return NodeType::DocumentFragment;
+    case QDomNode::NotationNode: return NodeType::Notation;
+    case QDomNode::BaseNode: return NodeType::Base;
+    case QDomNode::CharacterDataNode: return NodeType::CharacterData;
     }
-    return "unknown";
+    return NodeType::Unknown;
 }
 
 QJSValue DomNode::parentNode() {
@@ -334,8 +322,13 @@ QJSValue DomNode::nextSibling() {
 }
 
 QJSValue DomNode::attributes() {
-    /* TODO: Implement. */
-    return QJSValue();
+    QDomNamedNodeMap namedNodeMap = _domNode.attributes();
+    int count = namedNodeMap.count();
+    QJSValue attributesArray = _engine.createArray();
+    for(int index = 0; index < count; index++) {
+         attributesArray.setProperty(index, namedNodeMap.item(index).nodeName());
+    }
+    return attributesArray;
 }
 
 QJSValue DomNode::ownerDocument() {

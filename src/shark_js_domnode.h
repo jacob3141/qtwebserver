@@ -38,6 +38,25 @@ class DomNode : public QObject, public Logger {
 public:
     DomNode(Shark::Engine& engine, QDomDocument& domDocument, QDomNode domNode, QObject *parent = 0);
 
+    class NodeType {
+    public:
+        static const QString Element;
+        static const QString Attribute;
+        static const QString Text;
+        static const QString CDATASection;
+        static const QString EntityReference;
+        static const QString Entity;
+        static const QString ProcessingInstruction;
+        static const QString Comment;
+        static const QString Document;
+        static const QString DocumentType;
+        static const QString DocumentFragment;
+        static const QString Notation;
+        static const QString Base;
+        static const QString CharacterData;
+        static const QString Unknown;
+    };
+
 public slots:
     // Creating subelements
     /**
