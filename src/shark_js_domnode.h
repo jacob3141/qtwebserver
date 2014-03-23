@@ -40,24 +40,97 @@ public:
 
 public slots:
     // Creating subelements
+    /**
+     * Creates a new element node with the specified tag name below this
+     * node. The newly created node will be inserted after the last child
+     * node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createElementBelow(QString tagName);
+
+    /**
+     * Creates a new text node below this node. The newly created node will
+     * be inserted after the last child node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createTextBelow(QString data);
 
     // Creating elements before
+    /**
+     * Creates a new element node before this node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createElementBefore(QString tagName);
+
+    /**
+     * Creates a new text node before this node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createTextBefore(QString data);
 
     // Creating elements after
+    /**
+     * Creates a new element node after this node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createElementAfter(QString tagName);
+
+    /**
+     * Creates a new text node after this node.
+     * @param tagName The tag name.
+     * @returns a reference to the newly created node.
+     */
     QJSValue createTextAfter(QString data);
 
+    /** @returns all child elements. */
+    QJSValue elements();
+
+    /** @returns all child elements with the given tag name. */
     QJSValue elementsByTagName(QString tagName);
 
+    /** @returns all child elements with the given class name. */
+    QJSValue elementsByClass(QString className);
+
     // Classes
+    /**
+     * If this node is an element, makes sure it has the specified
+     * class.
+     * @param className The class name.
+     * @returns an object referencing the same node.
+     */
     QJSValue addClass(QString className);
+
+    /**
+     * If this node is an element, makes sure it does not have the
+     * the specified class.
+     * @param className The class name.
+     * @returns an object referencing the same node.
+     */
     QJSValue removeClass(QString className);
+
+    /**
+     * If this node is an element, makes sure it has the specified
+     * class if it does not have it already, otherweise makes sure
+     * it does not have the specified class.
+     * @param className The class name.
+     * @returns an object referencing the same node.
+     */
     QJSValue toggleClass(QString className);
+
+    /**
+     * Acts like addClass.
+     * @param className The class name.
+     * @returns an object referencing the same node.
+     */
     QJSValue withClass(QString className);
+
+    /** @returns true if this node is an element and has the specified
+     * class, false otherwise. */
     bool hasClass(QString className);
 
     // DOM read-only attributes

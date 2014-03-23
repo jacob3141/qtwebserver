@@ -92,6 +92,24 @@ QJSValue DomNode::createTextAfter(QString data) {
     return QJSValue::UndefinedValue;
 }
 
+QJSValue DomNode::elements() {
+    QList<QDomElement> searchResults;
+    QDomElement domElement = _domNode.firstChildElement();
+    while(domElement.isElement()) {
+        searchResults.append(domElement);
+        domElement = domElement.nextSiblingElement();
+    }
+
+    QJSValue searchResultsArray = _engine.createArray();
+    int index = 0;
+    foreach(QDomElement domElement, searchResults) {
+        searchResultsArray.setProperty(index, _engine.toJSValue(new DomNode(_engine, _domDocument, domElement)));
+        index++;
+    }
+
+    return searchResultsArray;
+}
+
 QJSValue DomNode::elementsByTagName(QString tagName) {
     QList<QDomElement> searchResults;
     QDomElement domElement = _domNode.firstChildElement(tagName);
@@ -105,6 +123,29 @@ QJSValue DomNode::elementsByTagName(QString tagName) {
     foreach(QDomElement domElement, searchResults) {
         searchResultsArray.setProperty(index, _engine.toJSValue(new DomNode(_engine, _domDocument, domElement)));
         index++;
+    }
+
+    return searchResultsArray;
+}
+
+QJSValue DomNode::elementsByClass(QString className) {
+    QList<QDomElement> searchResults;
+    QDomElement domElement = _domNode.firstChildElement();
+    while(domElement.isElement()) {
+        searchResults.append(domElement);
+        domElement = domElement.nextSiblingElement();
+    }
+
+    QJSValue searchResultsArray = _engine.createArray();
+    int index = 0;
+    foreach(QDomElement domElement, searchResults) {
+        DomNode *domNode = new DomNode(_engine, _domDocument, domElement);
+        if(domNode->hasClass(className)) {
+            searchResultsArray.setProperty(index, _engine.toJSValue(new DomNode(_engine, _domDocument, domElement)));
+            index++;
+        } else {
+            delete domNode;
+        }
     }
 
     return searchResultsArray;
