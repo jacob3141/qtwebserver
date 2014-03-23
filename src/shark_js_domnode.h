@@ -36,9 +36,23 @@ namespace Js {
 class DomNode : public QObject, public Logger {
     Q_OBJECT
 public:
-    DomNode(Shark::Engine& engine, QDomNode domNode, QObject *parent = 0);
+    DomNode(Shark::Engine& engine, QDomDocument& domDocument, QDomNode domNode, QObject *parent = 0);
 
 public slots:
+    // Creating subelements
+    QJSValue createElementUnder(QString tagName);
+    QJSValue createTextUnder(QString data);
+
+    // Creating elements before
+    QJSValue createElementBefore(QString tagName);
+    QJSValue createTextBefore(QString data);
+
+    // Creating elements after
+    QJSValue createElementAfter(QString tagName);
+    QJSValue createTextAfter(QString data);
+
+    QJSValue elementsByTagName(QString tagName);
+
 
     // DOM read-only attributes
     QString nodeName();
@@ -72,6 +86,7 @@ public slots:
 
 private:
     Shark::Engine& _engine;
+    QDomDocument& _domDocument;
     QDomNode _domNode;
 };
 

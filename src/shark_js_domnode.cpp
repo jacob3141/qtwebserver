@@ -24,11 +24,82 @@ namespace Shark {
 
 namespace Js {
 
-DomNode::DomNode(Engine &engine, QDomNode domNode, QObject *parent)
+DomNode::DomNode(Engine &engine, QDomDocument& domDocument, QDomNode domNode, QObject *parent)
     : QObject(parent),
       Logger("Shark::Js::DomNode"),
-      _engine(engine) {
+      _engine(engine),
+      _domDocument(domDocument) {
     _domNode = domNode;
+}
+
+QJSValue DomNode::createElementUnder(QString tagName) {
+    QDomElement element = _domDocument.createElement(tagName);
+    QDomNode node =_domNode.insertAfter(element, _domNode.lastChild());
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+}
+
+QJSValue DomNode::createTextUnder(QString data) {
+    QDomText text = _domDocument.createTextNode(data);
+    QDomNode node =_domNode.insertAfter(text, _domNode.lastChild());
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+}
+
+QJSValue DomNode::createElementBefore(QString tagName) {
+    if(!_domNode.parentNode().isNull()) {
+        QDomElement element = _domDocument.createElement(tagName);
+        QDomNode node =_domNode.parentNode().insertBefore(element, _domNode);
+        return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+}
+
+QJSValue DomNode::createTextBefore(QString data) {
+    if(!_domNode.parentNode().isNull()) {
+        QDomText text = _domDocument.createTextNode(data);
+        QDomNode node =_domNode.parentNode().insertBefore(text, _domNode);
+        return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+}
+
+QJSValue DomNode::createElementAfter(QString tagName) {
+    if(!_domNode.parentNode().isNull()) {
+        QDomElement element = _domDocument.createElement(tagName);
+        QDomNode node =_domNode.parentNode().insertAfter(element, _domNode);
+        return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+}
+
+QJSValue DomNode::createTextAfter(QString data) {
+    if(!_domNode.parentNode().isNull()) {
+        QDomText text = _domDocument.createTextNode(data);
+        QDomNode node =_domNode.parentNode().insertAfter(text, _domNode);
+        return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+}
+
+QJSValue DomNode::elementsByTagName(QString tagName) {
+    QList<QDomElement> searchResults;
+    QDomElement domElement = _domNode.firstChildElement(tagName);
+    while(domElement.isElement()) {
+        searchResults.append(domElement);
+        domElement = domElement.nextSiblingElement(tagName);
+    }
+
+    QJSValue searchResultsArray = _engine.createArray();
+    int index = 0;
+    foreach(QDomElement domElement, searchResults) {
+        searchResultsArray.setProperty(index, _engine.toJSValue(new DomNode(_engine, _domDocument, domElement)));
+        index++;
+    }
+
+    return searchResultsArray;
 }
 
 QString DomNode::nodeName() {
@@ -84,7 +155,7 @@ QString DomNode::nodeType() {
 }
 
 QJSValue DomNode::parentNode() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.parentNode()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.parentNode()));
 }
 
 QJSValue DomNode::childNodes() {
@@ -93,19 +164,19 @@ QJSValue DomNode::childNodes() {
 }
 
 QJSValue DomNode::firstChild() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.firstChild()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.firstChild()));
 }
 
 QJSValue DomNode::lastChild() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.lastChild()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.lastChild()));
 }
 
 QJSValue DomNode::previousSibling() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.previousSibling()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.previousSibling()));
 }
 
 QJSValue DomNode::nextSibling() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.nextSibling()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.nextSibling()));
 }
 
 QJSValue DomNode::attributes() {
@@ -114,7 +185,7 @@ QJSValue DomNode::attributes() {
 }
 
 QJSValue DomNode::ownerDocument() {
-    return _engine.toJSValue(new DomNode(_engine, _domNode.ownerDocument()));
+    return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode.ownerDocument()));
 }
 
 QString DomNode::namespaceURI() {

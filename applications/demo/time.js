@@ -17,9 +17,22 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-var doc	  = response.documentElement();
-var head  = doc.element('head');
-var body  = doc.element('body');
-var title = head.appendElement('title');
+var document = response.document();
+var head = document.elementsByTagName('head')[0];
+var body = document.elementsByTagName('body')[0];
 
+head
+.createElementUnder('title')
+.createTextUnder('The title');
+
+body
+.createElementUnder('p')
+.createTextUnder('This is a paragraph.');
+
+body
+.createElementUnder('p')
+.createTextUnder('This is another paragraph. ')
+.createTextAfter('And this text has been appended to the previous node.');					
+
+true;
 
