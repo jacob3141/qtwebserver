@@ -22,17 +22,20 @@ var head = document.elementsByTagName('head')[0];
 var body = document.elementsByTagName('body')[0];
 
 head
-.createElementUnder('title')
-.createTextUnder('The title');
+.createElementBelow('title')
+.createTextBelow('The title');
 
 body
-.createElementUnder('p')
-.createTextUnder('This is a paragraph.');
+.createElementBelow('p')
+.createTextBelow('This is a paragraph.');
 
 body
-.createElementUnder('p')
-.createTextUnder('This is another paragraph. ')
-.createTextAfter('And this text has been appended to the previous node.');					
+.createElementBelow('p')
+.createTextBelow('This is another paragraph. ')
+.createTextBelow('And this text has been appended to the previous node.');					
+
+body
+.createElementBelow('div').withClass('time');
 
 true;
 

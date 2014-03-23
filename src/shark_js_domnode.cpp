@@ -32,13 +32,13 @@ DomNode::DomNode(Engine &engine, QDomDocument& domDocument, QDomNode domNode, QO
     _domNode = domNode;
 }
 
-QJSValue DomNode::createElementUnder(QString tagName) {
+QJSValue DomNode::createElementBelow(QString tagName) {
     QDomElement element = _domDocument.createElement(tagName);
     QDomNode node =_domNode.insertAfter(element, _domNode.lastChild());
     return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
 }
 
-QJSValue DomNode::createTextUnder(QString data) {
+QJSValue DomNode::createTextBelow(QString data) {
     QDomText text = _domDocument.createTextNode(data);
     QDomNode node =_domNode.insertAfter(text, _domNode.lastChild());
     return _engine.toJSValue(new DomNode(_engine, _domDocument, node));
@@ -52,6 +52,8 @@ QJSValue DomNode::createElementBefore(QString tagName) {
     } else {
         // TODO: Find out how to throw an exception from C++ into JS
     }
+
+    return QJSValue::UndefinedValue;
 }
 
 QJSValue DomNode::createTextBefore(QString data) {
@@ -62,6 +64,8 @@ QJSValue DomNode::createTextBefore(QString data) {
     } else {
         // TODO: Find out how to throw an exception from C++ into JS
     }
+
+    return QJSValue::UndefinedValue;
 }
 
 QJSValue DomNode::createElementAfter(QString tagName) {
@@ -72,6 +76,8 @@ QJSValue DomNode::createElementAfter(QString tagName) {
     } else {
         // TODO: Find out how to throw an exception from C++ into JS
     }
+
+    return QJSValue::UndefinedValue;
 }
 
 QJSValue DomNode::createTextAfter(QString data) {
@@ -82,6 +88,8 @@ QJSValue DomNode::createTextAfter(QString data) {
     } else {
         // TODO: Find out how to throw an exception from C++ into JS
     }
+
+    return QJSValue::UndefinedValue;
 }
 
 QJSValue DomNode::elementsByTagName(QString tagName) {
@@ -100,6 +108,111 @@ QJSValue DomNode::elementsByTagName(QString tagName) {
     }
 
     return searchResultsArray;
+}
+
+QJSValue DomNode::addClass(QString className) {
+    if(_domNode.isElement()) {
+        if(className.split(QRegExp("\\s+"), QString::SkipEmptyParts).count() > 1) {
+            // TODO: Find out how to throw an exception from C++ into JS
+            // Invalid argument for class
+        } else {
+            QDomElement element = _domNode.toElement();
+
+            if(element.hasAttribute("class")) {
+                QString classString = element.attribute("class");
+                QStringList classStringList = classString.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+                if(!classStringList.contains(className)) {
+                    classStringList.append(className);
+                    element.setAttribute("class", classStringList.join(" "));
+                }
+            } else {
+                element.setAttribute("class", className);
+            }
+
+            return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode));
+        }
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+
+    return QJSValue::UndefinedValue;
+}
+
+QJSValue DomNode::removeClass(QString className) {
+    if(_domNode.isElement()) {
+        if(className.split(QRegExp("\\s+"), QString::SkipEmptyParts).count() > 1) {
+            // TODO: Find out how to throw an exception from C++ into JS
+            // Invalid argument for class
+        } else {
+            QDomElement element = _domNode.toElement();
+
+            if(element.hasAttribute("class")) {
+                QString classString = element.attribute("class");
+                QStringList classStringList = classString.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+                if(classStringList.contains(className)) {
+                    classStringList.removeAll(className);
+                    element.setAttribute("class", classStringList.join(" "));
+                }
+            }
+
+            return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode));
+        }
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+
+    return QJSValue::UndefinedValue;
+}
+
+QJSValue DomNode::toggleClass(QString className) {
+    if(_domNode.isElement()) {
+        if(className.split(QRegExp("\\s+"), QString::SkipEmptyParts).count() > 1) {
+            // TODO: Find out how to throw an exception from C++ into JS
+            // Invalid argument for class
+        } else {
+            if(hasClass(className)) {
+                removeClass(className);
+            } else {
+                addClass(className);
+            }
+            return _engine.toJSValue(new DomNode(_engine, _domDocument, _domNode));
+        }
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+
+    return QJSValue::UndefinedValue;
+}
+
+QJSValue DomNode::withClass(QString className) {
+    return addClass(className);
+}
+
+bool DomNode::hasClass(QString className) {
+    if(_domNode.isElement()) {
+        if(className.split(QRegExp("\\s+"), QString::SkipEmptyParts).count() > 1) {
+            // TODO: Find out how to throw an exception from C++ into JS
+            // Invalid argument for class
+        } else {
+            QDomElement element = _domNode.toElement();
+
+            if(element.hasAttribute("class")) {
+                QString classString = element.attribute("class");
+                QStringList classStringList = classString.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+                if(classStringList.contains(className)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    } else {
+        // TODO: Find out how to throw an exception from C++ into JS
+    }
+
+    return QJSValue::UndefinedValue;
 }
 
 QString DomNode::nodeName() {

@@ -40,8 +40,8 @@ public:
 
 public slots:
     // Creating subelements
-    QJSValue createElementUnder(QString tagName);
-    QJSValue createTextUnder(QString data);
+    QJSValue createElementBelow(QString tagName);
+    QJSValue createTextBelow(QString data);
 
     // Creating elements before
     QJSValue createElementBefore(QString tagName);
@@ -53,6 +53,12 @@ public slots:
 
     QJSValue elementsByTagName(QString tagName);
 
+    // Classes
+    QJSValue addClass(QString className);
+    QJSValue removeClass(QString className);
+    QJSValue toggleClass(QString className);
+    QJSValue withClass(QString className);
+    bool hasClass(QString className);
 
     // DOM read-only attributes
     QString nodeName();
