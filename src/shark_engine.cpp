@@ -44,18 +44,21 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
-    _scriptEngine.globalObject().setProperty("response", toJSValue(responseAPI));
-    _scriptEngine.globalObject().setProperty("request", toJSValue(requestAPI));
+    QJSValueList arguments;
+    arguments.append(toJSValue(requestAPI));
+    arguments.append(toJSValue(responseAPI));
 
     QJSValue result = _scriptEngine.evaluate(program);
-    log(QString("Evaluated JS with return value \"%1\".").arg(result.toString()),
-        result.isError() ? Log::Error : Log::Information);
+    _scriptEngine.globalObject().property("server_main").call(arguments);
+
+    if(result.isError()) {
+        log(QString("Evaluated JS with return value \"%1\".").arg(result.toString(), Log::Error));
+    }
 
     responseAPI->compile();
 
     responseAPI->deleteLater();
     requestAPI->deleteLater();
-
     return !result.isError();
 }
 

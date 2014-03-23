@@ -17,25 +17,28 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-var document = response.document();
-var head = document.elementsByTagName('head')[0];
-var body = document.elementsByTagName('body')[0];
+function server_main(request, response) {
+	var document = response.document();
+	var head = document.elementsByTagName('head')[0];
+	var body = document.elementsByTagName('body')[0];
 
-head
-.createElementBelow('title')
-.createTextBelow('The title');
+	head
+	.createElementBelow('title')
+	.createTextBelow('The title');
 
-body
-.createElementBelow('p')
-.createTextBelow('This is a paragraph.');
+	body
+	.createElementBelow('p')
+	.createTextBelow('Responding to request');
 
-body
-.createElementBelow('p')
-.createTextBelow('This is another paragraph. ')
-.createTextBelow('And this text has been appended to the previous node.');					
+	body
+	.createElementBelow('p')
+	.createTextBelow(request.requestString());
 
-body
-.createElementBelow('div').withClass('time');
+	body
+	.createElementBelow('div').withClass('time');
+}
 
-true;
+function client_main() {
+	var a = 2;
+}
 

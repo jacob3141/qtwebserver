@@ -61,6 +61,8 @@ public slots:
      */
     bool hasParameter(QString name);
 
+    QString requestString();
+
 private:
     Http::Request& _request;
     Shark::Engine& _engine;

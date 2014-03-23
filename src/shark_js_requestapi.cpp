@@ -48,6 +48,10 @@ bool RequestAPI::hasParameter(QString name) {
     return _request.availableQueryParameters().contains(name);
 }
 
+QString RequestAPI::requestString() {
+    return _request.requestString();
+}
+
 } // namespace Js
 
 } // namespace Shark
