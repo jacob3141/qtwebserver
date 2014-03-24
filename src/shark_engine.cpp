@@ -41,22 +41,40 @@ QJSValue Engine::createArray() {
 }
 
 bool Engine::evaluate(QString program, Http::Request &request, Http::Response &response) {
+    // Prepare APIs
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
+    QString serverSideJs = program;
+    QString clientSideJs = program;
+
+    serverSideJs.replace(QRegExp("@clientbegin.*@clientend"), "")
+                .replace(QRegExp("//[^\n]*\n"), "")
+                .replace(QRegExp("^\\s*\n"), "");
+    clientSideJs.replace(QRegExp("@serverbegin.*@serverend"), "")
+                .replace(QRegExp("//[^\n]*\n"), "")
+                .replace(QRegExp("^\\s*\n"), "");
+
+    // Dive into JS space and evaluate
     QJSValueList arguments;
     arguments.append(toJSValue(requestAPI));
     arguments.append(toJSValue(responseAPI));
+    QJSValue result = _scriptEngine.evaluate(serverSideJs);
 
-    QJSValue result = _scriptEngine.evaluate(program);
+    // Call the server side main function
     _scriptEngine.globalObject().property("server_main").call(arguments);
 
     if(result.isError()) {
         log(QString("Evaluated JS with return value \"%1\".").arg(result.toString(), Log::Error));
     }
 
-    responseAPI->compile();
+    // Add the client side script
+    responseAPI->addClientSideScript(clientSideJs);
 
+    // Serialize the DOM and set it as the body of the response
+    responseAPI->generateBodyFromDOM();
+
+    // Mark objects
     responseAPI->deleteLater();
     requestAPI->deleteLater();
     return !result.isError();

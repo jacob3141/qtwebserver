@@ -44,8 +44,9 @@ public:
     /**
      * Compiles the response to serialized data.
      */
-    void compile();
+    void generateBodyFromDOM();
 
+    void addClientSideScript(QString clientSideScript);
 public slots:
     /**
      * @returns the dom document.
@@ -57,6 +58,11 @@ private:
     QDomDocument *_responseDomDocument;
     Http::Response& _response;
     Shark::Engine& _engine;
+
+    QDomElement _htmlElement;
+    QDomElement _headElement;
+    QDomElement _bodyElement;
+    QDomElement _scriptElement;
 };
 
 } // namespace Js

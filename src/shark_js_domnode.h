@@ -113,7 +113,7 @@ public slots:
     QJSValue elementsByTagName(QString tagName);
 
     /** @returns all child elements with the given class name. */
-    QJSValue elementsByClass(QString className);
+    QJSValue elementsByClassName(QString className);
 
     // Classes
     /**

@@ -35,24 +35,35 @@ ResponseAPI::ResponseAPI(Shark::Engine& engine, Http::Response &response, QObjec
       _engine(engine) {
     _responseBody = "";
     _responseDomDocument = new QDomDocument("html");
-    QDomNode htmlElement = _responseDomDocument->createElement("html");
-    _responseDomDocument->appendChild(htmlElement);
 
-    QDomNode headElement = _responseDomDocument->createElement("head");
-    htmlElement.appendChild(headElement);
+    _htmlElement = _responseDomDocument->createElement("html");
+    _responseDomDocument->appendChild(_htmlElement);
 
-    QDomNode bodyElement = _responseDomDocument->createElement("body");
-    htmlElement.appendChild(bodyElement);
+    _headElement = _responseDomDocument->createElement("head");
+    _htmlElement.appendChild(_headElement);
+
+    _bodyElement = _responseDomDocument->createElement("body");
+    _bodyElement.setAttribute("onload", "client_main();");
+    _htmlElement.appendChild(_bodyElement);
+
+    _scriptElement = _responseDomDocument->createElement("script");
+    _scriptElement.setAttribute("type", "text/javascript");
+    _headElement.appendChild(_scriptElement);
 }
 
 ResponseAPI::~ResponseAPI() {
     delete _responseDomDocument;
 }
 
-void ResponseAPI::compile() {
+void ResponseAPI::generateBodyFromDOM() {
     // Do not confuse the response body with the html body.
     // The body of the response includes the whole html document.
     _response.setBody(_responseDomDocument->toString(4));
+}
+
+void ResponseAPI::addClientSideScript(QString clientSideScript) {
+    QDomText scriptText = _responseDomDocument->createTextNode(clientSideScript);
+    _scriptElement.appendChild(scriptText);
 }
 
 QJSValue ResponseAPI::document() {

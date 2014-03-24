@@ -17,6 +17,7 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+// @serverbegin
 function server_main(request, response) {
 	var document = response.document();
 	var head = document.elementsByTagName('head')[0];
@@ -35,10 +36,28 @@ function server_main(request, response) {
 	.createTextBelow(request.requestString());
 
 	body
-	.createElementBelow('div').withClass('time');
+	.createElementBelow('div').withClass('time')
+	.createTextBelow('This is the time.');
 }
+// @serverend
 
+// @clientbegin
 function client_main() {
-	var a = 2;
-}
+	function startTime() {
+		var today = new Date();
+		var h = padZeros(today.getHours());
+		var m = padZeros(today.getMinutes());
+		var s = padZeros(today.getSeconds());
+	
+		document.getElementsByClassName('time')[0].innerHTML = h + ":" + m + ":" + s;
+		
+		setTimeout(startTime, 1000);
+	}
 
+	function padZeros(i) {
+		return i;
+	}
+
+	startTime();
+}
+// @clientend

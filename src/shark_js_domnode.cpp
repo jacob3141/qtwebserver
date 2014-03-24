@@ -144,7 +144,7 @@ QJSValue DomNode::elementsByTagName(QString tagName) {
     return searchResultsArray;
 }
 
-QJSValue DomNode::elementsByClass(QString className) {
+QJSValue DomNode::elementsByClassName(QString className) {
     QList<QDomElement> searchResults;
     QDomElement domElement = _domNode.firstChildElement();
     while(domElement.isElement()) {
