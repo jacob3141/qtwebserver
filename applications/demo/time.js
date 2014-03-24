@@ -55,7 +55,7 @@ function client_main() {
 	}
 
 	function padZeros(i) {
-		return i;
+		return i < 10 ? ("0" + i) : i;
 	}
 
 	startTime();

@@ -58,12 +58,16 @@ ResponseAPI::~ResponseAPI() {
 void ResponseAPI::generateBodyFromDOM() {
     // Do not confuse the response body with the html body.
     // The body of the response includes the whole html document.
-    _response.setBody(_responseDomDocument->toString(4));
+    _response.setBody(_responseDomDocument->toString(2));
 }
 
 void ResponseAPI::addClientSideScript(QString clientSideScript) {
-    QDomText scriptText = _responseDomDocument->createTextNode(clientSideScript);
+    QDomText commentTextBefore = _responseDomDocument->createTextNode("\n//");
+    QDomText commentTextAfter = _responseDomDocument->createTextNode("\n");
+    QDomCDATASection scriptText = _responseDomDocument->createCDATASection(clientSideScript + "//");
+    _scriptElement.appendChild(commentTextBefore);
     _scriptElement.appendChild(scriptText);
+    _scriptElement.appendChild(commentTextAfter);
 }
 
 QJSValue ResponseAPI::document() {

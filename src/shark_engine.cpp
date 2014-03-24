@@ -69,7 +69,7 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     }
 
     // Add the client side script
-    responseAPI->addClientSideScript(clientSideJs);
+    responseAPI->addClientSideScript("\n" + clientSideJs);
 
     // Serialize the DOM and set it as the body of the response
     responseAPI->generateBodyFromDOM();
