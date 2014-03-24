@@ -49,6 +49,8 @@ void ResourceCache::updateCache(QString uniqueResourceIdentifier) {
         resource.contents = file.readAll();
         _cache[uniqueResourceIdentifier] = resource;
         file.close();
+    } else {
+        log(QString("Could not open file for read: \'%1\'.").arg(fileSystemPath), Log::Error);
     }
 }
 

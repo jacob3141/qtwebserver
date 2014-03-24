@@ -17,40 +17,6 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_APPLICATION_H
-#define SHARK_APPLICATION_H
+function common(x) {
 
-// Own includes
-#include "shark_http_responder.h"
-#include "shark_resourcecache.h"
-#include "shark_logger.h"
-
-// Qt includes
-#include <QString>
-
-namespace Shark {
-
-class Engine;
-
-/**
- * @brief The Application class
- */
-class Application : public Logger, public Http::Responder {
-public:
-    Application(QString rootDirectory);
-
-    /**
-     * @brief respond
-     * @param request
-     * @param response
-     */
-    void respond(Http::Request& request, Http::Response& response);
-
-private:
-    QString _rootDirectory;
-    Engine *_engine;
-};
-
-} // namespace Shark
-
-#endif // SHARK_APPLICATION_H
+}

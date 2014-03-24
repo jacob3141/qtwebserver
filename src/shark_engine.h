@@ -25,6 +25,7 @@
 #include "shark_http_request.h"
 #include "shark_http_response.h"
 #include "shark_logger.h"
+#include "shark_resourcecache.h"
 
 // Qt includes
 #include <QJSEngine>
@@ -35,7 +36,7 @@ namespace Shark {
 
 class Engine : public Logger {
 public:
-    Engine(Application *application);
+    Engine(QString rootDirectory);
 
     /**
      * Transfers the given QObject to script space. That means, that you will
@@ -48,9 +49,17 @@ public:
 
     QJSValue createArray();
 
-    bool evaluate(QString program, Http::Request& request, Http::Response& response);
+
+    bool evaluate(QString uri, Http::Request& request, Http::Response& response);
+
+    ResourceCache *resourceCache();
+
+protected:
+    void preprocess(QString &serverSideJs, QString &clientSideJs);
+    void replaceIncludes(QString &js);
 
 private:
+    ResourceCache *_resourceCache;
     Application *_application;
     QJSEngine _scriptEngine;
 };

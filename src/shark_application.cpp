@@ -29,8 +29,7 @@ namespace Shark {
 Application::Application(QString rootDirectory)
     : Logger("Shark::Application"), Http::Responder() {
     _rootDirectory = rootDirectory;
-    _engine = new Engine(this);
-    _resourceCache = new ResourceCache(_rootDirectory);
+    _engine = new Engine(_rootDirectory);
 }
 
 void Application::respond(Http::Request& request, Http::Response& response) {
@@ -38,9 +37,9 @@ void Application::respond(Http::Request& request, Http::Response& response) {
 
     // Deliver HTML sites directly from the cache
     if(uri.endsWith("html") || uri.endsWith("htm")) {
-        response.setBody(_resourceCache->read(uri));
+        response.setBody(_engine->resourceCache()->read(uri));
     } else if(uri.endsWith(".js")) {
-        if(!_engine->evaluate(_resourceCache->read(uri), request, response)) {
+        if(!_engine->evaluate(uri, request, response)) {
             log("Error processing the requested resource", Log::Error);
         }
     } else {

@@ -32,16 +32,13 @@ function server_main(request, response) {
 	.createTextBelow('Responding to request');
 
 	body
-	.createElementBelow('p')
-	.createTextBelow(request.requestString());
-
-	body
 	.createElementBelow('div').withClass('time')
 	.createTextBelow('This is the time.');
 }
 // @serverend
 
 // @clientbegin
+// @include {common.js}
 function client_main() {
 	function startTime() {
 		var today = new Date();

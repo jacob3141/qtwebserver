@@ -27,9 +27,9 @@
 
 namespace Shark {
 
-Engine::Engine(Application *application)
+Engine::Engine(QString rootDirectory)
     : Logger("Shark::Engine") {
-    _application = application;
+    _resourceCache = new ResourceCache(rootDirectory);
 }
 
 QJSValue Engine::toJSValue(QObject *object) {
@@ -40,20 +40,63 @@ QJSValue Engine::createArray() {
     return _scriptEngine.newArray();
 }
 
-bool Engine::evaluate(QString program, Http::Request &request, Http::Response &response) {
+void Engine::preprocess(QString& serverSideJs, QString& clientSideJs) {
+    // Remove client code in server side JS
+    serverSideJs.replace(QRegExp("@clientbegin.*@clientend"), "");
+
+    // Remove server code in client side JS
+    clientSideJs.replace(QRegExp("@serverbegin.*@serverend"), "");
+
+    // Expand include statements
+    replaceIncludes(serverSideJs);
+    replaceIncludes(clientSideJs);
+
+    // Remove comments and whitespace
+    serverSideJs.replace(QRegExp("//[^\n]*\n"), "")
+                .replace(QRegExp("^\\s*\n"), "");
+    clientSideJs.replace(QRegExp("//[^\n]*\n"), "")
+                .replace(QRegExp("^\\s*\n"), "");
+}
+
+void Engine::replaceIncludes(QString &js) {
+    QMap<QString, QString> replacements;
+    QRegExp regExp("//\\s*@include\\s+[^\n]*\n");
+    int position = 0;
+    int matchedLength = 0;
+    do {
+        position = regExp.indexIn(js, position);
+        matchedLength  = regExp.matchedLength();
+        if(position > 0) {
+            QString includeStatement = js.mid(position, matchedLength);
+            int firstBracketPosition = includeStatement.indexOf("{");
+            int secondBracketPosition = includeStatement.indexOf("}", firstBracketPosition);
+
+            QString includeURI = "/" + includeStatement.mid(firstBracketPosition + 1,
+                secondBracketPosition - firstBracketPosition - 1);
+
+            QString includeResource = _resourceCache->read(includeURI);
+            replaceIncludes(includeResource);
+            replacements[includeStatement] = includeResource;
+            position += matchedLength;
+        }
+    } while(position > 0);
+
+    QList<QString> keys = replacements.keys();
+    foreach(QString includeStatement, keys) {
+        js.replace(includeStatement, replacements[includeStatement]);
+    }
+}
+
+bool Engine::evaluate(QString uri, Http::Request &request, Http::Response &response) {
+    QString program = _resourceCache->read(uri);
+
     // Prepare APIs
     Js::ResponseAPI *responseAPI = new Js::ResponseAPI(*this, response);
     Js::RequestAPI *requestAPI = new Js::RequestAPI(*this, request);
 
     QString serverSideJs = program;
     QString clientSideJs = program;
-
-    serverSideJs.replace(QRegExp("@clientbegin.*@clientend"), "")
-                .replace(QRegExp("//[^\n]*\n"), "")
-                .replace(QRegExp("^\\s*\n"), "");
-    clientSideJs.replace(QRegExp("@serverbegin.*@serverend"), "")
-                .replace(QRegExp("//[^\n]*\n"), "")
-                .replace(QRegExp("^\\s*\n"), "");
+    preprocess(serverSideJs, clientSideJs);
 
     // Dive into JS space and evaluate
     QJSValueList arguments;
@@ -78,6 +121,11 @@ bool Engine::evaluate(QString program, Http::Request &request, Http::Response &r
     responseAPI->deleteLater();
     requestAPI->deleteLater();
     return !result.isError();
+}
+
+
+ResourceCache *Engine::resourceCache() {
+    return _resourceCache;
 }
 
 }
