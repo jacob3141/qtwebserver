@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -21,13 +21,11 @@
 #include <QStringBuilder>
 
 // Own includes
-#include "shark_http_response.h"
+#include "NetworkResponse.h"
 
 namespace Shark {
 
-namespace Http {
-
-Response::Response()
+NetworkResponse::NetworkResponse()
     : Logger("Shark::Http::Response") {
     _statusCode = Http::Ok;
     _contentType = "text/html";
@@ -35,7 +33,7 @@ Response::Response()
     _body = "";
 }
 
-QByteArray Response::toByteArray() {
+QByteArray NetworkResponse::toByteArray() {
     QString characterEncodingString = "";
     switch(_characterEncoding) {
         case Utf8: characterEncodingString = "utf-8"; break;
@@ -53,38 +51,36 @@ QByteArray Response::toByteArray() {
     }
 }
 
-Http::StatusCode Response::statusCode() {
+Http::StatusCode NetworkResponse::statusCode() {
     return _statusCode;
 }
 
-void Response::setStatusCode(Http::StatusCode statusCode) {
+void NetworkResponse::setStatusCode(Http::StatusCode statusCode) {
     _statusCode = statusCode;
 }
 
-QString Response::contentType() {
+QString NetworkResponse::contentType() {
     return _contentType;
 }
 
-void Response::setContentType(QString contentType) {
+void NetworkResponse::setContentType(QString contentType) {
     _contentType = contentType;
 }
 
-Response::CharacterEncoding Response::characterEncoding() {
+NetworkResponse::CharacterEncoding NetworkResponse::characterEncoding() {
     return _characterEncoding;
 }
 
-void Response::setCharacterEncoding(CharacterEncoding characterEncoding) {
+void NetworkResponse::setCharacterEncoding(CharacterEncoding characterEncoding) {
     _characterEncoding = characterEncoding;
 }
 
-QString Response::body() {
+QString NetworkResponse::body() {
     return _body;
 }
 
-void Response::setBody(QString body) {
+void NetworkResponse::setBody(QString body) {
     _body = body;
 }
-
-} // namespace Http
 
 } // namespace Shark

@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,11 +17,10 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTP_REQUEST_H
-#define SHARK_HTTP_REQUEST_H
+#pragma once
 
 // Own includes
-#include "shark_logger.h"
+#include "Logger.h"
 
 // Qt includes
 #include <QString>
@@ -29,14 +28,12 @@
 
 namespace Shark {
 
-namespace Http {
-
 /**
  * @brief The Request class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class Request : public Logger {
+class NetworkRequest : public Logger {
 public:
     enum Method {
         Unknown,
@@ -50,7 +47,7 @@ public:
         Connect
     };
 
-    Request(QString requestString);
+    NetworkRequest(QString requestString);
 
     /**
      * This method is used to indicate whether a request could not be
@@ -97,8 +94,5 @@ private:
     QMap<QString, QString> _queryParameters;
 };
 
-} // namspace Http
-
 } // namespace Shark
 
-#endif // SHARK_HTTP_REQUEST_H

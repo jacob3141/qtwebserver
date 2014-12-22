@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -18,19 +18,29 @@
 //
 
 // Own includes
-#include "shark_logger.h"
+#include "Application.h"
 
 namespace Shark {
 
-Logger::Logger(QString name) {
-    _name = name;
+Application::Application(QString rootDirectory)
+    : Logger("Shark::Application"), Http::Responder() {
+    _rootDirectory = rootDirectory;
 }
 
-Logger::~Logger() {
-}
+void Application::respond(NetworkRequest& request, NetworkResponse& response) {
+    Q_UNUSED(request);
 
-void Logger::log(QString message, Log::EntryType entryType) {
-    Log::instance()->log(_name, message, entryType);
+    response.setBody(QString(HTML(
+        <!DOCTYPE html>
+        <html>
+         <head>
+          <title>Shark Web Application Server</title>
+         </head>
+         <body>
+          <p>It works!</p>
+         </body>
+        </html>
+    )));
 }
 
 } // namespace Shark

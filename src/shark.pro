@@ -1,5 +1,5 @@
 #
-# Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+# Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 #
 # This file is part of Shark.
 #
@@ -21,7 +21,6 @@ QT += core network xml qml
 
 QT -= gui
 
-TARGET = ../bin/shark
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -30,35 +29,24 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    shark_webservice.cpp \
-    shark_webservicethread.cpp \
-    shark_application.cpp \
-    shark_resourcecache.cpp \
-    shark_engine.cpp \
-    shark_js_responseapi.cpp \
-    shark_http_request.cpp \
-    shark_http_response.cpp \
-    shark_http_statuscodes.cpp \
-    shark_js_requestapi.cpp \
-    shark_js_domnode.cpp \
-    shark_logger.cpp \
-    shark_log.cpp
+    NetworkResponse.cpp \
+    Application.cpp \
+    StatusCodes.cpp \
+    Log.cpp \
+    Logger.cpp \
+    NetworkService.cpp \
+    NetworkServiceThread.cpp \
+    NetworkRequest.cpp
 
 HEADERS += \
-    shark_webservice.h \
-    shark_webservicethread.h \
-    shark_application.h \
-    shark_resourcecache.h \
-    shark_engine.h \
-    shark_js_responseapi.h \
-    shark_http_request.h \
-    shark_http_responder.h \
-    shark_http_response.h \
-    shark_http_statuscodes.h \
-    shark_js_requestapi.h \
-    shark_js_domnode.h \
-    shark_logger.h \
-    shark_log.h
+    Application.h \
+    Responder.h \
+    Log.h \
+    Logger.h \
+    NetworkService.h \
+    NetworkResponse.h \
+    NetworkRequest.h \
+    StatusCodes.h \
+    NetworkServiceThread.h
 
-RESOURCES += \
-    web_resources.qrc
+RESOURCES +=

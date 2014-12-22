@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,26 +17,23 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTP_RESPONSE_H
-#define SHARK_HTTP_RESPONSE_H
+#pragma once
 
 // Own includes
-#include "shark_http_statuscodes.h"
-#include "shark_logger.h"
+#include "StatusCodes.h"
+#include "Logger.h"
 
 // Qt includes
 #include <QByteArray>
 
 namespace Shark {
 
-namespace Http {
-
 /**
  * @brief The Response class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class Response : public Logger {
+class NetworkResponse : public Logger {
 public:
     /**
      * @brief The CharacterEncoding enum
@@ -48,7 +45,7 @@ public:
     /**
      * @brief Constructor.
      */
-    Response();
+    NetworkResponse();
 
     /**
      * @brief Converts the response into a byte array. The resulting character
@@ -109,8 +106,4 @@ private:
     QString             _body;
 };
 
-} // namespace Http
-
 } // namespace Shark
-
-#endif // SHARK_HTTP_RESPONSE_H

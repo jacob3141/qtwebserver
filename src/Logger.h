@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,34 +17,26 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_LOG_H
-#define SHARK_LOG_H
+#pragma once
 
+// Own includes
+#include "Log.h"
+
+// Qt includes
 #include <QString>
 
 namespace Shark {
 
-class Logger;
-class Log {
-    friend class Logger;
+class Logger {
 public:
-    enum EntryType {
-        Information,
-        Warning,
-        Error
-    };
+    Logger(QString name);
+    virtual ~Logger();
 
-    static Log* instance();
-
-protected:
-    void log(QString name, QString message, EntryType entryType);
+    void log(QString message, Log::EntryType entryType = Log::Information);
 
 private:
-    Log();
-
-    static Log* _instance;
+    QString _name;
 };
 
 } // namespace Shark
 
-#endif // SHARK_LOG_H

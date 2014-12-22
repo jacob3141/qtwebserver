@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,12 +17,11 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTP_RESPONDER_H
-#define SHARK_HTTP_RESPONDER_H
+#pragma once
 
 // Own includes
-#include "shark_http_request.h"
-#include "shark_http_response.h"
+#include "NetworkRequest.h"
+#include "NetworkResponse.h"
 
 namespace Shark {
 
@@ -40,7 +39,7 @@ public:
      * @param request
      * @param response
      */
-    virtual void respond(Request& request, Response& response) {
+    virtual void respond(NetworkRequest& request, NetworkResponse& response) {
         Q_UNUSED(request);
         response.setBody(HTML(
             <!DOCTYPE html>
@@ -60,4 +59,3 @@ public:
 
 } // namespace Shark
 
-#endif // SHARK_HTTP_RESPONDER_H

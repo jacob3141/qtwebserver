@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,12 +17,11 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_SERVICE_H
-#define SHARK_SERVICE_H
+#pragma once
 
 // Own includes
-#include "shark_http_responder.h"
-#include "shark_logger.h"
+#include "Responder.h"
+#include "Logger.h"
 
 // Qt includes
 #include <QTcpServer>
@@ -30,25 +29,25 @@
 
 namespace Shark {
 
-class WebServiceThread;
+class NetworkServiceThread;
 
 /**
  * @brief The WebService class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class WebService : public QTcpServer, public Logger {
+class NetworkService : public QTcpServer, public Logger {
     Q_OBJECT
 public:
     /**
      * @brief WebService
      */
-    WebService();
+    NetworkService();
 
     /**
      * @brief ~WebService
      */
-    virtual ~WebService();
+    virtual ~NetworkService();
 
     /**
      * @brief initialize
@@ -88,9 +87,8 @@ private:
     int _threads;
 
     int _nextRequestDelegatedTo;
-    QVector<WebServiceThread*> _webServiceThreads;
+    QVector<NetworkServiceThread*> _NetworkServiceThreads;
 };
 
 } // namespace Shark
 
-#endif // SHARK_SERVICE_H

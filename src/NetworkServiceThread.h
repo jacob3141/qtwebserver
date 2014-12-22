@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,12 +17,11 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_WEBSERVICETHREAD_H
-#define SHARK_WEBSERVICETHREAD_H
+#pragma once
 
 // Own includes
-#include "shark_webservice.h"
-#include "shark_logger.h"
+#include "NetworkService.h"
+#include "Logger.h"
 
 // Qt includes
 #include <QThread>
@@ -31,38 +30,38 @@
 namespace Shark {
 
 /**
- * @brief The WebServiceThread class
+ * @brief The NetworkServiceThread class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class WebServiceThread : public QThread, public Logger {
+class NetworkServiceThread : public QThread, public Logger {
     Q_OBJECT
 public:
     /**
-     * @brief WebServiceThread
+     * @brief NetworkServiceThread
      * @param webService
      */
-    WebServiceThread(WebService& webService);
+    NetworkServiceThread(NetworkService& webService);
 
     /**
-     * @brief ~WebServiceThread
+     * @brief ~NetworkServiceThread
      */
-    virtual ~WebServiceThread();
+    virtual ~NetworkServiceThread();
 
     /**
-     * @brief The WebServiceThreadState enum
+     * @brief The NetworkServiceThreadState enum
      */
-    enum WebServiceThreadState {
+    enum NetworkServiceThreadState {
         Idle,
         ProcessingRequest,
         ProcessingResponse
     };
 
     /**
-     * @brief webServiceThreadState
+     * @brief NetworkServiceThreadState
      * @return
      */
-    WebServiceThreadState webServiceThreadState();
+    NetworkServiceThreadState networkServiceThreadState();
 
 public slots:
     /**
@@ -84,16 +83,15 @@ private slots:
 
 private:
     /**
-     * @brief setWebServiceThreadState
+     * @brief setNetworkServiceThreadState
      * @param state
      */
-    void setWebServiceThreadState(WebServiceThreadState state);
+    void setNetworkServiceThreadState(NetworkServiceThreadState state);
 
-    WebService&             _webService;
-    QMutex                  _webServiceStateMutex;
-    WebServiceThreadState   _webServiceThreadState;
+    NetworkService&             _networkService;
+    QMutex                  _networkServiceStateMutex;
+    NetworkServiceThreadState   _networkServiceThreadState;
 };
 
 } // namespace Shark
 
-#endif // SHARK_WEBSERVICETHREAD_H

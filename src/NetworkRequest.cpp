@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -18,16 +18,14 @@
 //
 
 // Own includes
-#include "shark_http_request.h"
+#include "NetworkRequest.h"
 
 // Qt includes
 #include <QStringList>
 
 namespace Shark {
 
-namespace Http {
-
-Request::Request(QString requestString)
+NetworkRequest::NetworkRequest(QString requestString)
     : Logger("Shark::Http::Request") {
     _requestString = requestString;
     _validRequest = true;
@@ -94,42 +92,40 @@ Request::Request(QString requestString)
     _httpVersion = requestLine.at(2);
 }
 
-bool Request::validRequest() {
+bool NetworkRequest::validRequest() {
     return _validRequest;
 }
 
-Request::Method Request::method() {
+NetworkRequest::Method NetworkRequest::method() {
     return _method;
 }
 
-QString Request::uniqueResourceIdentifier() {
+QString NetworkRequest::uniqueResourceIdentifier() {
     return _uniqueResourceIdentifier;
 }
 
-QString Request::httpVersion() {
+QString NetworkRequest::httpVersion() {
     return _httpVersion;
 }
 
-QString Request::requestString() {
+QString NetworkRequest::requestString() {
     return _requestString;
 }
 
-QString Request::queryString() {
+QString NetworkRequest::queryString() {
     return _queryString;
 }
 
-QStringList Request::availableQueryParameters() {
+QStringList NetworkRequest::availableQueryParameters() {
     return _queryParameters.keys();
 }
 
-QString Request::queryParameter(QString parameter) {
+QString NetworkRequest::queryParameter(QString parameter) {
     if(_queryParameters.contains(parameter)) {
         return _queryParameters[parameter];
     } else {
         return "";
     }
 }
-
-} // namespace Http
 
 } // namespace Shark

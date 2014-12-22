@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -22,49 +22,52 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
+#include <QNetworkRequest>
 
 // Own includes
-#include "shark_webservicethread.h"
+#include "NetworkServiceThread.h"
 
 namespace Shark {
 
-WebServiceThread::WebServiceThread(WebService &webService)
+NetworkServiceThread::NetworkServiceThread(NetworkService &webService)
     : QThread(0),
-      Logger(QString("Shark:WebServiceThread (%1)").arg((long)this)),
-      _webService(webService) {
-    _webServiceThreadState = Idle;
+      Logger(QString("Shark:NetworkServiceThread (%1)").arg((long)this)),
+      _networkService(webService) {
+    _networkServiceThreadState = Idle;
 }
 
-WebServiceThread::~WebServiceThread() {
+NetworkServiceThread::~NetworkServiceThread() {
 }
 
-WebServiceThread::WebServiceThreadState WebServiceThread::webServiceThreadState() {
-    _webServiceStateMutex.lock();
-    WebServiceThreadState state = _webServiceThreadState;
-    _webServiceStateMutex.unlock();
+NetworkServiceThread::NetworkServiceThreadState NetworkServiceThread::networkServiceThreadState() {
+    _networkServiceStateMutex.lock();
+    NetworkServiceThreadState state = _networkServiceThreadState;
+    _networkServiceStateMutex.unlock();
     return state;
 }
 
-void WebServiceThread::setWebServiceThreadState(WebServiceThread::WebServiceThreadState state) {
-    _webServiceStateMutex.lock();
-    _webServiceThreadState = state;
-    _webServiceStateMutex.unlock();
+void NetworkServiceThread::setNetworkServiceThreadState(NetworkServiceThread::NetworkServiceThreadState state) {
+    _networkServiceStateMutex.lock();
+    _networkServiceThreadState = state;
+    _networkServiceStateMutex.unlock();
 }
 
-void WebServiceThread::serve(int socketHandle) {
+void NetworkServiceThread::serve(int socketHandle) {
     QTcpSocket* tcpSocket = new QTcpSocket(this);
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readClient()));
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(discardClient()));
     tcpSocket->setSocketDescriptor(socketHandle);
 }
 
-void WebServiceThread::readClient() {
-    setWebServiceThreadState(ProcessingRequest);
+void NetworkServiceThread::readClient() {
+    setNetworkServiceThreadState(ProcessingRequest);
     QTcpSocket* socket = (QTcpSocket*)sender();
     QString httpRequest;
     bool requestCompleted = false;
 
     QTimer requestTimer, responseTimer;
+    requestTimer.setTimerType(Qt::PreciseTimer);
+    responseTimer.setTimerType(Qt::PreciseTimer);
     const int timeoutInterval = 10000;
     requestTimer.setInterval(timeoutInterval);
     responseTimer.setInterval(timeoutInterval);
@@ -81,16 +84,17 @@ void WebServiceThread::readClient() {
             }
         }
     }
+
     int requestTimePassed = timeoutInterval - requestTimer.remainingTime();
     log(QString("Received request within %1 ms.").arg(requestTimePassed));
 
     // Response
     responseTimer.start();
     if(requestCompleted) {
-        setWebServiceThreadState(ProcessingResponse);
-        Http::Request request(httpRequest);
-        Http::Response response;
-        _webService.httpResponder()->respond(request, response);
+        setNetworkServiceThreadState(ProcessingResponse);
+        NetworkRequest request(httpRequest);
+        NetworkResponse response;
+        _networkService.httpResponder()->respond(request, response);
         socket->write(response.toByteArray());
         socket->waitForBytesWritten(10000);
     }
@@ -103,10 +107,10 @@ void WebServiceThread::readClient() {
         delete socket;
     }
 
-    setWebServiceThreadState(Idle);
+    setNetworkServiceThreadState(Idle);
 }
 
-void WebServiceThread::discardClient() {
+void NetworkServiceThread::discardClient() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     socket->deleteLater();
 }

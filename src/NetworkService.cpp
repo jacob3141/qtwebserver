@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -22,20 +22,20 @@
 #include <QMetaObject>
 
 // Own includes
-#include "shark_webservice.h"
-#include "shark_webservicethread.h"
+#include "NetworkService.h"
+#include "NetworkServiceThread.h"
 
 namespace Shark {
 
-WebService::WebService()
+NetworkService::NetworkService()
     : QTcpServer(),
       Logger("Shark::WebService") {
 }
 
-WebService::~WebService() {
+NetworkService::~NetworkService() {
 }
 
-void WebService::initialize() {
+void NetworkService::initialize() {
     QSettings settings("../etc/shark.settings", QSettings::IniFormat);
     settings.beginGroup("service");
     _port = settings.value("port", 1337).toInt();
@@ -43,19 +43,19 @@ void WebService::initialize() {
     settings.endGroup();
 
     // Mark all active threads for deletion if already running
-    foreach(WebServiceThread* webServiceThread, _webServiceThreads) {
-        if(webServiceThread) {
-            webServiceThread->deleteLater();
+    foreach(NetworkServiceThread* networkServiceThread, _NetworkServiceThreads) {
+        if(networkServiceThread) {
+            networkServiceThread->deleteLater();
         }
     }
-    _webServiceThreads.clear();
+    _NetworkServiceThreads.clear();
 
     // Create the specified number of threads and store them in a set
     int thread = _threads;
     while(thread > 0) {
-        WebServiceThread* webServiceThread = new WebServiceThread(*this);
-        webServiceThread->start();
-        _webServiceThreads.append(webServiceThread);
+        NetworkServiceThread* networkServiceThread = new NetworkServiceThread(*this);
+        networkServiceThread->start();
+        _NetworkServiceThreads.append(networkServiceThread);
         thread--;
     }
 
@@ -69,22 +69,22 @@ void WebService::initialize() {
     }
 }
 
-Http::Responder *WebService::httpResponder() {
+Http::Responder *NetworkService::httpResponder() {
     return _httpResponder;
 }
 
-void WebService::setHttpResponder(Http::Responder *httpResponder) {
+void NetworkService::setHttpResponder(Http::Responder *httpResponder) {
     _httpResponder = httpResponder;
 }
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 void WebService::incomingConnection(int handle) {
 #else
-void WebService::incomingConnection(qintptr handle) {
+void NetworkService::incomingConnection(qintptr handle) {
 #endif
-    QMetaObject::invokeMethod(_webServiceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
+    QMetaObject::invokeMethod(_NetworkServiceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
     _nextRequestDelegatedTo++;
-    if(_nextRequestDelegatedTo >= _webServiceThreads.size()) {
+    if(_nextRequestDelegatedTo >= _NetworkServiceThreads.size()) {
         _nextRequestDelegatedTo = 0;
     }
 }

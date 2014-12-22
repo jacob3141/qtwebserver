@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "shark_http_statuscodes.h"
+#include "StatusCodes.h"
 
 namespace Shark {
 

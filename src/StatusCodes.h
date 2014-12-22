@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -17,8 +17,7 @@
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SHARK_HTTP_STATUSCODES_H
-#define SHARK_HTTP_STATUSCODES_H
+#pragma once
 
 // Qt includes
 #include <QMap>
@@ -107,4 +106,3 @@ QString reasonPhrase(Http::StatusCode statusCode);
 
 } // namespace Shark
 
-#endif // SHARK_HTTP_STATUSCODES_H
