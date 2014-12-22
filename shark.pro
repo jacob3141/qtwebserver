@@ -17,7 +17,7 @@
 # along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-QT += core network xml qml
+QT += core network xml
 
 QT -= gui
 
