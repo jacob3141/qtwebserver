@@ -17,18 +17,17 @@
 # along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
+TEMPLATE = lib
+
 QT += core network xml
 
 QT -= gui
 
-CONFIG   += console
+CONFIG   += console staticlib
 CONFIG   -= app_bundle
 
-TEMPLATE = app
-
-
 SOURCES += \
-    main.cpp \
     NetworkResponse.cpp \
     Application.cpp \
     StatusCodes.cpp \
