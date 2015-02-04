@@ -74,16 +74,19 @@ void NetworkServiceThread::readClient() {
 
     // Request
     requestTimer.start();
-    while(requestTimer.isActive() > 0) {
-        if(socket->canReadLine()) {
-            QString line = socket->readLine();
-            httpRequest.append(line);
-            if(line == "\r\n") {
-                requestCompleted = true;
-                break;
-            }
-        }
-    }
+    QByteArray text = socket->readAll();
+    httpRequest = QString(text);
+    requestCompleted = true;
+//    while(requestTimer.isActive() > 0) {
+//        if(socket->canReadLine()) {
+//            QString line = socket->readLine();
+//            httpRequest.append(line);
+//            if(line == "\r\n") {
+//                requestCompleted = true;
+//                break;
+//            }
+//        }
+//    }
 
     int requestTimePassed = timeoutInterval - requestTimer.remainingTime();
     log(QString("Received request within %1 ms.").arg(requestTimePassed));
