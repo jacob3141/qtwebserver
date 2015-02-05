@@ -25,41 +25,41 @@
 #include <QNetworkRequest>
 
 // Own includes
-#include "networkservicethread.h"
+#include "tcpserverthread.h"
 
 namespace WebServer {
 
-NetworkServiceThread::NetworkServiceThread(NetworkService &webService)
+TcpServerThread::TcpServerThread(MultithreadedTcpServer &multithreadedTcpServer)
     : QThread(0),
       Logger(QString("WebServer:NetworkServiceThread (%1)").arg((long)this)),
-      _networkService(webService) {
+      _multithreadedTcpServer(multithreadedTcpServer) {
     _networkServiceThreadState = Idle;
 }
 
-NetworkServiceThread::~NetworkServiceThread() {
+TcpServerThread::~TcpServerThread() {
 }
 
-NetworkServiceThread::NetworkServiceThreadState NetworkServiceThread::networkServiceThreadState() {
+TcpServerThread::NetworkServiceThreadState TcpServerThread::networkServiceThreadState() {
     _networkServiceStateMutex.lock();
     NetworkServiceThreadState state = _networkServiceThreadState;
     _networkServiceStateMutex.unlock();
     return state;
 }
 
-void NetworkServiceThread::setNetworkServiceThreadState(NetworkServiceThread::NetworkServiceThreadState state) {
+void TcpServerThread::setNetworkServiceThreadState(TcpServerThread::NetworkServiceThreadState state) {
     _networkServiceStateMutex.lock();
     _networkServiceThreadState = state;
     _networkServiceStateMutex.unlock();
 }
 
-void NetworkServiceThread::serve(int socketHandle) {
+void TcpServerThread::serve(int socketHandle) {
     QTcpSocket* tcpSocket = new QTcpSocket(this);
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readClient()));
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(discardClient()));
     tcpSocket->setSocketDescriptor(socketHandle);
 }
 
-void NetworkServiceThread::readClient() {
+void TcpServerThread::readClient() {
     setNetworkServiceThreadState(ProcessingRequest);
     QTcpSocket* socket = (QTcpSocket*)sender();
     QString httpRequest;
@@ -87,7 +87,7 @@ void NetworkServiceThread::readClient() {
         setNetworkServiceThreadState(ProcessingResponse);
         NetworkRequest request(httpRequest);
         NetworkResponse response;
-        _networkService.httpResponder()->respond(request, response);
+        _multithreadedTcpServer.httpResponder()->respond(request, response);
         socket->write(response.toByteArray());
         socket->waitForBytesWritten(10000);
     }
@@ -103,7 +103,7 @@ void NetworkServiceThread::readClient() {
     setNetworkServiceThreadState(Idle);
 }
 
-void NetworkServiceThread::discardClient() {
+void TcpServerThread::discardClient() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     socket->deleteLater();
 }

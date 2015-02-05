@@ -26,23 +26,23 @@ CONFIG   += staticlib
 
 SOURCES += \
     statuscodes.cpp \
-    networkservicethread.cpp \
-    networkservice.cpp \
     networkresponse.cpp \
     networkrequest.cpp \
     logger.cpp \
     log.cpp \
-    application.cpp
+    application.cpp \
+    multithreadedtcpserver.cpp \
+    tcpserverthread.cpp
 
 HEADERS += \
     statuscodes.h \
     responder.h \
-    networkservicethread.h \
-    networkservice.h \
     networkresponse.h \
     networkrequest.h \
     logger.h \
     log.h \
-    application.h
+    application.h \
+    multithreadedtcpserver.h \
+    tcpserverthread.h
 
 RESOURCES +=

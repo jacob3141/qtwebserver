@@ -20,7 +20,7 @@
 #pragma once
 
 // Own includes
-#include "networkservice.h"
+#include "multithreadedtcpserver.h"
 #include "logger.h"
 
 // Qt includes
@@ -34,19 +34,19 @@ namespace WebServer {
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class NetworkServiceThread : public QThread, public Logger {
+class TcpServerThread : public QThread, public Logger {
     Q_OBJECT
 public:
     /**
      * @brief NetworkServiceThread
      * @param webService
      */
-    NetworkServiceThread(NetworkService& webService);
+    TcpServerThread(MultithreadedTcpServer& multithreadedTcpServer);
 
     /**
      * @brief ~NetworkServiceThread
      */
-    virtual ~NetworkServiceThread();
+    virtual ~TcpServerThread();
 
     /**
      * @brief The NetworkServiceThreadState enum
@@ -88,8 +88,8 @@ private:
      */
     void setNetworkServiceThreadState(NetworkServiceThreadState state);
 
-    NetworkService&             _networkService;
-    QMutex                  _networkServiceStateMutex;
+    MultithreadedTcpServer&     _multithreadedTcpServer;
+    QMutex                      _networkServiceStateMutex;
     NetworkServiceThreadState   _networkServiceThreadState;
 };
 

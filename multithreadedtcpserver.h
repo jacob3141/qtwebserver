@@ -29,30 +29,32 @@
 
 namespace WebServer {
 
-class NetworkServiceThread;
+class TcpServerThread;
 
 /**
  * @brief The WebService class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class NetworkService : public QTcpServer, public Logger {
+class MultithreadedTcpServer : public QTcpServer, public Logger {
     Q_OBJECT
 public:
     /**
      * @brief WebService
      */
-    NetworkService();
+    MultithreadedTcpServer();
 
     /**
      * @brief ~WebService
      */
-    virtual ~NetworkService();
+    virtual ~MultithreadedTcpServer();
 
-    /**
-     * @brief initialize
-     */
-    void initialize();
+    bool close();
+    bool listen(const QHostAddress &address = QHostAddress::Any,
+                quint16 port = 0,
+                int numberOfThreads = 4);
+
+    int numberOfThreads();
 
     /**
      * @brief httpResponder
@@ -83,11 +85,9 @@ protected:
 
 private:
     Http::Responder *_httpResponder;
-    int _port;
-    int _threads;
 
     int _nextRequestDelegatedTo;
-    QVector<NetworkServiceThread*> _NetworkServiceThreads;
+    QVector<TcpServerThread*> _serviceThreads;
 };
 
 } // namespace WebServer
