@@ -20,8 +20,8 @@
 #pragma once
 
 // Own includes
-#include "Responder.h"
-#include "Logger.h"
+#include "responder.h"
+#include "logger.h"
 
 // Qt includes
 #include <QTcpServer>

@@ -19,29 +19,43 @@
 
 #pragma once
 
-#include <QString>
+// Own includes
+#include "networkrequest.h"
+#include "networkresponse.h"
 
 namespace Shark {
 
-class Logger;
-class Log {
-    friend class Logger;
+namespace Http {
+
+/**
+ * @brief The Responder class
+ * @author Jacob Dawid
+ * @date 23.11.2013
+ */
+class Responder {
 public:
-    enum EntryType {
-        Information,
-        Warning,
-        Error
-    };
-
-    static Log* instance();
-
-protected:
-    void log(QString name, QString message, EntryType entryType);
-
-private:
-    Log();
-
-    static Log* _instance;
+    /**
+     * @brief respond
+     * @param request
+     * @param response
+     */
+    virtual void respond(NetworkRequest& request, NetworkResponse& response) {
+        Q_UNUSED(request);
+        response.setBody(HTML(
+            <!DOCTYPE html>
+            <html>
+             <head>
+              <title>Shark Web Application Server</title>
+             </head>
+             <body>
+              <p>There has no responder been set up.</p>
+             </body>
+            </html>
+        ));
+    }
 };
 
+} // namespace Http
+
 } // namespace Shark
+

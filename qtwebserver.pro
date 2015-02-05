@@ -17,35 +17,32 @@
 # along with Shark.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 TEMPLATE = lib
 
 QT += core network xml
-
 QT -= gui
 
-CONFIG   += console staticlib
-CONFIG   -= app_bundle
+CONFIG   += staticlib
 
 SOURCES += \
-    NetworkResponse.cpp \
-    Application.cpp \
-    StatusCodes.cpp \
-    Log.cpp \
-    Logger.cpp \
-    NetworkService.cpp \
-    NetworkServiceThread.cpp \
-    NetworkRequest.cpp
+    statuscodes.cpp \
+    networkservicethread.cpp \
+    networkservice.cpp \
+    networkresponse.cpp \
+    networkrequest.cpp \
+    logger.cpp \
+    log.cpp \
+    application.cpp
 
 HEADERS += \
-    Application.h \
-    Responder.h \
-    Log.h \
-    Logger.h \
-    NetworkService.h \
-    NetworkResponse.h \
-    NetworkRequest.h \
-    StatusCodes.h \
-    NetworkServiceThread.h
+    statuscodes.h \
+    responder.h \
+    networkservicethread.h \
+    networkservice.h \
+    networkresponse.h \
+    networkrequest.h \
+    logger.h \
+    log.h \
+    application.h
 
 RESOURCES +=

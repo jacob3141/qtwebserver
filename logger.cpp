@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "Logger.h"
+#include "logger.h"
 
 namespace Shark {
 

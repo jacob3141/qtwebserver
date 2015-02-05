@@ -1,5 +1,5 @@
-/*
-// Copyright 2010-2014 Jacob Dawid <jacob.dawid@cybercatalyst.net>
+//
+// Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
 // This file is part of Shark.
 //
@@ -15,16 +15,38 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Shark.  If not, see <http://www.gnu.org/licenses/>.
-*/
+//
 
-/*
- * Compatiblity options in order to circumvent browser differences.
+#pragma once
+
+// Own includes
+#include "responder.h"
+#include "logger.h"
+
+// Qt includes
+#include <QString>
+
+namespace Shark {
+
+class Engine;
+
+/**
+ * @brief The Application class
  */
-* {
-    width: 		100%;
-    height: 		100%;
-    margin: 		0;
-    padding: 		0;
-    color: 		rgb(0, 0, 0);
-    background-color: 	rgb(255, 255, 255);
-}
+class Application : public Logger, public Http::Responder {
+public:
+    Application(QString rootDirectory);
+
+    /**
+     * @brief respond
+     * @param request
+     * @param response
+     */
+    void respond(NetworkRequest& request, NetworkResponse& response);
+
+protected:
+    QString _rootDirectory;
+};
+
+} // namespace Shark
+

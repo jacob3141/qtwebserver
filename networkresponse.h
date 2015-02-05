@@ -20,8 +20,8 @@
 #pragma once
 
 // Own includes
-#include "StatusCodes.h"
-#include "Logger.h"
+#include "statuscodes.h"
+#include "logger.h"
 
 // Qt includes
 #include <QByteArray>

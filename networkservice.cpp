@@ -22,8 +22,8 @@
 #include <QMetaObject>
 
 // Own includes
-#include "NetworkService.h"
-#include "NetworkServiceThread.h"
+#include "networkservice.h"
+#include "networkservicethread.h"
 
 namespace Shark {
 

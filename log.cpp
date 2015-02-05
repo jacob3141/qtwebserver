@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "Log.h"
+#include "log.h"
 
 // Standard includes
 #include <iostream>

@@ -21,7 +21,7 @@
 #include <QStringBuilder>
 
 // Own includes
-#include "NetworkResponse.h"
+#include "networkresponse.h"
 
 namespace Shark {
 

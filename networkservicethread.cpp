@@ -25,7 +25,7 @@
 #include <QNetworkRequest>
 
 // Own includes
-#include "NetworkServiceThread.h"
+#include "networkservicethread.h"
 
 namespace Shark {
 

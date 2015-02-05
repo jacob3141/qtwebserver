@@ -20,7 +20,7 @@
 #pragma once
 
 // Own includes
-#include "Logger.h"
+#include "logger.h"
 
 // Qt includes
 #include <QString>

@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "Application.h"
+#include "application.h"
 
 namespace Shark {
 

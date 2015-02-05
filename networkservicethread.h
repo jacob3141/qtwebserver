@@ -20,8 +20,8 @@
 #pragma once
 
 // Own includes
-#include "NetworkService.h"
-#include "Logger.h"
+#include "networkservice.h"
+#include "logger.h"
 
 // Qt includes
 #include <QThread>

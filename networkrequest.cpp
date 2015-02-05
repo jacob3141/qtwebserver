@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "NetworkRequest.h"
+#include "networkrequest.h"
 
 // Qt includes
 #include <QStringList>

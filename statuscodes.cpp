@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "StatusCodes.h"
+#include "statuscodes.h"
 
 namespace Shark {
 
