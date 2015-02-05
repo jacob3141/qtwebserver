@@ -30,7 +30,6 @@ SOURCES += \
     networkrequest.cpp \
     logger.cpp \
     log.cpp \
-    application.cpp \
     multithreadedtcpserver.cpp \
     tcpserverthread.cpp
 
@@ -41,7 +40,6 @@ HEADERS += \
     networkrequest.h \
     logger.h \
     log.h \
-    application.h \
     multithreadedtcpserver.h \
     tcpserverthread.h
 
