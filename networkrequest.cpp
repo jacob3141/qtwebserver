@@ -1,20 +1,20 @@
 //
 // Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
-// This file is part of Shark.
+// This file is part of QtWebServer.
 //
-// Shark is free software: you can redistribute it and/or modify
+// QtWebServer is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Shark is distributed in the hope that it will be useful,
+// QtWebServer is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Shark.  If not, see <http://www.gnu.org/licenses/>.
+// along with QtWebServer.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 // Own includes
@@ -23,10 +23,10 @@
 // Qt includes
 #include <QStringList>
 
-namespace Shark {
+namespace WebServer {
 
 NetworkRequest::NetworkRequest(QString requestString)
-    : Logger("Shark::Http::Request") {
+    : Logger("WebServer::Http::Request") {
     _requestString = requestString;
     _validRequest = true;
     _method = Unknown;
@@ -128,4 +128,4 @@ QString NetworkRequest::queryParameter(QString parameter) {
     }
 }
 
-} // namespace Shark
+} // namespace WebServer

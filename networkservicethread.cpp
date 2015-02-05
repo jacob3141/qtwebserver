@@ -1,20 +1,20 @@
 //
 // Copyright 2010-2015 Jacob Dawid <jacob@omg-it.works>
 //
-// This file is part of Shark.
+// This file is part of QtWebServer.
 //
-// Shark is free software: you can redistribute it and/or modify
+// QtWebServer is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Shark is distributed in the hope that it will be useful,
+// QtWebServer is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Shark.  If not, see <http://www.gnu.org/licenses/>.
+// along with QtWebServer.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 // Qt includes
@@ -27,11 +27,11 @@
 // Own includes
 #include "networkservicethread.h"
 
-namespace Shark {
+namespace WebServer {
 
 NetworkServiceThread::NetworkServiceThread(NetworkService &webService)
     : QThread(0),
-      Logger(QString("Shark:NetworkServiceThread (%1)").arg((long)this)),
+      Logger(QString("WebServer:NetworkServiceThread (%1)").arg((long)this)),
       _networkService(webService) {
     _networkServiceThreadState = Idle;
 }
@@ -77,16 +77,6 @@ void NetworkServiceThread::readClient() {
     QByteArray text = socket->readAll();
     httpRequest = QString(text);
     requestCompleted = true;
-//    while(requestTimer.isActive() > 0) {
-//        if(socket->canReadLine()) {
-//            QString line = socket->readLine();
-//            httpRequest.append(line);
-//            if(line == "\r\n") {
-//                requestCompleted = true;
-//                break;
-//            }
-//        }
-//    }
 
     int requestTimePassed = timeoutInterval - requestTimer.remainingTime();
     log(QString("Received request within %1 ms.").arg(requestTimePassed));
@@ -118,4 +108,4 @@ void NetworkServiceThread::discardClient() {
     socket->deleteLater();
 }
 
-} // namespace Shark
+} // namespace WebServer
