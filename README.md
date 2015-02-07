@@ -1,3 +1,5 @@
+[![Qt Pods](http://qt-pods.org/assets/logo.png "Qt Pods")](http://qt-pods.org)
+
 # QtWebServer
 
 QtWebServer is an attempt to create a Qt based web application server, ie. a web server that runs native C++/Qt code in order to deliver websites.
