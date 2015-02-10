@@ -26,7 +26,7 @@
 // Qt includes
 #include <QByteArray>
 
-namespace WebServer {
+namespace QtWebServer {
 
 /**
  * @brief The Response class

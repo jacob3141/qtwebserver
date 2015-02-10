@@ -20,7 +20,7 @@
 // Own includes
 #include "logger.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 Logger::Logger(QString name) {
     _name = name;

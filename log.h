@@ -22,7 +22,7 @@
 // Qt includes
 #include <QString>
 
-namespace WebServer {
+namespace QtWebServer {
 
 class Logger;
 class Log {

@@ -26,7 +26,7 @@
 #include <QString>
 #include <QMap>
 
-namespace WebServer {
+namespace QtWebServer {
 
 /**
  * @brief The Request class
@@ -35,18 +35,6 @@ namespace WebServer {
  */
 class NetworkRequest : public Logger {
 public:
-    enum Method {
-        Unknown,
-        Options,
-        Get,
-        Head,
-        Post,
-        Put,
-        Delete,
-        Trace,
-        Connect
-    };
-
     NetworkRequest(QString requestString);
 
     /**
@@ -60,7 +48,7 @@ public:
     /**
      * @returns the method for this request.
      */
-    Method method();
+    QString method();
 
     /**
      * @returns the URI for this request.
@@ -87,7 +75,7 @@ private:
     QString _requestString;
     QString _queryString;
     QString _fragment;
-    Method _method;
+    QString _method;
     QString _uniqueResourceIdentifier;
     QString _httpVersion;
     bool _validRequest;

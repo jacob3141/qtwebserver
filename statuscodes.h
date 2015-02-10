@@ -23,7 +23,7 @@
 #include <QMap>
 #include <QString>
 
-namespace WebServer {
+namespace QtWebServer {
 
 namespace Http {
 

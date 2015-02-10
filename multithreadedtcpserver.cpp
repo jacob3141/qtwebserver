@@ -25,11 +25,12 @@
 #include "multithreadedtcpserver.h"
 #include "tcpserverthread.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 MultithreadedTcpServer::MultithreadedTcpServer()
     : QTcpServer(),
       Logger("WebServer::WebService") {
+    _httpResponder = new Http::Responder();
 }
 
 MultithreadedTcpServer::~MultithreadedTcpServer() {

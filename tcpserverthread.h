@@ -27,7 +27,7 @@
 #include <QThread>
 #include <QMutex>
 
-namespace WebServer {
+namespace QtWebServer {
 
 /**
  * @brief The NetworkServiceThread class

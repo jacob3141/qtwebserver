@@ -23,7 +23,7 @@
 // Own includes
 #include "networkresponse.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 NetworkResponse::NetworkResponse()
     : Logger("WebServer::Http::Response") {

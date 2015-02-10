@@ -23,9 +23,9 @@
 // Standard includes
 #include <iostream>
 
-namespace WebServer {
+namespace QtWebServer {
 
-WebServer::Log* WebServer::Log::_instance;
+QtWebServer::Log* QtWebServer::Log::_instance;
 
 Log* Log::instance() {
     if(!_instance) {

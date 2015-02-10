@@ -23,13 +23,13 @@
 // Qt includes
 #include <QStringList>
 
-namespace WebServer {
+namespace QtWebServer {
 
 NetworkRequest::NetworkRequest(QString requestString)
     : Logger("WebServer::Http::Request") {
     _requestString = requestString;
     _validRequest = true;
-    _method = Unknown;
+    _method = "";
     _uniqueResourceIdentifier = "";
     _httpVersion = "";
 
@@ -52,27 +52,7 @@ NetworkRequest::NetworkRequest(QString requestString)
         return;
     }
 
-    QString methodString = requestLine.at(0).toLower();
-
-    if(methodString == "options") {
-        _method = Options;
-    } else if(methodString == "get") {
-        _method = Get;
-    } else if(methodString == "head") {
-        _method = Head;
-    } else if(methodString == "post") {
-        _method = Post;
-    } else if(methodString == "put") {
-        _method = Put;
-    } else if(methodString == "delete") {
-        _method = Delete;
-    } else if(methodString == "trace") {
-        _method = Trace;
-    } else if(methodString == "connect") {
-        _method = Connect;
-    } else {
-        _method = Unknown;
-    }
+    _method = requestLine.at(0).toLower();
 
     QStringList splittedURI = requestLine.at(1).split('?', QString::SkipEmptyParts);
     _queryString = "";
@@ -96,7 +76,7 @@ bool NetworkRequest::validRequest() {
     return _validRequest;
 }
 
-NetworkRequest::Method NetworkRequest::method() {
+QString NetworkRequest::method() {
     return _method;
 }
 

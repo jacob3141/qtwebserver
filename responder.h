@@ -23,7 +23,7 @@
 #include "networkrequest.h"
 #include "networkresponse.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 namespace Http {
 
@@ -45,7 +45,7 @@ public:
             <!DOCTYPE html>
             <html>
              <head>
-              <title>WebServer Web Application Server</title>
+              <title>QtWebServer Web Application Server</title>
              </head>
              <body>
               <p>There has no responder been set up.</p>

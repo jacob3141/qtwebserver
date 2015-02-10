@@ -20,7 +20,7 @@
 // Own includes
 #include "statuscodes.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 namespace Http {
 

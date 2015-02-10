@@ -27,7 +27,7 @@
 #include <QTcpServer>
 #include <QVector>
 
-namespace WebServer {
+namespace QtWebServer {
 
 class TcpServerThread;
 

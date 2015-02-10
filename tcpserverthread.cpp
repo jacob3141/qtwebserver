@@ -27,7 +27,7 @@
 // Own includes
 #include "tcpserverthread.h"
 
-namespace WebServer {
+namespace QtWebServer {
 
 TcpServerThread::TcpServerThread(MultithreadedTcpServer &multithreadedTcpServer)
     : QThread(0),
