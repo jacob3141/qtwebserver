@@ -87,7 +87,7 @@ void MultithreadedTcpServer::setHttpResponder(Http::Responder *httpResponder) {
 }
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-void WebService::incomingConnection(int handle) {
+void MultithreadedTcpServer::incomingConnection(int handle) {
 #else
 void MultithreadedTcpServer::incomingConnection(qintptr handle) {
 #endif
