@@ -45,4 +45,4 @@ private:
     static Log* _instance;
 };
 
-} // namespace WebServer
+} // namespace QtWebServer

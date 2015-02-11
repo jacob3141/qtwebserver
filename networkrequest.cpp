@@ -108,4 +108,4 @@ QString NetworkRequest::queryParameter(QString parameter) {
     }
 }
 
-} // namespace WebServer
+} // namespace QtWebServer

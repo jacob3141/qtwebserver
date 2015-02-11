@@ -33,4 +33,4 @@ void Logger::log(QString message, Log::EntryType entryType) {
     Log::instance()->log(_name, message, entryType);
 }
 
-} // namespace WebServer
+} // namespace QtWebServer

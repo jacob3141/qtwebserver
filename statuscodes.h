@@ -104,5 +104,5 @@ QString reasonPhrase(Http::StatusCode statusCode);
 
 } // namespace Http
 
-} // namespace WebServer
+} // namespace QtWebServer
 

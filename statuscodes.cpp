@@ -78,9 +78,9 @@ QString reasonPhrase(Http::StatusCode statusCode) {
             return reasonPhrasePairMap[i].reasonPhrase;
         }
     }
-    return "Unknown";
+    return "";
 }
 
 } // namespace Http
 
-} // namespace WebServer
+} // namespace QtWebServer

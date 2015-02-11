@@ -38,5 +38,5 @@ private:
     QString _name;
 };
 
-} // namespace WebServer
+} // namespace QtWebServer
 

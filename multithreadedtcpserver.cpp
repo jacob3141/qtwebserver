@@ -98,4 +98,4 @@ void MultithreadedTcpServer::incomingConnection(qintptr handle) {
     }
 }
 
-} // namespace WebServer
+} // namespace QtWebServer

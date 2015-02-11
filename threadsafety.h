@@ -17,42 +17,47 @@
 // along with QtWebServer.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// Own includes
-#include "log.h"
+#pragma once
 
-// Standard includes
-#include <iostream>
+#include <QMutex>
 
 namespace QtWebServer {
 
-QtWebServer::Log* QtWebServer::Log::_instance;
+class MutexLocker {
+public:
+    MutexLocker(QMutex& m) : _m(m) { _m.lock(); }
+    ~MutexLocker() { _m.unlock(); }
 
-Log* Log::instance() {
-    if(!_instance) {
-        _instance = new Log();
+private:
+    QMutex& _m;
+};
+
+template<typename T>
+class ThreadSafe {
+public:
+    ThreadSafe() {}
+    ~ThreadSafe() {}
+
+    void set(const T& other) {
+        MutexLocker m(_mutex); Q_UNUSED(m);
+        _r = other;
     }
-    return _instance;
-}
 
-void Log::log(QString name, QString message, EntryType entryType) {
-    Q_UNUSED(entryType);
-    switch (entryType) {
-    case Information:
-        std::cout << "[" << name.toStdString() << "] "
-                  << message.toStdString() << std::endl;
-        break;
-    case Warning:
-        std::cout << "[" << name.toStdString() << "] "
-                  << message.toStdString() << std::endl;
-        break;
-    case Error:
-        std::cout << "\033[1;31m[" << name.toStdString() << "] "
-                  << message.toStdString() << "\033[0m" << std::endl;
-        break;
+    T r() {
+        MutexLocker m(_mutex); Q_UNUSED(m);
+        return _r;
     }
-}
 
-Log::Log() {
-}
+    const ThreadSafe<T>& operator=(const T& other) {
+        set(other);
+        return *this;
+    }
+
+private:
+    ThreadSafe(const ThreadSafe&) {}
+
+    T _r;
+    QMutex _mutex;
+};
 
 } // namespace QtWebServer

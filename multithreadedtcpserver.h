@@ -90,5 +90,5 @@ private:
     QVector<TcpServerThread*> _serviceThreads;
 };
 
-} // namespace WebServer
+} // namespace QtWebServer
 

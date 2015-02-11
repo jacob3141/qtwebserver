@@ -83,4 +83,4 @@ void NetworkResponse::setBody(QString body) {
     _body = body;
 }
 
-} // namespace WebServer
+} // namespace QtWebServer

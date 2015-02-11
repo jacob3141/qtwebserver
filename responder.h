@@ -39,7 +39,7 @@ public:
      * @param request
      * @param response
      */
-    virtual void respond(NetworkRequest& request, NetworkResponse& response) {
+    virtual void respond(const NetworkRequest& request, NetworkResponse& response) {
         Q_UNUSED(request);
         response.setBody(HTML(
             <!DOCTYPE html>
@@ -57,5 +57,5 @@ public:
 
 } // namespace Http
 
-} // namespace WebServer
+} // namespace QtWebServer
 

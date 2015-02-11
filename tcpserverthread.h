@@ -22,6 +22,7 @@
 // Own includes
 #include "multithreadedtcpserver.h"
 #include "logger.h"
+#include "threadsafety.h"
 
 // Qt includes
 #include <QThread>
@@ -35,33 +36,25 @@ namespace QtWebServer {
  * @date 23.11.2013
  */
 class TcpServerThread : public QThread, public Logger {
+    friend class MultithreadedTcpServer;
     Q_OBJECT
 public:
-    /**
-     * @brief NetworkServiceThread
-     * @param webService
-     */
-    TcpServerThread(MultithreadedTcpServer& multithreadedTcpServer);
-
-    /**
-     * @brief ~NetworkServiceThread
-     */
-    virtual ~TcpServerThread();
-
     /**
      * @brief The NetworkServiceThreadState enum
      */
     enum NetworkServiceThreadState {
-        Idle,
-        ProcessingRequest,
-        ProcessingResponse
+        Idle,               /** Thread is idle and waiting to process the next client. */
+        ProcessingRequest,  /** Thread is busy reading the request. */
+        ProcessingResponse  /** Thread is buy generating a response. */
     };
+
+    virtual ~TcpServerThread();
 
     /**
      * @brief NetworkServiceThreadState
      * @return
      */
-    NetworkServiceThreadState networkServiceThreadState();
+    NetworkServiceThreadState state();
 
 public slots:
     /**
@@ -72,26 +65,28 @@ public slots:
 
 private slots:
     /**
-     * @brief readClient
+     * Answers a request from a client.
      */
-    void readClient();
+    void respondToClient();
+    void cleanup();
 
-    /**
-     * @brief discardClient
-     */
-    void discardClient();
+signals:
+    void stateChanged(NetworkServiceThreadState state);
 
 private:
+    TcpServerThread(MultithreadedTcpServer& multithreadedTcpServer);
+
     /**
      * @brief setNetworkServiceThreadState
      * @param state
      */
-    void setNetworkServiceThreadState(NetworkServiceThreadState state);
+    void setState(NetworkServiceThreadState state);
 
     MultithreadedTcpServer&     _multithreadedTcpServer;
-    QMutex                      _networkServiceStateMutex;
-    NetworkServiceThreadState   _networkServiceThreadState;
+
+    ThreadSafe<NetworkServiceThreadState> _networkServiceThreadState;
+
 };
 
-} // namespace WebServer
+} // namespace QtWebServer
 

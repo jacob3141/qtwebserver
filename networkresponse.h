@@ -106,4 +106,4 @@ private:
     QString             _body;
 };
 
-} // namespace WebServer
+} // namespace QtWebServer

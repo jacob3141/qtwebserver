@@ -39,28 +39,26 @@ TcpServerThread::TcpServerThread(MultithreadedTcpServer &multithreadedTcpServer)
 TcpServerThread::~TcpServerThread() {
 }
 
-TcpServerThread::NetworkServiceThreadState TcpServerThread::networkServiceThreadState() {
-    _networkServiceStateMutex.lock();
-    NetworkServiceThreadState state = _networkServiceThreadState;
-    _networkServiceStateMutex.unlock();
-    return state;
+TcpServerThread::NetworkServiceThreadState TcpServerThread::state() {
+    return _networkServiceThreadState.r();
 }
 
-void TcpServerThread::setNetworkServiceThreadState(TcpServerThread::NetworkServiceThreadState state) {
-    _networkServiceStateMutex.lock();
+void TcpServerThread::setState(TcpServerThread::NetworkServiceThreadState state) {
     _networkServiceThreadState = state;
-    _networkServiceStateMutex.unlock();
+    emit stateChanged(state);
 }
 
 void TcpServerThread::serve(int socketHandle) {
     QTcpSocket* tcpSocket = new QTcpSocket(this);
-    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readClient()));
-    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(discardClient()));
+    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(respondToClient()));
+    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(cleanup()));
     tcpSocket->setSocketDescriptor(socketHandle);
 }
 
-void TcpServerThread::readClient() {
-    setNetworkServiceThreadState(ProcessingRequest);
+void TcpServerThread::respondToClient() {
+    // Mark that we're processing.
+    setState(ProcessingRequest);
+
     QTcpSocket* socket = (QTcpSocket*)sender();
     QString httpRequest;
     bool requestCompleted = false;
@@ -84,7 +82,7 @@ void TcpServerThread::readClient() {
     // Response
     responseTimer.start();
     if(requestCompleted) {
-        setNetworkServiceThreadState(ProcessingResponse);
+        setState(ProcessingResponse);
         NetworkRequest request(httpRequest);
         NetworkResponse response;
         _multithreadedTcpServer.httpResponder()->respond(request, response);
@@ -100,12 +98,12 @@ void TcpServerThread::readClient() {
         delete socket;
     }
 
-    setNetworkServiceThreadState(Idle);
+    setState(Idle);
 }
 
-void TcpServerThread::discardClient() {
+void TcpServerThread::cleanup() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     socket->deleteLater();
 }
 
-} // namespace WebServer
+} // namespace QtWebServer

@@ -41,6 +41,7 @@ HEADERS += \
     logger.h \
     log.h \
     multithreadedtcpserver.h \
-    tcpserverthread.h
+    tcpserverthread.h \
+    threadsafety.h
 
 RESOURCES +=

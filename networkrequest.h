@@ -82,5 +82,5 @@ private:
     QMap<QString, QString> _queryParameters;
 };
 
-} // namespace WebServer
+} // namespace QtWebServer
 
