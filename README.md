@@ -4,6 +4,8 @@
 
 QtWebServer is an attempt to create a high-performance Qt based web application server, ie. a web server that runs native C++/Qt code in order to deliver websites.
 
+A perfect use-case would be providing a REST API for smaller services.
+
 ![Concept](https://github.com/cybercatalyst/qtwebserver/blob/master/qtwebserver.png "Concept")
 
 Within the Qt app, you set up resources and bind them to physical providers, for example files or a database content. A web application object holds information on how to match uri patterns to resources, which again is accessed by a multithreaded tcp server component. The multithreaded server is an extension of Qt's QTcpServer class.
