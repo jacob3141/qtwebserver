@@ -27,16 +27,33 @@ namespace QtWebServer {
 
 namespace Http {
 
-Resource::Resource(QObject *parent) :
+Resource::Resource(QString uniqueIdentifier,
+                   QObject *parent) :
     QObject(parent),
     Responder() {
+    _uniqueIdentifier = uniqueIdentifier;
 }
 
 bool Resource::match(QString uniqueIdentifier) {
     QStringList splittedUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
     QStringList splittedRequestedUri = uniqueIdentifier.split("/", QString::SkipEmptyParts);
 
-    return false;
+    int count = splittedRequestedUri.count();
+    if(splittedUri.count() != count) {
+        return false;
+    }
+
+    for(int depth = 0; depth < count; depth++) {
+        if(splittedUri.at(depth).startsWith("{") && splittedUri.at(depth).endsWith("}")) {
+            continue;
+        }
+
+        if(splittedUri.at(depth) != splittedRequestedUri.at(depth)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 QString Resource::uniqueIdentifier() {

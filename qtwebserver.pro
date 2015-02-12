@@ -33,7 +33,8 @@ SOURCES += \
     tcp/tcpserverthread.cpp \
     misc/log.cpp \
     misc/logger.cpp \
-    http/httpresource.cpp
+    http/httpresource.cpp \
+    http/httpiodeviceresource.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -47,6 +48,7 @@ HEADERS += \
     misc/threadsafety.h \
     misc/logger.h \
     misc/log.h \
-    http/httpresource.h
+    http/httpresource.h \
+    http/httpiodeviceresource.h
 
 RESOURCES +=

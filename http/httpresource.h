@@ -36,7 +36,8 @@ class Resource :
     public Responder {
     Q_OBJECT
 public:
-    Resource(QObject *parent = 0);
+    Resource(QString uniqueIdentifier,
+             QObject *parent = 0);
 
     /**
      * Resource matching method. The default implementation matches
@@ -47,7 +48,21 @@ public:
      */
     virtual bool match(QString uniqueIdentifier);
 
+    /**
+     * The default uri matcher ignores uri parts embraced with "{" and "}",
+     * so you can refer to them as uri paramters later. For example:
+     *  /service/{account}/{id}
+     * will match
+     *  /service/user1/23
+     *  /service/user4/29
+     * @returns the unique resource identifier for this resource.
+     */
     QString uniqueIdentifier();
+
+    /**
+     * Sets the unique resource identifier for this resource.
+     * @param uniqueIdentifer
+     */
     void setUniqueIdentifier(QString uniqueIdentifer);
 
 private:

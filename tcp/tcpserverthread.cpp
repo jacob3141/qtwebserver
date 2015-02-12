@@ -76,9 +76,10 @@ void ServerThread::respondToClient() {
     socket->waitForBytesWritten(timeoutMSec);
     socket->close();
     socket->deleteLater();
-    timer.stop();
 
     int timePassed = timeoutMSec - timer.remainingTime();
+    timer.stop();
+
     log(QString("Generated and sent response within %1 ms.").arg(timePassed));
 
     setState(NetworkServiceThreadStateIdle);
