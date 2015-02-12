@@ -10,6 +10,33 @@ Within the Qt app, you set up resources and bind them to physical providers, for
 
 # Installation and usage
 
+```cpp
+#include <QCoreApplication>
+#include <QFile>
+
+#include "tcp/tcpmultithreadedserver.h"
+#include "http/httpwebengine.h"
+#include "http/httpiodeviceresource.h"
+
+using namespace QtWebServer;
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    Tcp::MultithreadedServer s;
+    Http::WebEngine w;
+
+    w.addResource(new Http::IODeviceResource(
+                      "/test",
+                      new QFile("/home/jacob/text.html")));
+
+    s.setResponder(&w);
+    s.listen(QHostAddress::Any, 3000);
+    return a.exec();
+}
+```
+
 You can either integrate QtWebServer into your existing application or build a whole standalone web application. There is no distinction between the webserver and the web application, you literally link your web application with your website.
 
 Installation via qt-pods is perfectly suited for this use-case. You can update your QtWebServer version at any time and switch back flawlessly, since it will be embedded as a git submodule. It is not recommended to plain copy the QtWebServer code into your target application. In order to learn more about qt-pods, see here:
