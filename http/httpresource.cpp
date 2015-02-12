@@ -64,6 +64,14 @@ void Resource::setUniqueIdentifier(QString uniqueIdentifer) {
     _uniqueIdentifier = uniqueIdentifer;
 }
 
+QString Resource::contentType() {
+    return _contentType.r();
+}
+
+void Resource::setContentType(QString contentType) {
+    _contentType = contentType;
+}
+
 } // namespace Http
 
 } // namespace QtWebServer

@@ -32,6 +32,8 @@ IODeviceResource::IODeviceResource(QString uniqueIdentifier,
     if(_ioDevice) {
         _ioDevice->setParent(this);
     }
+
+    setContentType("text/plain");
 }
 
 IODeviceResource::~IODeviceResource() {
@@ -44,7 +46,7 @@ void IODeviceResource::respond(const Http::Request& request, Response& response)
 
     if(request.method() == "get") {
         response.setCharacterEncoding(Response::Utf8);
-        response.setContentType("text/plain");
+        response.setContentType(contentType());
 
         _ioDevice->open(QIODevice::ReadOnly);
         if(_ioDevice->isOpen()) {

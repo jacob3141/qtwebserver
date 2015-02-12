@@ -65,8 +65,13 @@ public:
      */
     void setUniqueIdentifier(QString uniqueIdentifer);
 
+    QString contentType();
+
+    void setContentType(QString contentType);
+
 private:
     ThreadSafe<QString> _uniqueIdentifier;
+    ThreadSafe<QString> _contentType;
 };
 
 } // namespace Http
