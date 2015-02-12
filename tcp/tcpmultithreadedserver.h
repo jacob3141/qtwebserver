@@ -20,8 +20,9 @@
 #pragma once
 
 // Own includes
-#include "responder.h"
-#include "logger.h"
+#include "tcpresponder.h"
+
+#include "misc/logger.h"
 
 // Qt includes
 #include <QTcpServer>
@@ -29,25 +30,27 @@
 
 namespace QtWebServer {
 
-class TcpServerThread;
+namespace Tcp {
+
+class ServerThread;
 
 /**
  * @brief The WebService class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class MultithreadedTcpServer : public QTcpServer, public Logger {
+class MultithreadedServer : public QTcpServer, public Logger {
     Q_OBJECT
 public:
     /**
      * @brief WebService
      */
-    MultithreadedTcpServer();
+    MultithreadedServer();
 
     /**
      * @brief ~WebService
      */
-    virtual ~MultithreadedTcpServer();
+    virtual ~MultithreadedServer();
 
     bool close();
     bool listen(const QHostAddress &address = QHostAddress::Any,
@@ -60,13 +63,13 @@ public:
      * @brief httpResponder
      * @return
      */
-    Http::Responder *httpResponder();
+    Responder *responder();
 
     /**
      * @brief setHttpResponder
      * @param httpResponder
      */
-    void setHttpResponder(Http::Responder *httpResponder);
+    void setResponder(Responder *responder);
 
 protected:
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -84,11 +87,13 @@ protected:
 #endif
 
 private:
-    Http::Responder *_httpResponder;
+    Responder *_responder;
 
     int _nextRequestDelegatedTo;
-    QVector<TcpServerThread*> _serviceThreads;
+    QVector<ServerThread*> _serviceThreads;
 };
+
+} // namespace Tcp
 
 } // namespace QtWebServer
 

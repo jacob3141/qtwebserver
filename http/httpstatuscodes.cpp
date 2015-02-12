@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "statuscodes.h"
+#include "httpstatuscodes.h"
 
 namespace QtWebServer {
 

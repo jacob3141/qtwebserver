@@ -20,7 +20,7 @@
 #pragma once
 
 // Own includes
-#include "logger.h"
+#include "misc/logger.h"
 
 // Qt includes
 #include <QString>
@@ -28,14 +28,11 @@
 
 namespace QtWebServer {
 
-/**
- * @brief The Request class
- * @author Jacob Dawid
- * @date 23.11.2013
- */
-class NetworkRequest : public Logger {
+namespace Http {
+
+class Request : public Logger {
 public:
-    NetworkRequest(QString requestString);
+    Request(QString requestString);
 
     /**
      * This method is used to indicate whether a request could not be
@@ -43,33 +40,25 @@ public:
      * using any other methods.
      * @returns true, if the request has been valid, false otherwise.
      */
-    bool validRequest();
+    bool valid() const;
 
-    /**
-     * @returns the method for this request.
-     */
-    QString method();
+    /** @returns the method for this request. */
+    QString method() const;
 
-    /**
-     * @returns the URI for this request.
-     */
-    QString uniqueResourceIdentifier();
+    /** @returns the URI for this request. */
+    QString uniqueResourceIdentifier() const;
 
-    /**
-     * @returns the HTTP version for this request.
-     */
-    QString httpVersion();
+    /** @returns the HTTP version for this request. */
+    QString version() const;
 
-    /**
-     * @returns the original request string.
-     */
-    QString requestString();
+    /** returns the original request string. */
+    QString requestString() const;
 
-    QString queryString();
+    QString queryString() const;
 
-    QStringList availableQueryParameters();
+    QStringList availableParameters() const;
 
-    QString queryParameter(QString parameter);
+    QString parameter(QString parameter) const;
 
 private:
     QString _requestString;
@@ -77,10 +66,12 @@ private:
     QString _fragment;
     QString _method;
     QString _uniqueResourceIdentifier;
-    QString _httpVersion;
-    bool _validRequest;
-    QMap<QString, QString> _queryParameters;
+    QString _version;
+    bool _valid;
+    QMap<QString, QString> _parameters;
 };
+
+}
 
 } // namespace QtWebServer
 

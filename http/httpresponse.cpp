@@ -21,11 +21,13 @@
 #include <QStringBuilder>
 
 // Own includes
-#include "networkresponse.h"
+#include "httpresponse.h"
 
 namespace QtWebServer {
 
-NetworkResponse::NetworkResponse()
+namespace Http {
+
+Response::Response()
     : Logger("WebServer::Http::Response") {
     _statusCode = Http::Ok;
     _contentType = "text/html";
@@ -33,7 +35,7 @@ NetworkResponse::NetworkResponse()
     _body = "";
 }
 
-QByteArray NetworkResponse::toByteArray() {
+QByteArray Response::toByteArray() {
     QString characterEncodingString = "";
     switch(_characterEncoding) {
         case Utf8: characterEncodingString = "utf-8"; break;
@@ -51,36 +53,38 @@ QByteArray NetworkResponse::toByteArray() {
     }
 }
 
-Http::StatusCode NetworkResponse::statusCode() {
+Http::StatusCode Response::statusCode() {
     return _statusCode;
 }
 
-void NetworkResponse::setStatusCode(Http::StatusCode statusCode) {
+void Response::setStatusCode(Http::StatusCode statusCode) {
     _statusCode = statusCode;
 }
 
-QString NetworkResponse::contentType() {
+QString Response::contentType() {
     return _contentType;
 }
 
-void NetworkResponse::setContentType(QString contentType) {
+void Response::setContentType(QString contentType) {
     _contentType = contentType;
 }
 
-NetworkResponse::CharacterEncoding NetworkResponse::characterEncoding() {
+Response::CharacterEncoding Response::characterEncoding() {
     return _characterEncoding;
 }
 
-void NetworkResponse::setCharacterEncoding(CharacterEncoding characterEncoding) {
+void Response::setCharacterEncoding(CharacterEncoding characterEncoding) {
     _characterEncoding = characterEncoding;
 }
 
-QString NetworkResponse::body() {
+QString Response::body() {
     return _body;
 }
 
-void NetworkResponse::setBody(QString body) {
+void Response::setBody(QString body) {
     _body = body;
 }
+
+} // namespace Http
 
 } // namespace QtWebServer

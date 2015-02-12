@@ -17,45 +17,36 @@
 // along with QtWebServer.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#pragma once
-
 // Own includes
-#include "networkrequest.h"
-#include "networkresponse.h"
+#include "httpresource.h"
+
+// Qt includes
+#include <QStringList>
 
 namespace QtWebServer {
 
 namespace Http {
 
-/**
- * @brief The Responder class
- * @author Jacob Dawid
- * @date 23.11.2013
- */
-class Responder {
-public:
-    /**
-     * @brief respond
-     * @param request
-     * @param response
-     */
-    virtual void respond(const NetworkRequest& request, NetworkResponse& response) {
-        Q_UNUSED(request);
-        response.setBody(HTML(
-            <!DOCTYPE html>
-            <html>
-             <head>
-              <title>QtWebServer Web Application Server</title>
-             </head>
-             <body>
-              <p>There has no responder been set up.</p>
-             </body>
-            </html>
-        ));
-    }
-};
+Resource::Resource(QObject *parent) :
+    QObject(parent),
+    Responder() {
+}
+
+bool Resource::match(QString uniqueIdentifier) {
+    QStringList splittedUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
+    QStringList splittedRequestedUri = uniqueIdentifier.split("/", QString::SkipEmptyParts);
+
+    return false;
+}
+
+QString Resource::uniqueIdentifier() {
+    return _uniqueIdentifier.r();
+}
+
+void Resource::setUniqueIdentifier(QString uniqueIdentifer) {
+    _uniqueIdentifier = uniqueIdentifer;
+}
 
 } // namespace Http
 
 } // namespace QtWebServer
-

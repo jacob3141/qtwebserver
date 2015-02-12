@@ -20,20 +20,22 @@
 #pragma once
 
 // Own includes
-#include "statuscodes.h"
-#include "logger.h"
+#include "httpstatuscodes.h"
+
+#include "misc/logger.h"
 
 // Qt includes
 #include <QByteArray>
 
 namespace QtWebServer {
 
+namespace Http {
 /**
  * @brief The Response class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class NetworkResponse : public Logger {
+class Response : public Logger {
 public:
     /**
      * @brief The CharacterEncoding enum
@@ -45,7 +47,7 @@ public:
     /**
      * @brief Constructor.
      */
-    NetworkResponse();
+    Response();
 
     /**
      * @brief Converts the response into a byte array. The resulting character
@@ -105,5 +107,7 @@ private:
     CharacterEncoding   _characterEncoding;
     QString             _body;
 };
+
+} // Http
 
 } // namespace QtWebServer

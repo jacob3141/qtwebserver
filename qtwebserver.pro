@@ -25,23 +25,28 @@ QT -= gui
 CONFIG   += staticlib
 
 SOURCES += \
-    statuscodes.cpp \
-    networkresponse.cpp \
-    networkrequest.cpp \
-    logger.cpp \
-    log.cpp \
-    multithreadedtcpserver.cpp \
-    tcpserverthread.cpp
+    http/httprequest.cpp \
+    http/httpresponse.cpp \
+    http/httpstatuscodes.cpp \
+    http/httpwebengine.cpp \
+    tcp/tcpmultithreadedserver.cpp \
+    tcp/tcpserverthread.cpp \
+    misc/log.cpp \
+    misc/logger.cpp \
+    http/httpresource.cpp
 
 HEADERS += \
-    statuscodes.h \
-    responder.h \
-    networkresponse.h \
-    networkrequest.h \
-    logger.h \
-    log.h \
-    multithreadedtcpserver.h \
-    tcpserverthread.h \
-    threadsafety.h
+    http/httprequest.h \
+    http/httpresponder.h \
+    http/httpresponse.h \
+    http/httpstatuscodes.h \
+    http/httpwebengine.h \
+    tcp/tcpserverthread.h \
+    tcp/tcpmultithreadedserver.h \
+    tcp/tcpresponder.h \
+    misc/threadsafety.h \
+    misc/logger.h \
+    misc/log.h \
+    http/httpresource.h
 
 RESOURCES +=

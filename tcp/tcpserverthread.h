@@ -20,9 +20,10 @@
 #pragma once
 
 // Own includes
-#include "multithreadedtcpserver.h"
-#include "logger.h"
-#include "threadsafety.h"
+#include "tcpmultithreadedserver.h"
+
+#include "misc/logger.h"
+#include "misc/threadsafety.h"
 
 // Qt includes
 #include <QThread>
@@ -30,25 +31,26 @@
 
 namespace QtWebServer {
 
+namespace Tcp {
+
 /**
  * @brief The NetworkServiceThread class
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class TcpServerThread : public QThread, public Logger {
-    friend class MultithreadedTcpServer;
+class ServerThread : public QThread, public Logger {
+    friend class MultithreadedServer;
     Q_OBJECT
 public:
     /**
      * @brief The NetworkServiceThreadState enum
      */
     enum NetworkServiceThreadState {
-        Idle,               /** Thread is idle and waiting to process the next client. */
-        ProcessingRequest,  /** Thread is busy reading the request. */
-        ProcessingResponse  /** Thread is buy generating a response. */
+        NetworkServiceThreadStateIdle, /** Thread is idle and waiting to process the next client. */
+        NetworkServiceThreadStateBusy  /** Thread is busy. */
     };
 
-    virtual ~TcpServerThread();
+    virtual ~ServerThread();
 
     /**
      * @brief NetworkServiceThreadState
@@ -74,7 +76,7 @@ signals:
     void stateChanged(NetworkServiceThreadState state);
 
 private:
-    TcpServerThread(MultithreadedTcpServer& multithreadedTcpServer);
+    ServerThread(MultithreadedServer& multithreadedServer);
 
     /**
      * @brief setNetworkServiceThreadState
@@ -82,11 +84,13 @@ private:
      */
     void setState(NetworkServiceThreadState state);
 
-    MultithreadedTcpServer&     _multithreadedTcpServer;
+    MultithreadedServer&     _multithreadedServer;
 
     ThreadSafe<NetworkServiceThreadState> _networkServiceThreadState;
 
 };
+
+} // namespace Tcp
 
 } // namespace QtWebServer
 

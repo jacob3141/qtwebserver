@@ -22,27 +22,28 @@
 #include <QMetaObject>
 
 // Own includes
-#include "multithreadedtcpserver.h"
+#include "tcpmultithreadedserver.h"
 #include "tcpserverthread.h"
 
 namespace QtWebServer {
 
-MultithreadedTcpServer::MultithreadedTcpServer()
+namespace Tcp {
+
+MultithreadedServer::MultithreadedServer()
     : QTcpServer(),
       Logger("WebServer::WebService") {
-    _httpResponder = new Http::Responder();
 }
 
-MultithreadedTcpServer::~MultithreadedTcpServer() {
+MultithreadedServer::~MultithreadedServer() {
     close();
 }
 
-bool MultithreadedTcpServer::close() {
+bool MultithreadedServer::close() {
     if(isListening()) {
         QTcpServer::close();
 
         // Mark all active threads for deletion if already running
-        foreach(TcpServerThread* networkServiceThread, _serviceThreads) {
+        foreach(ServerThread* networkServiceThread, _serviceThreads) {
             if(networkServiceThread) {
                 networkServiceThread->deleteLater();
             }
@@ -52,7 +53,7 @@ bool MultithreadedTcpServer::close() {
     return true;
 }
 
-bool MultithreadedTcpServer::listen(const QHostAddress &address,
+bool MultithreadedServer::listen(const QHostAddress &address,
                                     quint16 port,
                                     int numberOfThreads) {
     if(isListening()) {
@@ -62,7 +63,7 @@ bool MultithreadedTcpServer::listen(const QHostAddress &address,
     // Create the specified number of threads and store them in a vector
     int thread = numberOfThreads;
     while(thread > 0) {
-        TcpServerThread* networkServiceThread = new TcpServerThread(*this);
+        ServerThread* networkServiceThread = new ServerThread(*this);
         networkServiceThread->start();
         _serviceThreads.append(networkServiceThread);
         thread--;
@@ -74,22 +75,22 @@ bool MultithreadedTcpServer::listen(const QHostAddress &address,
     return QTcpServer::listen(address, port);
 }
 
-int MultithreadedTcpServer::numberOfThreads() {
+int MultithreadedServer::numberOfThreads() {
     return _serviceThreads.size();
 }
 
-Http::Responder *MultithreadedTcpServer::httpResponder() {
-    return _httpResponder;
+Responder *MultithreadedServer::responder() {
+    return _responder;
 }
 
-void MultithreadedTcpServer::setHttpResponder(Http::Responder *httpResponder) {
-    _httpResponder = httpResponder;
+void MultithreadedServer::setResponder(Responder *responder) {
+    _responder = responder;
 }
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 void MultithreadedTcpServer::incomingConnection(int handle) {
 #else
-void MultithreadedTcpServer::incomingConnection(qintptr handle) {
+void MultithreadedServer::incomingConnection(qintptr handle) {
 #endif
     QMetaObject::invokeMethod(_serviceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
     _nextRequestDelegatedTo++;
@@ -97,5 +98,7 @@ void MultithreadedTcpServer::incomingConnection(qintptr handle) {
         _nextRequestDelegatedTo = 0;
     }
 }
+
+} // namespace Tcp
 
 } // namespace QtWebServer

@@ -18,26 +18,28 @@
 //
 
 // Own includes
-#include "networkrequest.h"
+#include "httprequest.h"
 
 // Qt includes
 #include <QStringList>
 
 namespace QtWebServer {
 
-NetworkRequest::NetworkRequest(QString requestString)
+namespace Http {
+
+Request::Request(QString requestString)
     : Logger("WebServer::Http::Request") {
     _requestString = requestString;
-    _validRequest = true;
+    _valid = true;
     _method = "";
     _uniqueResourceIdentifier = "";
-    _httpVersion = "";
+    _version = "";
 
     QStringList lines = requestString.split("\r\n");
     if(lines.size() < 1) {
         // If we have zero request lines, something went horribly wrong.
         // Nevertheless, it's better to stop it here.
-        _validRequest = false;
+        _valid = false;
         return;
     }
 
@@ -48,7 +50,7 @@ NetworkRequest::NetworkRequest(QString requestString)
         // string, the request uri and the HTTP version. If we were
         // strict, we shouldn't even accept anything larger than four
         // strings, but we're permissive here.
-        _validRequest = false;
+        _valid = false;
         return;
     }
 
@@ -62,50 +64,52 @@ NetworkRequest::NetworkRequest(QString requestString)
         foreach(QString queryParameterAssignment, queryParameterAssignmentList) {
             QStringList assignment = queryParameterAssignment.split('=', QString::SkipEmptyParts);
             if(assignment.size() > 0) {
-                _queryParameters[assignment.at(0)] = assignment.at(1);
+                _parameters[assignment.at(0)] = assignment.at(1);
             }
         }
     }
 
     _uniqueResourceIdentifier = splittedURI.at(0);
 
-    _httpVersion = requestLine.at(2);
+    _version = requestLine.at(2);
 }
 
-bool NetworkRequest::validRequest() {
-    return _validRequest;
+bool Request::valid() const {
+    return _valid;
 }
 
-QString NetworkRequest::method() {
+QString Request::method() const {
     return _method;
 }
 
-QString NetworkRequest::uniqueResourceIdentifier() {
+QString Request::uniqueResourceIdentifier() const {
     return _uniqueResourceIdentifier;
 }
 
-QString NetworkRequest::httpVersion() {
-    return _httpVersion;
+QString Request::version() const {
+    return _version;
 }
 
-QString NetworkRequest::requestString() {
+QString Request::requestString() const {
     return _requestString;
 }
 
-QString NetworkRequest::queryString() {
+QString Request::queryString() const {
     return _queryString;
 }
 
-QStringList NetworkRequest::availableQueryParameters() {
-    return _queryParameters.keys();
+QStringList Request::availableParameters() const {
+    return _parameters.keys();
 }
 
-QString NetworkRequest::queryParameter(QString parameter) {
-    if(_queryParameters.contains(parameter)) {
-        return _queryParameters[parameter];
+QString Request::parameter(QString parameter) const {
+    if(_parameters.contains(parameter)) {
+        return _parameters[parameter];
     } else {
         return "";
     }
 }
+
+} // namespace Http
 
 } // namespace QtWebServer
