@@ -17,47 +17,23 @@
 // along with QtWebServer.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#pragma once
-
-#include <QMutex>
+// Own includes
+#include "httpjsonresource.h"
 
 namespace QtWebServer {
 
-class MutexLocker {
-public:
-    MutexLocker(QMutex& m) : _m(m) { _m.lock(); }
-    ~MutexLocker() { _m.unlock(); }
+namespace Http {
 
-private:
-    QMutex& _m;
-};
+JsonResource::JsonResource(QString uniqueIdentifier,
+                           QObject *parent) :
+    Resource(uniqueIdentifier, parent) {
+    setContentType("application/json");
+}
 
-template<typename T>
-class ThreadGuard {
-public:
-    ThreadGuard() {}
-    ~ThreadGuard() {}
+JsonResource::~JsonResource() {
+}
 
-    void set(const T& other) {
-        MutexLocker m(_mutex); Q_UNUSED(m);
-        _r = other;
-    }
-
-    T r() {
-        MutexLocker m(_mutex); Q_UNUSED(m);
-        return _r;
-    }
-
-    const ThreadGuard<T>& operator=(const T& other) {
-        set(other);
-        return *this;
-    }
-
-private:
-    ThreadGuard(const ThreadGuard&) {}
-
-    T _r;
-    QMutex _mutex;
-};
+} // namespace Http
 
 } // namespace QtWebServer
+

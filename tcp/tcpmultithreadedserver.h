@@ -60,13 +60,13 @@ public:
     int numberOfThreads();
 
     /**
-     * @brief httpResponder
+     * @brief responder
      * @return
      */
     Responder *responder();
 
     /**
-     * @brief setHttpResponder
+     * @brief setResponder
      * @param httpResponder
      */
     void setResponder(Responder *responder);

@@ -48,6 +48,8 @@ public:
      */
     virtual bool match(QString uniqueIdentifier);
 
+    QMap<QString, QString> uriParameters(QString uniqueIdentifier);
+
     /**
      * The default uri matcher ignores uri parts embraced with "{" and "}",
      * so you can refer to them as uri paramters later. For example:
@@ -70,8 +72,8 @@ public:
     void setContentType(QString contentType);
 
 private:
-    ThreadSafe<QString> _uniqueIdentifier;
-    ThreadSafe<QString> _contentType;
+    ThreadGuard<QString> _uniqueIdentifier;
+    ThreadGuard<QString> _contentType;
 };
 
 } // namespace Http

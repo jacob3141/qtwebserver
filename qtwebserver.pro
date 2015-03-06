@@ -19,8 +19,8 @@
 
 TEMPLATE = lib
 
-QT += core network xml
-QT -= gui
+QT += core network xml gui
+#QT -= gui
 
 CONFIG   += staticlib
 
@@ -34,7 +34,9 @@ SOURCES += \
     misc/log.cpp \
     misc/logger.cpp \
     http/httpresource.cpp \
-    http/httpiodeviceresource.cpp
+    http/httpiodeviceresource.cpp \
+    http/httpjsonresource.cpp \
+    http/httpxmlresource.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -49,6 +51,8 @@ HEADERS += \
     misc/logger.h \
     misc/log.h \
     http/httpresource.h \
-    http/httpiodeviceresource.h
+    http/httpiodeviceresource.h \
+    http/httpjsonresource.h \
+    http/httpxmlresource.h
 
 RESOURCES +=

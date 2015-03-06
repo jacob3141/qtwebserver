@@ -56,6 +56,30 @@ bool Resource::match(QString uniqueIdentifier) {
     return true;
 }
 
+QMap<QString, QString> Resource::uriParameters(QString uniqueIdentifier) {
+    QStringList splittedUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
+    QStringList splittedRequestedUri = uniqueIdentifier.split("/", QString::SkipEmptyParts);
+    QMap<QString, QString> uriParameterMap;
+
+    int count = splittedRequestedUri.count();
+    if(splittedUri.count() != count) {
+        return uriParameterMap;
+    }
+
+    for(int depth = 0; depth < count; depth++) {
+        QString uriSegment = splittedUri.at(depth);
+        if(uriSegment.startsWith("{") && uriSegment.endsWith("}")) {
+            // Truncate the { and }
+            uriSegment = uriSegment.mid(1, uriSegment.count() - 2);
+            QString key = uriSegment;
+            QString value = splittedRequestedUri.at(depth);
+            uriParameterMap.insert(key, value);
+        }
+    }
+    return uriParameterMap;
+}
+
+
 QString Resource::uniqueIdentifier() {
     return _uniqueIdentifier.r();
 }

@@ -64,7 +64,6 @@ Resource *WebEngine::matchResource(QString uniqueResourceIdentifier) {
     return 0;
 }
 
-
 } // namespace Http
 
 } // namespace QtWebServer

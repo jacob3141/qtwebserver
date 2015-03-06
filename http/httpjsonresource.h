@@ -19,45 +19,22 @@
 
 #pragma once
 
-#include <QMutex>
+// Own includes
+#include "httpresource.h"
 
 namespace QtWebServer {
 
-class MutexLocker {
-public:
-    MutexLocker(QMutex& m) : _m(m) { _m.lock(); }
-    ~MutexLocker() { _m.unlock(); }
+namespace Http {
 
-private:
-    QMutex& _m;
+class JsonResource :
+    public Resource {
+    Q_OBJECT
+public:
+    JsonResource(QString uniqueIdentifier,
+                 QObject *parent = 0);
+    ~JsonResource();
 };
 
-template<typename T>
-class ThreadGuard {
-public:
-    ThreadGuard() {}
-    ~ThreadGuard() {}
-
-    void set(const T& other) {
-        MutexLocker m(_mutex); Q_UNUSED(m);
-        _r = other;
-    }
-
-    T r() {
-        MutexLocker m(_mutex); Q_UNUSED(m);
-        return _r;
-    }
-
-    const ThreadGuard<T>& operator=(const T& other) {
-        set(other);
-        return *this;
-    }
-
-private:
-    ThreadGuard(const ThreadGuard&) {}
-
-    T _r;
-    QMutex _mutex;
-};
+} // namespace Http
 
 } // namespace QtWebServer

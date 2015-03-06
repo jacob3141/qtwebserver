@@ -86,7 +86,7 @@ private:
 
     MultithreadedServer&     _multithreadedServer;
 
-    ThreadSafe<NetworkServiceThreadState> _networkServiceThreadState;
+    ThreadGuard<NetworkServiceThreadState> _networkServiceThreadState;
 
 };
 
