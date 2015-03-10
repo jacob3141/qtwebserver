@@ -19,10 +19,10 @@
 
 TEMPLATE = lib
 
-QT += core network xml gui
-#QT -= gui
+QT += core network xml sql
+QT -= gui
 
-CONFIG   += staticlib
+CONFIG += staticlib
 
 SOURCES += \
     http/httprequest.cpp \
@@ -36,7 +36,8 @@ SOURCES += \
     http/httpresource.cpp \
     http/httpiodeviceresource.cpp \
     http/httpjsonresource.cpp \
-    http/httpxmlresource.cpp
+    http/httpxmlresource.cpp \
+    sql/sqlconnectionpool.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -53,6 +54,7 @@ HEADERS += \
     http/httpresource.h \
     http/httpiodeviceresource.h \
     http/httpjsonresource.h \
-    http/httpxmlresource.h
+    http/httpxmlresource.h \
+    sql/sqlconnectionpool.h
 
 RESOURCES +=

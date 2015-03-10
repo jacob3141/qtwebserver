@@ -1,4 +1,0 @@
-[service]
-url	=	localhost
-port	=	1337
-threads = 	4

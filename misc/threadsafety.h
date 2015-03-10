@@ -35,16 +35,21 @@ private:
 template<typename T>
 class ThreadGuard {
 public:
-    ThreadGuard() {}
-    ~ThreadGuard() {}
+    ThreadGuard() {
+        _mutex = new QMutex();
+    }
+
+    ~ThreadGuard() {
+        delete _mutex;
+    }
 
     void set(const T& other) {
-        MutexLocker m(_mutex); Q_UNUSED(m);
+        MutexLocker m(*_mutex); Q_UNUSED(m);
         _r = other;
     }
 
-    T r() {
-        MutexLocker m(_mutex); Q_UNUSED(m);
+    T r() const {
+        MutexLocker m(*_mutex); Q_UNUSED(m);
         return _r;
     }
 
@@ -57,7 +62,7 @@ private:
     ThreadGuard(const ThreadGuard&) {}
 
     T _r;
-    QMutex _mutex;
+    QMutex *_mutex;
 };
 
 } // namespace QtWebServer
