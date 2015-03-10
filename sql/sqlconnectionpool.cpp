@@ -22,7 +22,6 @@
 
 // Qt includes
 #include <QStringList>
-#include <QDebug>
 
 namespace QtWebServer {
 
