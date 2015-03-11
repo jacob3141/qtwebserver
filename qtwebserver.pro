@@ -35,8 +35,6 @@ SOURCES += \
     misc/logger.cpp \
     http/httpresource.cpp \
     http/httpiodeviceresource.cpp \
-    http/httpjsonresource.cpp \
-    http/httpxmlresource.cpp \
     sql/sqlconnectionpool.cpp
 
 HEADERS += \
@@ -53,8 +51,6 @@ HEADERS += \
     misc/log.h \
     http/httpresource.h \
     http/httpiodeviceresource.h \
-    http/httpjsonresource.h \
-    http/httpxmlresource.h \
     sql/sqlconnectionpool.h
 
 RESOURCES +=

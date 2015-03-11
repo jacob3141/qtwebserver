@@ -56,7 +56,7 @@ public:
 
     QString queryString() const;
 
-    QStringList availableParameters() const;
+    QMap<QString, QString> parameters() const;
 
     QString parameter(QString parameter) const;
 

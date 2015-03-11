@@ -63,7 +63,7 @@ Request::Request(QString requestString)
         QStringList queryParameterAssignmentList = _queryString.split('&', QString::SkipEmptyParts);
         foreach(QString queryParameterAssignment, queryParameterAssignmentList) {
             QStringList assignment = queryParameterAssignment.split('=', QString::SkipEmptyParts);
-            if(assignment.size() > 0) {
+            if(assignment.size() > 1) {
                 _parameters[assignment.at(0)] = assignment.at(1);
             }
         }
@@ -98,8 +98,8 @@ QString Request::queryString() const {
     return _queryString;
 }
 
-QStringList Request::availableParameters() const {
-    return _parameters.keys();
+QMap<QString, QString> Request::parameters() const {
+    return _parameters;
 }
 
 QString Request::parameter(QString parameter) const {
