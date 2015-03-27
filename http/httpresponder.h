@@ -37,13 +37,13 @@ namespace Http {
 class Responder : public Tcp::Responder {
 public:
     virtual void respond(const QByteArray& request, QByteArray& response) {
-        Http::Request httpRequest(request);
-        Http::Response httpResponse;
+        Request httpRequest(request);
+        Response httpResponse;
         respond(httpRequest, httpResponse);
         response = httpResponse.toByteArray();
     }
 
-    virtual void respond(const Http::Request& request, Response& response) = 0;
+    virtual void respond(const Request& request, Response& response) = 0;
 };
 
 } // namespace Http
