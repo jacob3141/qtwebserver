@@ -19,6 +19,9 @@
 
 #pragma once
 
+// Own includes
+#include "misc/threadsafety.h"
+
 // Qt includes
 #include <QString>
 
@@ -28,6 +31,11 @@ class Logger;
 class Log {
     friend class Logger;
 public:
+    enum LoggingMode {
+        LoggingModeNone,
+        LoggingModeConsole
+    };
+
     enum EntryType {
         Information,
         Warning,
@@ -36,11 +44,16 @@ public:
 
     static Log* instance();
 
+    LoggingMode loggingMode();
+    void setLoggingMode(LoggingMode loggingMode);
+
 protected:
     void log(QString name, QString message, EntryType entryType);
 
 private:
     Log();
+
+    ThreadGuard<LoggingMode> _loggingMode;
 
     static Log* _instance;
 };

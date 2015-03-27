@@ -34,7 +34,19 @@ Log* Log::instance() {
     return _instance;
 }
 
+Log::LoggingMode Log::loggingMode() {
+    return _loggingMode.r();
+}
+
+void Log::setLoggingMode(Log::LoggingMode loggingMode) {
+    _loggingMode = loggingMode;
+}
+
 void Log::log(QString name, QString message, EntryType entryType) {
+    if(loggingMode() == LoggingModeNone) {
+        return;
+    }
+
     Q_UNUSED(entryType);
     switch (entryType) {
     case Information:
@@ -53,6 +65,7 @@ void Log::log(QString name, QString message, EntryType entryType) {
 }
 
 Log::Log() {
+    _loggingMode = LoggingModeConsole;
 }
 
 } // namespace QtWebServer
