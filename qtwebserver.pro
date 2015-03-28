@@ -36,7 +36,7 @@ SOURCES += \
     http/httpresource.cpp \
     http/httpiodeviceresource.cpp \
     sql/sqlconnectionpool.cpp \
-    template/partial.cpp
+    html/document.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -53,6 +53,6 @@ HEADERS += \
     http/httpresource.h \
     http/httpiodeviceresource.h \
     sql/sqlconnectionpool.h \
-    template/partial.h
+    html/document.h
 
 RESOURCES +=

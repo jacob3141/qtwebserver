@@ -20,30 +20,30 @@
 #pragma once
 
 // Qt includes
-#include <QString>
-#include <QFile>
-
-// Own includes
-#include "misc/logger.h"
+#include <QDomDocument>
 
 namespace QtWebServer {
 
-namespace Template {
+namespace Html {
 
-class Partial : public Logger {
+class Document :
+    public QDomDocument {
 public:
-    Partial(QString resource);
-    ~Partial();
+    Document(QString documentTypeDeclaration = "<!DOCTYPE html>");
+    ~Document();
 
-    QString resource();
-    void setResource(QString resource);
+    void setDocumentTitle(QString title);
+    QString documentTitle();
 
-    QString resolve();
+    QDomElement html();
+    QDomElement head();
+    QDomElement body();
 
 private:
-    QString _resource;
+    QDomElement _html, _head, _body;
+    QDomText _title;
 };
 
-} // Template
+} // namespace Html
 
-} // QtWebServer
+} // namespace QtWebServer
