@@ -18,7 +18,7 @@
 //
 
 // Own includes
-#include "document.h"
+#include "htmldocument.h"
 
 // Qt includes
 #include <QFile>

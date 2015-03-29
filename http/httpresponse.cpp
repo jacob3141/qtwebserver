@@ -41,16 +41,19 @@ QByteArray Response::toByteArray() {
         case Utf8: characterEncodingString = "utf-8"; break;
     }
 
-    QString response = "";
-    response += QString("HTTP/1.1 %1 %2\r\n").arg(_statusCode).arg(Http::reasonPhrase(_statusCode));
-    response += QString("Content-Type: %1; charset=\"%2\"\r\n").arg(_contentType).arg(characterEncodingString);
+    QByteArray response = "";
+    response += QString("HTTP/1.1 %1 %2\r\n")
+            .arg(_statusCode)
+            .arg(Http::reasonPhrase(_statusCode))
+            .toUtf8();
+    response += QString("Content-Type: %1; charset=\"%2\"\r\n")
+            .arg(_contentType)
+            .arg(characterEncodingString)
+            .toUtf8();
     response += "\r\n";
     response += _body;
 
-    switch(_characterEncoding) {
-        default:
-        case Utf8: return response.toUtf8();
-    }
+    return response;
 }
 
 Http::StatusCode Response::statusCode() {
@@ -77,11 +80,11 @@ void Response::setCharacterEncoding(CharacterEncoding characterEncoding) {
     _characterEncoding = characterEncoding;
 }
 
-QString Response::body() {
+QByteArray Response::body() {
     return _body;
 }
 
-void Response::setBody(QString body) {
+void Response::setBody(QByteArray body) {
     _body = body;
 }
 

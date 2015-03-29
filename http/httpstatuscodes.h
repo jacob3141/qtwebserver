@@ -100,8 +100,6 @@ extern ReasonPhrasePair reasonPhrasePairMap[STATUS_CODE_COUNT];
  */
 QString reasonPhrase(Http::StatusCode statusCode);
 
-#define HTML(x) #x
-
 } // namespace Http
 
 } // namespace QtWebServer

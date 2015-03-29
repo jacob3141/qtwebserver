@@ -93,19 +93,19 @@ public:
     /**
      * @returns The response body part.
      */
-    QString body();
+    QByteArray body();
 
     /**
      * @brief Sets the response body, ie. the actual document transmitted.
      * @param body An HTTP response body.
      */
-    void setBody(QString body);
+    void setBody(QByteArray body);
 
 private:
     Http::StatusCode    _statusCode;
     QString             _contentType;
     CharacterEncoding   _characterEncoding;
-    QString             _body;
+    QByteArray          _body;
 };
 
 } // Http
