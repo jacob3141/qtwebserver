@@ -34,8 +34,12 @@ AssetsResource::AssetsResource(QObject *parent) :
 AssetsResource::~AssetsResource() {
 }
 
-void AssetsResource::addAsset(QString id, QString assetPath) {
+void AssetsResource::insertAsset(QString id, QString assetPath) {
     _assetsPathMap.insert(id, assetPath);
+}
+
+void AssetsResource::removeAsset(QString id) {
+    _assetsPathMap.remove(id);
 }
 
 void AssetsResource::respond(const Http::Request& request,
