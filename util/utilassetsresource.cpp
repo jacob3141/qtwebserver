@@ -22,6 +22,7 @@
 
 // Qt includes
 #include <QFile>
+#include <QFileInfo>
 
 namespace QtWebServer {
 
@@ -50,10 +51,10 @@ void AssetsResource::respond(const Http::Request& request,
         QFile assetFile(_assetsPathMap.value(id));
         assetFile.open(QFile::ReadOnly);
         if(assetFile.isOpen()) {
-            QByteArray assetData = assetFile.readAll();
+            QFileInfo fileInfo(assetFile);
             response.setStatusCode(Http::Ok);
-            response.setContentType(_mimeDatabase.mimeTypeForData(assetData).name());
-            response.setBody(assetData);
+            response.setContentType(_mimeDatabase.mimeTypeForFile(fileInfo).name());
+            response.setBody(assetFile.readAll());
             assetFile.close();
         } else {
             response.setStatusCode(Http::Forbidden);
