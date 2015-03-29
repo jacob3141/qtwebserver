@@ -20,6 +20,10 @@
 // Own includes
 #include "document.h"
 
+// Qt includes
+#include <QFile>
+#include <QStringList>
+
 namespace QtWebServer {
 
 namespace Html {
@@ -44,11 +48,11 @@ Document::Document(QString documentTypeDeclaration)
 Document::~Document() {
 }
 
-void Document::setDocumentTitle(QString title) {
+void Document::setTitle(QString title) {
     _title.setNodeValue(title);
 }
 
-QString Document::documentTitle() {
+QString Document::title() {
     return _title.nodeValue();
 }
 
@@ -62,6 +66,94 @@ QDomElement Document::head() {
 
 QDomElement Document::body() {
     return _body;
+}
+
+bool Document::appendPartial(QDomElement domElement, QString resourceName) {
+    QFile partialFile(resourceName);
+    QDomDocument domDocument;
+    partialFile.open(QFile::ReadOnly);
+    if(!partialFile.isOpen()) {
+        return false;
+    }
+    bool parsePartialContent = domDocument.setContent(partialFile.readAll());
+    partialFile.close();
+
+    if(!parsePartialContent) {
+        return false;
+    }
+
+    domElement.appendChild(domDocument.documentElement());
+    return true;
+}
+
+QList<QDomElement> Document::elementsByClass(QString className) const {
+    return elementsByAttribute("class", className);
+}
+
+QList<QDomElement> Document::elementsByClass(QDomElement domElement, QString className) const {
+    return elementsByAttribute(domElement, "class", className);
+}
+
+QDomElement Document::elementById(QString idName) const {
+    QList<QDomElement> elements = elementsById(idName);
+    if(elements.count() > 0) {
+        return elements.at(0);
+    }
+    return QDomElement();
+}
+
+QList<QDomElement> Document::elementsById(QString idName) const {
+    return elementsByAttribute("id", idName);
+}
+
+QList<QDomElement> Document::elementsById(QDomElement domElement, QString idName) const {
+    return elementsByAttribute(domElement, "id", idName);
+}
+
+QList<QDomElement> Document::elementsByAttribute(QString attributeName,
+                                                 QString attributeValue,
+                                                 bool allowMultipleValues) const {
+    return elementsByAttribute(documentElement(),
+                               attributeName,
+                               attributeValue,
+                               allowMultipleValues);
+
+}
+
+QList<QDomElement> Document::elementsByAttribute(QDomElement domElement,
+                                                 QString attributeName,
+                                                 QString attributeValue,
+                                                 bool allowMultipleValues) const {
+    QList<QDomElement> elementList;
+
+    if(domElement.hasAttribute(attributeName)) {
+        QString elementAttributeValue = domElement.attribute(attributeName, "");
+
+        if(allowMultipleValues) {
+            QStringList elementAttributeValues = elementAttributeValue.split("\\s+", QString::SkipEmptyParts);
+            if(elementAttributeValues.contains(attributeValue)) {
+                elementList.append(domElement);
+            }
+        } else {
+            if(attributeValue == elementAttributeValue) {
+                elementList.append(domElement);
+            }
+        }
+    }
+
+    QDomNodeList children = domElement.childNodes();
+    int count = children.count();
+    for(int i = 0; i < count; i++) {
+        QDomNode child = children.item(i);
+        if(child.isElement()) {
+            elementList << elementsByAttribute(child.toElement(),
+                                               attributeName,
+                                               attributeValue,
+                                               allowMultipleValues);
+        }
+    }
+
+    return elementList;
 }
 
 } // namespace Html

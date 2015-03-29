@@ -21,6 +21,7 @@
 
 // Qt includes
 #include <QDomDocument>
+#include <QList>
 
 namespace QtWebServer {
 
@@ -32,12 +33,30 @@ public:
     Document(QString documentTypeDeclaration = "<!DOCTYPE html>");
     ~Document();
 
-    void setDocumentTitle(QString title);
-    QString documentTitle();
+    void setTitle(QString title);
+    QString title();
 
     QDomElement html();
     QDomElement head();
     QDomElement body();
+
+    bool appendPartial(QDomElement domElement, QString resourceName);
+
+
+    QList<QDomElement> elementsByClass(QString className) const;
+    QList<QDomElement> elementsByClass(QDomElement domElement, QString className) const;
+
+    QDomElement elementById(QString idName) const;
+    QList<QDomElement> elementsById(QString idName) const;
+    QList<QDomElement> elementsById(QDomElement domElement, QString idName) const;
+
+    QList<QDomElement> elementsByAttribute(QString attributeName,
+                                           QString attributeValue,
+                                           bool allowMultipleValues = true) const;
+    QList<QDomElement> elementsByAttribute(QDomElement domElement,
+                                           QString attributeName,
+                                           QString attributeValue,
+                                           bool allowMultipleValues = true) const;
 
 private:
     QDomElement _html, _head, _body;
