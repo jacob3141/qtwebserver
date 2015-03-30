@@ -23,6 +23,7 @@
 #include "tcpresponder.h"
 
 #include "misc/logger.h"
+#include "misc/threadsafety.h"
 
 // Qt includes
 #include <QTcpServer>
@@ -42,33 +43,44 @@ class ServerThread;
 class MultithreadedServer : public QTcpServer, public Logger {
     Q_OBJECT
 public:
-    /**
-     * @brief WebService
-     */
+    /** @brief WebService */
     MultithreadedServer();
 
-    /**
-     * @brief ~WebService
-     */
+    /** @brief ~WebService */
     virtual ~MultithreadedServer();
 
+    /** Closes the server immediately. */
     bool close();
+
+    /**
+     * Listens to the given address and port.
+     * @param address The server address.
+     * @param port The server port.
+     * @param numberOfThreads The number of threads this server is using.
+     * @returns true, if the server is listening.
+     */
     bool listen(const QHostAddress &address = QHostAddress::Any,
                 quint16 port = 0,
                 int numberOfThreads = 4);
 
+    /** Sets the number of threads this server owns. */
     int numberOfThreads();
 
-    /**
-     * @brief responder
-     * @return
-     */
-    Responder *responder();
+    /** @returns the server timeout in seconds. */
+    int serverTimeoutSeconds();
 
     /**
-     * @brief setResponder
-     * @param httpResponder
+     * Sets the server timeout in seconds. If the server is not able
+     * to serve the cliend in the given amount of time (ie. all threads
+     * are busy for the given amount of seconds) it will simply ignore
+     * incoming connections.
      */
+    void setServerTimeoutSeconds(int seconds);
+
+    /** @returns the responder for this server. */
+    Responder *responder();
+
+    /** Sets the responder for this server. */
     void setResponder(Responder *responder);
 
 protected:
@@ -87,10 +99,12 @@ protected:
 #endif
 
 private:
-    Responder *_responder;
+    ThreadGuard<Responder*> _responder;
+    ThreadGuard<int> _serverTimeoutSeconds;
 
+    // Scheduler
     int _nextRequestDelegatedTo;
-    QVector<ServerThread*> _serviceThreads;
+    QVector<ServerThread*> _serverThreads;
 };
 
 } // namespace Tcp

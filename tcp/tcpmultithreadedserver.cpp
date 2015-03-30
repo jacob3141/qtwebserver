@@ -20,6 +20,7 @@
 // Qt includes
 #include <QSettings>
 #include <QMetaObject>
+#include <QTimer>
 
 // Own includes
 #include "tcpmultithreadedserver.h"
@@ -32,6 +33,7 @@ namespace Tcp {
 MultithreadedServer::MultithreadedServer()
     : QTcpServer(),
       Logger("WebServer::WebService") {
+    _serverTimeoutSeconds = 60;
 }
 
 MultithreadedServer::~MultithreadedServer() {
@@ -43,12 +45,12 @@ bool MultithreadedServer::close() {
         QTcpServer::close();
 
         // Mark all active threads for deletion if already running
-        foreach(ServerThread* networkServiceThread, _serviceThreads) {
+        foreach(ServerThread* networkServiceThread, _serverThreads) {
             if(networkServiceThread) {
                 networkServiceThread->deleteLater();
             }
         }
-        _serviceThreads.clear();
+        _serverThreads.clear();
     }
     return true;
 }
@@ -65,7 +67,7 @@ bool MultithreadedServer::listen(const QHostAddress &address,
     while(thread > 0) {
         ServerThread* networkServiceThread = new ServerThread(*this);
         networkServiceThread->start();
-        _serviceThreads.append(networkServiceThread);
+        _serverThreads.append(networkServiceThread);
         thread--;
     }
 
@@ -76,11 +78,19 @@ bool MultithreadedServer::listen(const QHostAddress &address,
 }
 
 int MultithreadedServer::numberOfThreads() {
-    return _serviceThreads.size();
+    return _serverThreads.size();
+}
+
+int MultithreadedServer::serverTimeoutSeconds() {
+    return _serverTimeoutSeconds.r();
+}
+
+void MultithreadedServer::setServerTimeoutSeconds(int seconds) {
+    _serverTimeoutSeconds = seconds;
 }
 
 Responder *MultithreadedServer::responder() {
-    return _responder;
+    return _responder.r();
 }
 
 void MultithreadedServer::setResponder(Responder *responder) {
@@ -92,11 +102,27 @@ void MultithreadedTcpServer::incomingConnection(int handle) {
 #else
 void MultithreadedServer::incomingConnection(qintptr handle) {
 #endif
-    QMetaObject::invokeMethod(_serviceThreads[_nextRequestDelegatedTo], "serve", Q_ARG(int, handle));
-    _nextRequestDelegatedTo++;
-    if(_nextRequestDelegatedTo >= _serviceThreads.size()) {
-        _nextRequestDelegatedTo = 0;
-    }
+    ServerThread* serverThread = 0;
+    ServerThread::NetworkServiceThreadState state;
+    QTimer timer;
+    timer.start(serverTimeoutSeconds() * 1000);
+    do {
+        serverThread = _serverThreads[_nextRequestDelegatedTo];
+        state = serverThread->state();
+
+        _nextRequestDelegatedTo++;
+        if(_nextRequestDelegatedTo >= _serverThreads.size()) {
+            _nextRequestDelegatedTo = 0;
+        }
+
+        if(state == ServerThread::NetworkServiceThreadStateBusy &&
+           timer.remainingTime() <= 0) {
+            // Abort on server timeout
+            return;
+        }
+    } while(state == ServerThread::NetworkServiceThreadStateBusy);
+
+    QMetaObject::invokeMethod(serverThread, "serve", Q_ARG(int, handle));
 }
 
 } // namespace Tcp
