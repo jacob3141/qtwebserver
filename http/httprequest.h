@@ -61,15 +61,15 @@ public:
     /** @returns a map of request headers (name and value). **/
     QMap<QString, QString> headers() const;
 
-    /** @returns payload. */
-    QByteArray payload() const;
+    /** @returns the body of the request. */
+    QByteArray body() const;
 
 private:
     void deserialize(QByteArray rawRequest);
     void deserializeHeader(const QByteArray& rawHeader);
     QByteArray takeLine(QByteArray& rawRequest);
 
-    QByteArray _payload;
+    QByteArray _body;
     QString _queryString;
     QString _fragment;
     QString _method;

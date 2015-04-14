@@ -60,8 +60,8 @@ QMap<QString, QString> Request::headers() const {
     return _headers;
 }
 
-QByteArray Request::payload() const {
-    return _payload;
+QByteArray Request::body() const {
+    return _body;
 }
 
 QByteArray Request::takeLine(QByteArray& rawRequest) {
@@ -142,8 +142,8 @@ void Request::deserialize(QByteArray rawRequest) {
         deserializeHeader(nextLine);
     }
 
-    // The payload remains
-    _payload = QByteArray(rawRequest);
+    // By definition, all that follows after a \r\n\r\n is the body of the request.
+    _body = QByteArray(rawRequest);
 }
 
 void Request::deserializeHeader(const QByteArray& rawHeader) {
