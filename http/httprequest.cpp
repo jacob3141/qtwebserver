@@ -27,23 +27,86 @@ namespace QtWebServer {
 
 namespace Http {
 
-Request::Request(QString requestString)
+Request::Request(const QByteArray &rawRequest)
     : Logger("WebServer::Http::Request") {
-    _requestString = requestString;
+    deserialize(rawRequest);
+}
+
+bool Request::valid() const {
+    return _valid;
+}
+
+QString Request::method() const {
+    return _method;
+}
+
+QString Request::uniqueResourceIdentifier() const {
+    return _uniqueResourceIdentifier;
+}
+
+QString Request::version() const {
+    return _version;
+}
+
+QString Request::queryString() const {
+    return _queryString;
+}
+
+QMap<QString, QString> Request::parameters() const {
+    return _parameters;
+}
+
+QMap<QString, QString> Request::headers() const {
+    return _headers;
+}
+
+QByteArray Request::payload() const {
+    return _payload;
+}
+
+QByteArray Request::takeLine(QByteArray& rawRequest) {
+    // Lines in the HTTP protocol are defined to be separated by '\r\n'
+    QByteArray line;
+    int rawSize = rawRequest.size();
+    int rawPosition;
+
+    // Watch out for the first occurrence of '\r'
+    for(rawPosition = 0; rawPosition < rawSize - 1; rawPosition++) {
+        if(rawRequest[rawPosition] == '\r' && rawRequest[rawPosition + 1] == '\n') {
+            break;
+        }
+    }
+
+    // If there is just two characters left, this must be EOF
+    if(rawPosition != rawSize - 2) {
+        // Get the line contents
+        line = rawRequest.left(rawPosition);
+
+        // Get the remaining data, skipping '\r\n'
+        rawRequest = rawRequest.right(rawSize - line.count() - 2);
+    } else {
+        // EOF
+        rawRequest = "";
+        line = rawRequest;
+    }
+
+    return line;
+}
+
+void Request::deserialize(QByteArray rawRequest) {
+    log(QString("Deserializing request, %1 bytes").arg(rawRequest.count()));
+
+    _headers.clear();
+    _parameters.clear();
     _valid = true;
     _method = "";
     _uniqueResourceIdentifier = "";
     _version = "";
 
-    QStringList lines = requestString.split("\r\n");
-    if(lines.size() < 1) {
-        // If we have zero request lines, something went horribly wrong.
-        // Nevertheless, it's better to stop it here.
-        _valid = false;
-        return;
-    }
-
-    QStringList requestLine = lines.at(0).split(QRegExp("\\s+"));
+    // Read ahead the first line in the request
+    QByteArray rawRequestLine = takeLine(rawRequest);
+    QStringList requestLine = QString::fromUtf8(rawRequestLine)
+                                .split(QRegExp("\\s+"));
 
     if(requestLine.size() < 3) {
         // The request line has to contain three strings: The method
@@ -51,6 +114,7 @@ Request::Request(QString requestString)
         // strict, we shouldn't even accept anything larger than four
         // strings, but we're permissive here.
         _valid = false;
+        log(QString("Invalid request line: %1 parts").arg(requestLine.count()));
         return;
     }
 
@@ -72,42 +136,34 @@ Request::Request(QString requestString)
     _uniqueResourceIdentifier = splittedURI.at(0);
 
     _version = requestLine.at(2);
-}
 
-bool Request::valid() const {
-    return _valid;
-}
-
-QString Request::method() const {
-    return _method;
-}
-
-QString Request::uniqueResourceIdentifier() const {
-    return _uniqueResourceIdentifier;
-}
-
-QString Request::version() const {
-    return _version;
-}
-
-QString Request::requestString() const {
-    return _requestString;
-}
-
-QString Request::queryString() const {
-    return _queryString;
-}
-
-QMap<QString, QString> Request::parameters() const {
-    return _parameters;
-}
-
-QString Request::parameter(QString parameter) const {
-    if(_parameters.contains(parameter)) {
-        return _parameters[parameter];
-    } else {
-        return "";
+    QByteArray nextLine;
+    while(!(nextLine = takeLine(rawRequest)).isEmpty()) {
+        deserializeHeader(nextLine);
     }
+
+    // The payload remains
+    _payload = QByteArray(rawRequest);
+}
+
+void Request::deserializeHeader(const QByteArray& rawHeader) {
+    QString headerLine = QString::fromUtf8(rawHeader);
+    int colonPosition;
+    int headerLineLength = headerLine.count();
+    for(colonPosition = 0; colonPosition < headerLineLength; colonPosition++) {
+        if(headerLine.at(colonPosition) == ':') {
+            break;
+        }
+    }
+
+    if(colonPosition == headerLineLength) {
+        log(QString("Invalid header line found %1").arg(headerLine), Log::Warning);
+        return;
+    }
+
+    QString headerName = headerLine.left(colonPosition);
+    QString headerValue = headerLine.right(headerLineLength - colonPosition).trimmed();
+    _headers.insert(headerName, headerValue);
 }
 
 } // namespace Http

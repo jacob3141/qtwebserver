@@ -26,7 +26,6 @@ CONFIG += staticlib
 
 SOURCES += \
     http/httprequest.cpp \
-    http/httpresponse.cpp \
     http/httpstatuscodes.cpp \
     http/httpwebengine.cpp \
     tcp/tcpmultithreadedserver.cpp \
@@ -37,12 +36,12 @@ SOURCES += \
     http/httpiodeviceresource.cpp \
     sql/sqlconnectionpool.cpp \
     html/htmldocument.cpp \
-    util/utilassetsresource.cpp
+    util/utilassetsresource.cpp \
+    http/httpresponse.cpp
 
 HEADERS += \
     http/httprequest.h \
     http/httpresponder.h \
-    http/httpresponse.h \
     http/httpstatuscodes.h \
     http/httpwebengine.h \
     tcp/tcpserverthread.h \
@@ -55,6 +54,7 @@ HEADERS += \
     http/httpiodeviceresource.h \
     sql/sqlconnectionpool.h \
     html/htmldocument.h \
-    util/utilassetsresource.h
+    util/utilassetsresource.h \
+    http/httpresponse.h
 
 RESOURCES +=

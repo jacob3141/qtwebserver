@@ -30,9 +30,10 @@ namespace QtWebServer {
 
 namespace Http {
 
-class Request : public Logger {
+class Request :
+    public Logger {
 public:
-    Request(QString requestString);
+    Request(const QByteArray& rawRequest);
 
     /**
      * This method is used to indicate whether a request could not be
@@ -51,17 +52,24 @@ public:
     /** @returns the HTTP version for this request. */
     QString version() const;
 
-    /** returns the original request string. */
-    QString requestString() const;
-
+    /** @returns the query string for this request. */
     QString queryString() const;
 
+    /** @returns url parameters. */
     QMap<QString, QString> parameters() const;
 
-    QString parameter(QString parameter) const;
+    /** @returns a map of request headers (name and value). **/
+    QMap<QString, QString> headers() const;
+
+    /** @returns payload. */
+    QByteArray payload() const;
 
 private:
-    QString _requestString;
+    void deserialize(QByteArray rawRequest);
+    void deserializeHeader(const QByteArray& rawHeader);
+    QByteArray takeLine(QByteArray& rawRequest);
+
+    QByteArray _payload;
     QString _queryString;
     QString _fragment;
     QString _method;
@@ -69,6 +77,7 @@ private:
     QString _version;
     bool _valid;
     QMap<QString, QString> _parameters;
+    QMap<QString, QString> _headers;
 };
 
 }

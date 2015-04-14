@@ -32,7 +32,7 @@ public:
     Logger(QString name);
     virtual ~Logger();
 
-    void log(QString message, Log::EntryType entryType = Log::Information);
+    void log(QString message, Log::EntryType entryType = Log::Verbose);
 
 private:
     QString _name;

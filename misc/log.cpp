@@ -47,8 +47,11 @@ void Log::log(QString name, QString message, EntryType entryType) {
         return;
     }
 
-    Q_UNUSED(entryType);
     switch (entryType) {
+    case Verbose:
+        std::cout << "[" << name.toStdString() << "] "
+                  << message.toStdString() << std::endl;
+        break;
     case Information:
         std::cout << "[" << name.toStdString() << "] "
                   << message.toStdString() << std::endl;

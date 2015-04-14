@@ -26,6 +26,7 @@
 
 // Qt includes
 #include <QByteArray>
+#include <QNetworkReply>
 
 namespace QtWebServer {
 
