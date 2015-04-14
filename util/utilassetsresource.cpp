@@ -53,16 +53,16 @@ void AssetsResource::respond(const Http::Request& request,
         if(assetFile.isOpen()) {
             QFileInfo fileInfo(assetFile);
             response.setStatusCode(Http::Ok);
-            response.setHeader("Content-Type", _mimeDatabase.mimeTypeForFile(fileInfo).name());
+            response.setHeader(Http::ContentType, _mimeDatabase.mimeTypeForFile(fileInfo).name());
             response.setBody(assetFile.readAll());
             assetFile.close();
         } else {
             response.setStatusCode(Http::Forbidden);
-            response.setHeader("Content-Type", "text/plain");
+            response.setHeader(Http::ContentType, "text/plain");
         }
     } else {
         response.setStatusCode(Http::NotFound);
-        response.setHeader("Content-Type", "text/plain");
+        response.setHeader(Http::ContentType, "text/plain");
     }
 }
 

@@ -20,6 +20,8 @@
 #pragma once
 
 // Own includes
+#include "httpheaders.h"
+
 #include "misc/logger.h"
 
 // Qt includes
@@ -60,6 +62,9 @@ public:
 
     /** @returns a map of request headers (name and value). **/
     QMap<QString, QString> headers() const;
+
+    QString header(Header header) const;
+    QString header(QString headerName) const;
 
     /** @returns the body of the request. */
     QByteArray body() const;

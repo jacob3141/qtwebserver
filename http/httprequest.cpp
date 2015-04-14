@@ -60,6 +60,14 @@ QMap<QString, QString> Request::headers() const {
     return _headers;
 }
 
+QString Request::header(Header header) const {
+    return this->header(headerName(header));
+}
+
+QString Request::header(QString headerName) const {
+    return _headers.value(headerName);
+}
+
 QByteArray Request::body() const {
     return _body;
 }

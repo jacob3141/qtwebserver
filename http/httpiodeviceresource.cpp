@@ -45,7 +45,7 @@ void IODeviceResource::respond(const Http::Request& request, Response& response)
     }
 
     if(request.method() == "get") {
-        response.setHeader("Content-Type", contentType());
+        response.setHeader(Http::ContentType, contentType());
 
         _ioDevice->open(QIODevice::ReadOnly);
         if(_ioDevice->isOpen()) {

@@ -71,11 +71,19 @@ void Response::setBody(QByteArray body) {
     _body = body;
 }
 
+void Response::setHeader(Header header, QString headerValue) {
+    setHeader(headerName(header), headerValue);
+}
+
 void Response::setHeader(QString headerName, QString headerValue) {
     _headers.insert(headerName, headerValue);
 }
 
-QString Response::header(QString headerName) {
+QString Response::header(Header header) const {
+    return this->header(headerName(header));
+}
+
+QString Response::header(QString headerName) const {
     return _headers.value(headerName);
 }
 

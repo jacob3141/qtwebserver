@@ -20,6 +20,7 @@
 #pragma once
 
 // Own includes
+#include "httpheaders.h"
 #include "httpstatuscodes.h"
 
 #include "misc/logger.h"
@@ -73,9 +74,11 @@ public:
      */
     void setBody(QByteArray body);
 
+    void setHeader(Header header, QString headerValue);
     void setHeader(QString headerName, QString headerValue);
 
-    QString header(QString headerName);
+    QString header(Header header) const;
+    QString header(QString headerName) const;
 
 private:
     Http::StatusCode        _statusCode;
