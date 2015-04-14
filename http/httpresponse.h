@@ -39,13 +39,6 @@ namespace Http {
 class Response : public Logger {
 public:
     /**
-     * @brief The CharacterEncoding enum
-     */
-    enum CharacterEncoding {
-        Utf8
-    };
-
-    /**
      * @brief Constructor.
      */
     Response();
@@ -70,28 +63,6 @@ public:
     void setStatusCode(Http::StatusCode statusCode);
 
     /**
-     * @returns The content type of this response.
-     */
-    QString contentType();
-
-    /**
-     * @brief Sets the specified content type.
-     * @param contentType A content type string.
-     */
-    void setContentType(QString contentType);
-
-    /**
-     * @returns The character encoding of this response.
-     */
-    CharacterEncoding characterEncoding();
-
-    /**
-     * @brief Sets the character encoding for this response.
-     * @param characterEncoding A character encoding.
-     */
-    void setCharacterEncoding(CharacterEncoding characterEncoding);
-
-    /**
      * @returns The response body part.
      */
     QByteArray body();
@@ -102,11 +73,14 @@ public:
      */
     void setBody(QByteArray body);
 
+    void setHeader(QString headerName, QString headerValue);
+
+    QString header(QString headerName);
+
 private:
-    Http::StatusCode    _statusCode;
-    QString             _contentType;
-    CharacterEncoding   _characterEncoding;
-    QByteArray          _body;
+    Http::StatusCode        _statusCode;
+    QMap<QString, QString>  _headers;
+    QByteArray              _body;
 };
 
 } // Http

@@ -30,26 +30,25 @@ namespace Http {
 Response::Response()
     : Logger("WebServer::Http::Response") {
     _statusCode = Http::Ok;
-    _contentType = "text/html";
-    _characterEncoding = Utf8;
     _body = "";
 }
 
 QByteArray Response::toByteArray() {
-    QString characterEncodingString = "";
-    switch(_characterEncoding) {
-        case Utf8: characterEncodingString = "utf-8"; break;
-    }
 
     QByteArray response = "";
     response += QString("HTTP/1.1 %1 %2\r\n")
             .arg(_statusCode)
             .arg(Http::reasonPhrase(_statusCode))
             .toUtf8();
-    response += QString("Content-Type: %1; charset=\"%2\"\r\n")
-            .arg(_contentType)
-            .arg(characterEncodingString)
-            .toUtf8();
+
+    QStringList headerNames = _headers.keys();
+    foreach(QString headerName, headerNames) {
+        response += QString("%1: %2\r\n")
+                .arg(headerName)
+                .arg(_headers.value(headerName))
+                .toUtf8();
+    }
+
     response += "\r\n";
     response += _body;
 
@@ -64,28 +63,20 @@ void Response::setStatusCode(Http::StatusCode statusCode) {
     _statusCode = statusCode;
 }
 
-QString Response::contentType() {
-    return _contentType;
-}
-
-void Response::setContentType(QString contentType) {
-    _contentType = contentType;
-}
-
-Response::CharacterEncoding Response::characterEncoding() {
-    return _characterEncoding;
-}
-
-void Response::setCharacterEncoding(CharacterEncoding characterEncoding) {
-    _characterEncoding = characterEncoding;
-}
-
 QByteArray Response::body() {
     return _body;
 }
 
 void Response::setBody(QByteArray body) {
     _body = body;
+}
+
+void Response::setHeader(QString headerName, QString headerValue) {
+    _headers.insert(headerName, headerValue);
+}
+
+QString Response::header(QString headerName) {
+    return _headers.value(headerName);
 }
 
 } // namespace Http

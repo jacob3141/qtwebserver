@@ -22,7 +22,6 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
-#include <QNetworkRequest>
 
 // Own includes
 #include "tcpserverthread.h"

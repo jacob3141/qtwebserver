@@ -56,8 +56,8 @@ bool MultithreadedServer::close() {
 }
 
 bool MultithreadedServer::listen(const QHostAddress &address,
-                                    quint16 port,
-                                    int numberOfThreads) {
+                                 quint16 port,
+                                 int numberOfThreads) {
     if(isListening()) {
         return false;
     }
@@ -116,7 +116,7 @@ void MultithreadedServer::incomingConnection(qintptr handle) {
         }
 
         if(state == ServerThread::NetworkServiceThreadStateBusy &&
-           timer.remainingTime() <= 0) {
+                timer.remainingTime() <= 0) {
             // Abort on server timeout
             return;
         }
