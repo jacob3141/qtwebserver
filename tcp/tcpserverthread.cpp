@@ -143,31 +143,25 @@ void ServerThread::respondToClient() {
     QSslSocket* socket = (QSslSocket*)sender();
     setState(NetworkServiceThreadStateBusy);
 
-    const int timeoutMSec = 30000;
-//    QTimer timer;
-//    timer.setTimerType(Qt::PreciseTimer);
-//    timer.setInterval(timeoutMSec);
-//    timer.start();
-
-    // -----------------------
-
-    QByteArray request = socket->readAll();
-    QByteArray response;
     Responder *responder = _multithreadedServer.responder();
     if(responder) {
-       responder->respond(request, response);
+        QByteArray request = socket->readAll();
+        QByteArray response;
+        responder->respond(request, response);
+
+        int bytesWritten = 0;
+        int bytesRemaining = 0;
+        do {
+            bytesWritten = socket->write(response);
+            if(bytesWritten == -1) {
+                break;
+            }
+            response = response.right(response.count() - bytesWritten);
+            bytesRemaining = response.count();
+        } while(bytesRemaining > 0);
     }
-    socket->write(response);
-    socket->waitForBytesWritten(timeoutMSec);
+
     socket->close();
-    socket->deleteLater();
-
-    // -----------------------
-
-//    int timePassed = timeoutMSec - timer.remainingTime();
-//    timer.stop();
-
-//    log(QString("Generated and sent response within %1 ms.").arg(timePassed));
 
     setState(NetworkServiceThreadStateIdle);
 }

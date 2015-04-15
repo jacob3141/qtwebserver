@@ -102,8 +102,6 @@ QByteArray Request::takeLine(QByteArray& rawRequest) {
 }
 
 void Request::deserialize(QByteArray rawRequest) {
-    log(QString("Deserializing request, %1 bytes").arg(rawRequest.count()));
-
     _headers.clear();
     _parameters.clear();
     _valid = true;
