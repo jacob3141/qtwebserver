@@ -18,7 +18,7 @@
 //
 
 // Qt includes
-#include <QTcpSocket>
+#include <QSslSocket>
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
@@ -50,14 +50,14 @@ void ServerThread::setState(ServerThread::NetworkServiceThreadState state) {
 }
 
 void ServerThread::serve(int socketHandle) {
-    QTcpSocket* tcpSocket = new QTcpSocket(this);
-    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(respondToClient()));
-    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(cleanup()));
-    tcpSocket->setSocketDescriptor(socketHandle);
+    QSslSocket* socket = new QSslSocket(this);
+    connect(socket, SIGNAL(readyRead()), this, SLOT(respondToClient()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(cleanup()));
+    socket->setSocketDescriptor(socketHandle);
 }
 
 void ServerThread::respondToClient() {
-    QTcpSocket* socket = (QTcpSocket*)sender();
+    QSslSocket* socket = (QSslSocket*)sender();
     setState(NetworkServiceThreadStateBusy);
 
     const int timeoutMSec = 30000;
@@ -85,7 +85,7 @@ void ServerThread::respondToClient() {
 }
 
 void ServerThread::cleanup() {
-    QTcpSocket* socket = (QTcpSocket*)sender();
+    QSslSocket* socket = (QSslSocket*)sender();
     socket->deleteLater();
 }
 

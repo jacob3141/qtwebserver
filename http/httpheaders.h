@@ -92,7 +92,6 @@ enum Header {
     WWWAuthenticate
 };
 
-
 typedef struct {
     Header header;
     const char* headerName;
