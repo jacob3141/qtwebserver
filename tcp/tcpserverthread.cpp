@@ -18,7 +18,6 @@
 //
 
 // Qt includes
-#include <QSslSocket>
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
@@ -53,7 +52,91 @@ void ServerThread::serve(int socketHandle) {
     QSslSocket* socket = new QSslSocket(this);
     connect(socket, SIGNAL(readyRead()), this, SLOT(respondToClient()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(cleanup()));
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(socket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrors(QList<QSslError>)));
+    connect(socket, SIGNAL(modeChanged(QSslSocket::SslMode)), this, SLOT(modeChanged(QSslSocket::SslMode)));
     socket->setSocketDescriptor(socketHandle);
+}
+
+void ServerThread::error(QAbstractSocket::SocketError error) {
+    QString errorString = "Unknown error";
+    switch(error) {
+    case QAbstractSocket::ConnectionRefusedError:
+        errorString = "The connection was refused by the peer (or timed out).";
+        break;
+    case QAbstractSocket::RemoteHostClosedError:
+        errorString = "The remote host closed the connection. Note that the client socket (i.e., this socket) will be closed after the remote close notification has been sent.";
+        break;
+    case QAbstractSocket::HostNotFoundError:
+        errorString = "The host address was not found.";
+        break;
+    case QAbstractSocket::SocketAccessError:
+        errorString = "The socket operation failed because the application lacked the required privileges.";
+        break;
+    case QAbstractSocket::SocketResourceError:
+        errorString = "The local system ran out of resources (e.g., too many sockets).";
+        break;
+    case QAbstractSocket::SocketTimeoutError:
+        errorString = "The socket operation timed out.";
+        break;
+    case QAbstractSocket::DatagramTooLargeError:
+        errorString = "The datagram was larger than the operating system's limit (which can be as low as 8192 bytes).";
+        break;
+    case QAbstractSocket::NetworkError:
+        errorString = "An error occurred with the network (e.g., the network cable was accidentally plugged out).";
+        break;
+    case QAbstractSocket::AddressInUseError:
+        errorString = "The address specified to QAbstractSocket::bind() is already in use and was set to be exclusive.";
+        break;
+    case QAbstractSocket::SocketAddressNotAvailableError:
+        errorString = "The address specified to QAbstractSocket::bind() does not belong to the host.";
+        break;
+    case QAbstractSocket::UnsupportedSocketOperationError:
+        errorString = "The requested socket operation is not supported by the local operating system (e.g., lack of IPv6 support).";
+        break;
+    case QAbstractSocket::UnfinishedSocketOperationError:
+        errorString = "Used by QAbstractSocketEngine only, The last operation attempted has not finished yet (still in progress in the background).";
+        break;
+    case QAbstractSocket::ProxyAuthenticationRequiredError:
+        errorString = "The socket is using a proxy, and the proxy requires authentication.";
+        break;
+    case QAbstractSocket::SslHandshakeFailedError:
+        errorString = "The SSL/TLS handshake failed, so the connection was closed.";
+        break;
+    case QAbstractSocket::ProxyConnectionRefusedError:
+        errorString = "Could not contact the proxy server because the connection to that server was denied.";
+        break;
+    case QAbstractSocket::ProxyConnectionClosedError:
+        errorString = "The connection to the proxy server was closed unexpectedly (before the connection to the final peer was established).";
+        break;
+    case QAbstractSocket::ProxyConnectionTimeoutError:
+        errorString = "The connection to the proxy server timed out or the proxy server stopped responding in the authentication phase.";
+        break;
+    case QAbstractSocket::ProxyNotFoundError:
+        errorString = "The proxy address set with setProxy() (or the application proxy) was not found.";
+        break;
+    case QAbstractSocket::ProxyProtocolError:
+        errorString = "The connection negotiation with the proxy server failed, because the response from the proxy server could not be understood.";
+        break;
+    case QAbstractSocket::OperationError:
+        errorString = "An operation was attempted while the socket was in a state that did not permit it.";
+        break;
+    case QAbstractSocket::SslInternalError:
+        errorString = "The SSL library being used reported an internal error. This is probably the result of a bad installation or misconfiguration of the library.";
+        break;
+    case QAbstractSocket::SslInvalidUserDataError:
+        errorString = "Invalid data (certificate, key, cypher, etc.) was provided and its use resulted in an error in the SSL library.";
+        break;
+    case QAbstractSocket::TemporaryError:
+        errorString = "A temporary error occurred (e.g., operation would block and socket is non-blocking).";
+        break;
+    default:
+    case QAbstractSocket::UnknownSocketError:
+        errorString = "An unidentified error occurred.";
+        break;
+    }
+
+    log(QString("Socker error: %1 (%2)").arg(errorString).arg((int)error));
 }
 
 void ServerThread::respondToClient() {
@@ -61,27 +144,52 @@ void ServerThread::respondToClient() {
     setState(NetworkServiceThreadStateBusy);
 
     const int timeoutMSec = 30000;
-    QTimer timer;
-    timer.setTimerType(Qt::PreciseTimer);
-    timer.setInterval(timeoutMSec);
-    timer.start();
+//    QTimer timer;
+//    timer.setTimerType(Qt::PreciseTimer);
+//    timer.setInterval(timeoutMSec);
+//    timer.start();
 
+    // -----------------------
+
+    QByteArray request = socket->readAll();
     QByteArray response;
     Responder *responder = _multithreadedServer.responder();
     if(responder) {
-       responder->respond(socket->readAll(), response);
+       responder->respond(request, response);
     }
     socket->write(response);
     socket->waitForBytesWritten(timeoutMSec);
     socket->close();
     socket->deleteLater();
 
-    int timePassed = timeoutMSec - timer.remainingTime();
-    timer.stop();
+    // -----------------------
 
-    log(QString("Generated and sent response within %1 ms.").arg(timePassed));
+//    int timePassed = timeoutMSec - timer.remainingTime();
+//    timer.stop();
+
+//    log(QString("Generated and sent response within %1 ms.").arg(timePassed));
 
     setState(NetworkServiceThreadStateIdle);
+}
+
+void ServerThread::sslErrors(QList<QSslError> errors) {
+    foreach(QSslError error, errors) {
+        log(error.errorString(), Log::Error);
+    }
+}
+
+void ServerThread::modeChanged(QSslSocket::SslMode mode) {
+    switch (mode) {
+    case QSslSocket::UnencryptedMode:
+        log("SSL socket mode changed to unencrypted mode.");
+        break;
+    case QSslSocket::SslClientMode:
+        log("SSL socket mode changed to client mode.");
+        break;
+    case QSslSocket::SslServerMode:
+        log("SSL socket mode changed to server mode.");
+        break;
+    }
 }
 
 void ServerThread::cleanup() {

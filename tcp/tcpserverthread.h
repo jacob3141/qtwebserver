@@ -27,7 +27,8 @@
 
 // Qt includes
 #include <QThread>
-#include <QMutex>
+#include <QSslError>
+#include <QSslSocket>
 
 namespace QtWebServer {
 
@@ -66,10 +67,10 @@ public slots:
     void serve(int socketHandle);
 
 private slots:
-    /**
-     * Answers a request from a client.
-     */
     void respondToClient();
+    void error(QAbstractSocket::SocketError error);
+    void sslErrors(QList<QSslError> errors);
+    void modeChanged(QSslSocket::SslMode mode);
     void cleanup();
 
 signals:
@@ -84,7 +85,7 @@ private:
      */
     void setState(NetworkServiceThreadState state);
 
-    MultithreadedServer&     _multithreadedServer;
+    MultithreadedServer& _multithreadedServer;
 
     ThreadGuard<NetworkServiceThreadState> _networkServiceThreadState;
 
