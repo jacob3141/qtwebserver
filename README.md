@@ -49,3 +49,7 @@ You can either integrate QtWebServer into your existing application or build a w
 Installation via qt-pods is perfectly suited for this use-case. You can update your QtWebServer version at any time and switch back flawlessly, since it will be embedded as a git submodule. It is not recommended to plain copy the QtWebServer code into your target application. In order to learn more about qt-pods, see here:
 
 https://github.com/cybercatalyst/qt-pods
+
+# License
+
+Licensed under GNU AGPLv3. Available under a commercial license, too.
