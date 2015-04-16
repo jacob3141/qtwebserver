@@ -23,8 +23,7 @@
 
 TEMPLATE = lib
 
-QT += core network xml sql
-QT -= gui
+QT += core network xml sql gui
 
 CONFIG += staticlib
 
@@ -42,7 +41,8 @@ SOURCES += \
     html/htmldocument.cpp \
     util/utilassetsresource.cpp \
     http/httpresponse.cpp \
-    http/httpheaders.cpp
+    http/httpheaders.cpp \
+    util/utildataurlcodec.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -61,7 +61,8 @@ HEADERS += \
     html/htmldocument.h \
     util/utilassetsresource.h \
     http/httpresponse.h \
-    http/httpheaders.h
+    http/httpheaders.h \
+    util/utildataurlcodec.h
 
 RESOURCES +=
 
