@@ -60,7 +60,7 @@ HeaderNamePair headerNameMap[HEADER_COUNT] = {
     {Referer,               "Referer"},
     {TE,                    "TE"},
     {Upgrade,               "Upgrade"},
-    {UserAgent,             "UserAgent"},
+    {UserAgent,             "User-Agent"},
 
     {AcceptRanges,          "Accept-Ranges"},
     {Age,                   "Age"},
