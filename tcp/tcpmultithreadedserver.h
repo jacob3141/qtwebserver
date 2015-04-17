@@ -88,19 +88,11 @@ public:
     void setResponder(Responder *responder);
 
 protected:
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
     /**
      * @brief incomingConnection
      * @param handle
      */
-    void incomingConnection(int handle);
-#else
-    /**
-     * @brief incomingConnection
-     * @param handle
-     */
-    void incomingConnection(qintptr handle);
-#endif
+    void incomingConnection(qintptr socketDescriptor);
 
 private:
     ThreadGuard<Responder*> _responder;

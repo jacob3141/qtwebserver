@@ -24,12 +24,13 @@
 #pragma once
 
 // Own includes
-#include "httpresponder.h"
 #include "httpresource.h"
+#include "tcp/tcpresponder.h"
 #include "misc/threadsafety.h"
 
 // Qt includes
 #include <QObject>
+#include <QMap>
 #include <QSet>
 
 namespace QtWebServer {
@@ -38,18 +39,21 @@ namespace Http {
 
 class WebEngine :
     public QObject,
-    public Http::Responder {
+    public Tcp::Responder {
     Q_OBJECT
 public:
     WebEngine(QObject *parent = 0);
 
-    void respond(const Http::Request& request, Response& response);
+    void respond(QSslSocket *sslSocket);
+    void clientHasConnected(QSslSocket* sslSocket);
+    void clientHasQuit(QSslSocket* sslSocket);
 
     void addResource(Resource *resource);
 
 private:
     Resource *matchResource(QString uniqueResourceIdentifier);
 
+    QMap<QSslSocket*, Request> _pendingRequests;
     QMutex _resourcesMutex;
     QSet<Resource*> _resources;
 };

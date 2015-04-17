@@ -31,6 +31,10 @@ namespace QtWebServer {
 
 namespace Http {
 
+Request::Request()
+    : Logger("WebServer::Http::Request") {
+}
+
 Request::Request(const QByteArray &rawRequest)
     : Logger("WebServer::Http::Request") {
     deserialize(rawRequest);
@@ -74,6 +78,27 @@ QString Request::header(QString headerName) const {
 
 QByteArray Request::body() const {
     return _body;
+}
+
+void Request::appendBodyData(QByteArray bodyData) {
+    _body.append(bodyData);
+}
+
+bool Request::isComplete() const {
+    if(_headers.contains(headerName(ContentLength))) {
+        bool contentLengthValid = false;
+        long long contentLength = _headers.value(headerName(ContentLength)).toLongLong(&contentLengthValid);
+        if(contentLengthValid) {
+            return _body.count() == contentLength;
+        }
+    }
+
+    // TODO: Chunked transfer mode here.
+
+    // If there is nothing indicating the content length
+    // and no information about chunked transfer mode then
+    // we have to assume the requesrespondt is complete
+    return true;
 }
 
 QByteArray Request::takeLine(QByteArray& rawRequest) {
@@ -172,7 +197,7 @@ void Request::deserializeHeader(const QByteArray& rawHeader) {
     }
 
     QString headerName = headerLine.left(colonPosition);
-    QString headerValue = headerLine.right(headerLineLength - colonPosition).trimmed();
+    QString headerValue = headerLine.right(headerLineLength - colonPosition - 1).trimmed();
     _headers.insert(headerName, headerValue);
 }
 

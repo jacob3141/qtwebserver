@@ -101,15 +101,13 @@ void MultithreadedServer::setResponder(Responder *responder) {
     _responder = responder;
 }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-void MultithreadedTcpServer::incomingConnection(int handle) {
-#else
-void MultithreadedServer::incomingConnection(qintptr handle) {
-#endif
+void MultithreadedServer::incomingConnection(qintptr socketDescriptor) {
     ServerThread* serverThread = 0;
     ServerThread::NetworkServiceThreadState state;
+
     QTimer timer;
     timer.start(serverTimeoutSeconds() * 1000);
+
     do {
         serverThread = _serverThreads[_nextRequestDelegatedTo];
         state = serverThread->state();
@@ -126,7 +124,8 @@ void MultithreadedServer::incomingConnection(qintptr handle) {
         }
     } while(state == ServerThread::NetworkServiceThreadStateBusy);
 
-    QMetaObject::invokeMethod(serverThread, "serve", Q_ARG(int, handle));
+    // Use invokeMethod here to decouple threads
+    QMetaObject::invokeMethod(serverThread, "handleNewConnection", Q_ARG(int, socketDescriptor));
 }
 
 } // namespace Tcp

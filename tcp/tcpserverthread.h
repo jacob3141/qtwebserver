@@ -33,6 +33,7 @@
 #include <QThread>
 #include <QSslError>
 #include <QSslSocket>
+#include <QList>
 
 namespace QtWebServer {
 
@@ -63,19 +64,14 @@ public:
      */
     NetworkServiceThreadState state();
 
-public slots:
-    /**
-     * @brief serve
-     * @param socketHandle
-     */
-    void serve(int socketHandle);
-
 private slots:
-    void respondToClient();
+    void handleNewConnection(int socketHandle);
+    void clientDataAvailable();
+    void clientClosedConnection();
+
     void error(QAbstractSocket::SocketError error);
     void sslErrors(QList<QSslError> errors);
     void modeChanged(QSslSocket::SslMode mode);
-    void cleanup();
 
 signals:
     void stateChanged(NetworkServiceThreadState state);
@@ -92,7 +88,6 @@ private:
     MultithreadedServer& _multithreadedServer;
 
     ThreadGuard<NetworkServiceThreadState> _networkServiceThreadState;
-
 };
 
 } // namespace Tcp

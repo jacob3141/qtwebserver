@@ -25,6 +25,7 @@
 #include <QStringList>
 #include <QDateTime>
 #include <QTimer>
+#include <QEventLoop>
 
 // Own includes
 #include "tcpserverthread.h"
@@ -52,14 +53,50 @@ void ServerThread::setState(ServerThread::NetworkServiceThreadState state) {
     emit stateChanged(state);
 }
 
-void ServerThread::serve(int socketHandle) {
-    QSslSocket* socket = new QSslSocket(this);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(respondToClient()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(cleanup()));
-    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
-    connect(socket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrors(QList<QSslError>)));
-    connect(socket, SIGNAL(modeChanged(QSslSocket::SslMode)), this, SLOT(modeChanged(QSslSocket::SslMode)));
-    socket->setSocketDescriptor(socketHandle);
+void ServerThread::handleNewConnection(int socketHandle) {
+    setState(NetworkServiceThreadStateBusy);
+
+    QSslSocket* sslSocket = new QSslSocket(this);
+    connect(sslSocket, SIGNAL(readyRead()), this, SLOT(clientDataAvailable()));
+    connect(sslSocket, SIGNAL(disconnected()), this, SLOT(clientClosedConnection()));
+
+    // Error/informational signals
+    connect(sslSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(sslSocket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrors(QList<QSslError>)));
+    connect(sslSocket, SIGNAL(modeChanged(QSslSocket::SslMode)), this, SLOT(modeChanged(QSslSocket::SslMode)));
+    sslSocket->setSocketDescriptor(socketHandle);
+
+    Responder *responder = _multithreadedServer.responder();
+    if(responder) {
+        responder->clientHasConnected(sslSocket);
+    }
+
+    setState(NetworkServiceThreadStateIdle);
+}
+
+
+void ServerThread::clientDataAvailable() {
+    setState(NetworkServiceThreadStateBusy);
+
+    QSslSocket* sslSocket = (QSslSocket*)sender();
+    Responder *responder = _multithreadedServer.responder();
+    if(responder) {
+        responder->respond(sslSocket);
+    }
+
+    setState(NetworkServiceThreadStateIdle);
+}
+
+void ServerThread::clientClosedConnection() {
+    setState(NetworkServiceThreadStateBusy);
+
+    QSslSocket* socket = (QSslSocket*)sender();
+    Responder *responder = _multithreadedServer.responder();
+    if(responder) {
+        responder->clientHasQuit(socket);
+    }
+
+    setState(NetworkServiceThreadStateIdle);
 }
 
 void ServerThread::error(QAbstractSocket::SocketError error) {
@@ -140,34 +177,7 @@ void ServerThread::error(QAbstractSocket::SocketError error) {
         break;
     }
 
-    log(QString("Socker error: %1 (%2)").arg(errorString).arg((int)error));
-}
-
-void ServerThread::respondToClient() {
-    QSslSocket* socket = (QSslSocket*)sender();
-    setState(NetworkServiceThreadStateBusy);
-
-    Responder *responder = _multithreadedServer.responder();
-    if(responder) {
-        QByteArray request = socket->readAll();
-        QByteArray response;
-        responder->respond(request, response);
-
-        int bytesWritten = 0;
-        int bytesRemaining = 0;
-        do {
-            bytesWritten = socket->write(response);
-            if(bytesWritten == -1) {
-                break;
-            }
-            response = response.right(response.count() - bytesWritten);
-            bytesRemaining = response.count();
-        } while(bytesRemaining > 0);
-    }
-
-    socket->close();
-
-    setState(NetworkServiceThreadStateIdle);
+    log(QString("Socket error: %1 (%2)").arg(errorString).arg((int)error));
 }
 
 void ServerThread::sslErrors(QList<QSslError> errors) {
@@ -188,11 +198,6 @@ void ServerThread::modeChanged(QSslSocket::SslMode mode) {
         log("SSL socket mode changed to server mode.");
         break;
     }
-}
-
-void ServerThread::cleanup() {
-    QSslSocket* socket = (QSslSocket*)sender();
-    socket->deleteLater();
 }
 
 } // namespace Tcp

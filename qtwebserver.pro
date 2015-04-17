@@ -46,7 +46,6 @@ SOURCES += \
 
 HEADERS += \
     http/httprequest.h \
-    http/httpresponder.h \
     http/httpstatuscodes.h \
     http/httpwebengine.h \
     tcp/tcpserverthread.h \

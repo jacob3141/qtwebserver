@@ -39,6 +39,7 @@ namespace Http {
 class Request :
     public Logger {
 public:
+    Request();
     Request(const QByteArray& rawRequest);
 
     /**
@@ -72,6 +73,14 @@ public:
 
     /** @returns the body of the request. */
     QByteArray body() const;
+
+    void appendBodyData(QByteArray bodyData);
+
+    /**
+     * Determines whether the request is complete either based
+     * on the content length or when all chunks have been transmitted
+     */
+    bool isComplete() const;
 
 private:
     void deserialize(QByteArray rawRequest);

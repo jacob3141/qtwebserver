@@ -23,6 +23,8 @@
 
 // Own includes
 #include "httpwebengine.h"
+#include "httprequest.h"
+#include "httpresponse.h"
 
 // Qt includes
 #include <QString>
@@ -38,14 +40,42 @@ WebEngine::WebEngine(QObject *parent) :
     Responder() {
 }
 
-void WebEngine::respond(const Http::Request& request, Response& response) {
-    Resource *resource = matchResource(request.uniqueResourceIdentifier());
-    if(resource != 0) {
-        resource->respond(request, response);
+void WebEngine::respond(QSslSocket* sslSocket) {
+    QByteArray rawRequest = sslSocket->readAll();
+
+    Http::Request httpRequest;
+    if(_pendingRequests.contains(sslSocket)) {
+        httpRequest = _pendingRequests.value(sslSocket);
+        httpRequest.appendBodyData(rawRequest);
+        _pendingRequests.insert(sslSocket, httpRequest);
     } else {
-        // Resource not found
-        response.setStatusCode(NotFound);
+        httpRequest = Http::Request(rawRequest);
+        _pendingRequests.insert(sslSocket, httpRequest);
     }
+
+    if(httpRequest.isComplete()) {
+        Http::Response httpResponse;
+
+        Resource *resource = matchResource(httpRequest.uniqueResourceIdentifier());
+        if(resource != 0) {
+            resource->deliver(httpRequest, httpResponse);
+        } else {
+            // Resource not found
+            httpResponse.setStatusCode(NotFound);
+        }
+
+        write(sslSocket, httpResponse.toByteArray());
+        sslSocket->close();
+        _pendingRequests.remove(sslSocket);
+    }
+}
+
+void WebEngine::clientHasConnected(QSslSocket* sslSocket) {
+    Tcp::Responder::clientHasConnected(sslSocket);
+}
+
+void WebEngine::clientHasQuit(QSslSocket* sslSocket) {
+    Tcp::Responder::clientHasQuit(sslSocket);
 }
 
 void WebEngine::addResource(Resource *resource) {

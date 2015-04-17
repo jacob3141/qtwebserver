@@ -24,8 +24,9 @@
 #pragma once
 
 // Own includes
-#include "httpresponder.h"
 #include "misc/threadsafety.h"
+#include "httprequest.h"
+#include "httpresponse.h"
 
 // Qt includes
 #include <QObject>
@@ -36,8 +37,7 @@ namespace QtWebServer {
 namespace Http {
 
 class Resource :
-    public QObject,
-    public Responder {
+    public QObject {
     Q_OBJECT
 public:
     Resource(QString uniqueIdentifier,
@@ -74,6 +74,8 @@ public:
     QString contentType();
 
     void setContentType(QString contentType);
+
+    virtual void deliver(const Http::Request& request, Http::Response& response) = 0;
 
 private:
     ThreadGuard<QString> _uniqueIdentifier;
