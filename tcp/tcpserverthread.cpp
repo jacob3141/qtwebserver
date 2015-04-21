@@ -70,11 +70,6 @@ void ServerThread::handleNewConnection(int socketHandle) {
     sslSocket->setSocketDescriptor(socketHandle);
     sslSocket->setSslConfiguration(_multithreadedServer.sslConfiguration());
 
-    Responder *responder = _multithreadedServer.responder();
-    if(responder) {
-        responder->clientHasConnected(sslSocket);
-    }
-
     setState(NetworkServiceThreadStateIdle);
 }
 
@@ -95,11 +90,10 @@ void ServerThread::clientDataAvailable() {
 void ServerThread::clientClosedConnection() {
     setState(NetworkServiceThreadStateBusy);
 
-    QSslSocket* socket = (QSslSocket*)sender();
-    Responder *responder = _multithreadedServer.responder();
-    if(responder) {
-        responder->clientHasQuit(socket);
-    }
+    QSslSocket* sslSocket = (QSslSocket*)sender();
+
+    sslSocket->close();
+    sslSocket->deleteLater();
 
     setState(NetworkServiceThreadStateIdle);
 }

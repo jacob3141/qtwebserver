@@ -25,7 +25,6 @@
 
 // Qt includes
 #include <QSslSocket>
-#include <QList>
 
 namespace QtWebServer {
 
@@ -34,41 +33,6 @@ namespace Tcp {
 class Responder {
 public:
     virtual void respond(QSslSocket* sslSocket) = 0;
-
-    /** Called whenever a client has connected. */
-    virtual void clientHasConnected(QSslSocket* sslSocket) {
-        _connectedClients.append(sslSocket);
-    }
-
-    /** Called whenever a client has quit. */
-    virtual void clientHasQuit(QSslSocket* sslSocket) {
-        _connectedClients.removeAll(sslSocket);
-        sslSocket->deleteLater();
-    }
-
-    bool isClientConnected(QSslSocket *sslSocket) {
-        return _connectedClients.contains(sslSocket);
-    }
-
-    QByteArray read(QSslSocket *sslSocket) {
-        return sslSocket->readAll();
-    }
-
-    void write(QSslSocket *sslSocket, QByteArray raw) {
-        int bytesWritten = 0;
-        int bytesRemaining = 0;
-        do {
-            bytesWritten = sslSocket->write(raw);
-            if(bytesWritten == -1) {
-                break;
-            }
-            raw = raw.right(raw.count() - bytesWritten);
-            bytesRemaining = raw.count();
-        } while(bytesRemaining > 0);
-    }
-
-private:
-    QList<QSslSocket*> _connectedClients;
 };
 
 } // namespace Tcp

@@ -41,13 +41,13 @@ WebEngine::WebEngine(QObject *parent) :
 }
 
 void WebEngine::respond(QSslSocket* sslSocket) {
-    if(awaitsSslHandshake(sslSocket)) {
+    if(probeAwaitsSslHandshake(sslSocket)) {
         sslSocket->startServerEncryption();
         return;
     }
 
     Http::Request httpRequest = acquireSocket(sslSocket);
-    if(httpRequest.isComplete()) {
+    if(httpRequest.isValid() && httpRequest.isComplete()) {
         Http::Response httpResponse;
 
         Resource *resource = matchResource(httpRequest.uniqueResourceIdentifier());
@@ -57,9 +57,9 @@ void WebEngine::respond(QSslSocket* sslSocket) {
             httpResponse.setStatusCode(NotFound);
         }
 
-        write(sslSocket, httpResponse.toByteArray());
+        writeToSocket(sslSocket, httpResponse.toByteArray());
+        sslSocket->disconnectFromHost();
 
-        sslSocket->close();
         releaseSocket(sslSocket);
     }
 }
@@ -83,14 +83,6 @@ void WebEngine::releaseSocket(QSslSocket *sslSocket) {
     _pendingRequests.remove(sslSocket);
 }
 
-void WebEngine::clientHasConnected(QSslSocket* sslSocket) {
-    Tcp::Responder::clientHasConnected(sslSocket);
-}
-
-void WebEngine::clientHasQuit(QSslSocket* sslSocket) {
-    Tcp::Responder::clientHasQuit(sslSocket);
-}
-
 void WebEngine::addResource(Resource *resource) {
     MutexLocker mutexLocker(_resourcesMutex); Q_UNUSED(mutexLocker);
     if(resource == 0) {
@@ -101,7 +93,7 @@ void WebEngine::addResource(Resource *resource) {
     _resources.insert(resource);
 }
 
-bool WebEngine::awaitsSslHandshake(QSslSocket *sslSocket) {
+bool WebEngine::probeAwaitsSslHandshake(QSslSocket *sslSocket) {
     // If the connection is already encrypted a handshake doesn't make
     // sense
     if(sslSocket->isEncrypted()) {
@@ -114,6 +106,8 @@ bool WebEngine::awaitsSslHandshake(QSslSocket *sslSocket) {
     // If that also fails, the request is probably broken anyways.
     QByteArray peekBytes = sslSocket->peek(32768);
     Http::Request request(peekBytes);
+
+    // If the data is garbage, it is likely to be encrypted*///////////////////////////////////////////////////////////////*//////////////////////**///////*/
     return !request.isValid();
 }
 
@@ -125,6 +119,23 @@ Resource *WebEngine::matchResource(QString uniqueResourceIdentifier) {
         }
     }
     return 0;
+}
+
+QByteArray WebEngine::readFromSocket(QSslSocket *sslSocket) {
+    return sslSocket->readAll();
+}
+
+void WebEngine::writeToSocket(QSslSocket *sslSocket, QByteArray raw) {
+    int bytesWritten = 0;
+    int bytesRemaining = 0;
+    do {
+        bytesWritten = sslSocket->write(raw);
+        if(bytesWritten == -1) {
+            break;
+        }
+        raw = raw.right(raw.count() - bytesWritten);
+        bytesRemaining = raw.count();
+    } while(bytesRemaining > 0);
 }
 
 } // namespace Http

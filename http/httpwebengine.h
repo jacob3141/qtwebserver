@@ -45,17 +45,17 @@ public:
     WebEngine(QObject *parent = 0);
 
     void respond(QSslSocket *sslSocket);
-    void clientHasConnected(QSslSocket* sslSocket);
-    void clientHasQuit(QSslSocket* sslSocket);
-
     void addResource(Resource *resource);
 
 private:
     Http::Request acquireSocket(QSslSocket *sslSocket);
     void releaseSocket(QSslSocket *sslSocket);
 
-    bool awaitsSslHandshake(QSslSocket *sslSocket);
+    bool probeAwaitsSslHandshake(QSslSocket *sslSocket);
     Resource *matchResource(QString uniqueResourceIdentifier);
+
+    QByteArray readFromSocket(QSslSocket *sslSocket);
+    void writeToSocket(QSslSocket *sslSocket, QByteArray raw);
 
     QMap<QSslSocket*, Request> _pendingRequests;
     QSet<Resource*> _resources;
