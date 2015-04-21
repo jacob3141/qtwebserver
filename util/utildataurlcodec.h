@@ -33,6 +33,20 @@ namespace Util {
 
 class DataUrlCodec {
 public:
+    struct DataUrlContents {
+        DataUrlContents() {
+            data = "";
+            mimeTypeName = "";
+            charset = "";
+            base64Encoded = false;
+        }
+
+        QByteArray data;
+        QString mimeTypeName;
+        QString charset;
+        bool base64Encoded;
+    };
+
     DataUrlCodec();
     ~DataUrlCodec();
 
@@ -45,11 +59,16 @@ public:
      * @param encodeBase64 Encode as base64 string, percent encoding otherwise.
      * @returns the UTF-8 encoded data URL.
      */
-    static QByteArray toDataUrl(QByteArray data,
-                                QString mimeType = "",
-                                bool encodeBase64 = true);
+    static QByteArray encodeDataUrl(DataUrlContents dataUrlContents);
+
+    static DataUrlContents decodeDataUrl(QByteArray dataUrl);
+
+    static QByteArray dataUrlFromImage(QImage image,
+                                       const char* format = 0,
+                                       int quality = -1);
 
     static QImage imageFromDataUrl(QByteArray dataUrl);
+
 };
 
 } // namespace Util

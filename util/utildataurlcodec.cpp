@@ -28,6 +28,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QImage>
+#include <QBuffer>
 
 namespace QtWebServer {
 
@@ -39,79 +40,112 @@ DataUrlCodec::DataUrlCodec() {
 DataUrlCodec::~DataUrlCodec() {
 }
 
-QByteArray DataUrlCodec::toDataUrl(QByteArray data,
-                                   QString mimeType,
-                                   bool encodeBase64) {
-    QMimeDatabase mimeDatabase;
-    QMimeType autoMimeType = mimeDatabase.mimeTypeForData(data);
-
-    QString encodingParamter = "";
-    if(encodeBase64) {
-        encodingParamter = ";base64";
+QByteArray DataUrlCodec::encodeDataUrl(DataUrlContents dataUrlContents) {
+    if(dataUrlContents.mimeTypeName.isEmpty()) {
+        QMimeDatabase mimeDatabase;
+        QMimeType mimeType = mimeDatabase.mimeTypeForData(dataUrlContents.data);
+        dataUrlContents.mimeTypeName = mimeType.name();
     }
 
+    QString encodingParamter;
     QByteArray encodedData;
-    if(encodeBase64) {
-        encodedData = data.toBase64();
+    if(dataUrlContents.base64Encoded) {
+        encodingParamter = ";base64";
+        encodedData = dataUrlContents.data.toBase64();
     } else {
-        encodedData = data.toPercentEncoding();
+        encodingParamter = "";
+        encodedData = dataUrlContents.data.toPercentEncoding();
     }
 
-    return QString("data:%1;charset=utf-8%2,%3")
-        .arg(mimeType.isEmpty() ? autoMimeType.name() : mimeType)
-        .arg(encodingParamter)
-        .arg(QString::fromUtf8(encodedData))
-        .toUtf8();
+    QString charsetString;
+    if(dataUrlContents.charset.toLower() == "utf-8") {
+        charsetString = ";charset=utf-8";
+    } else {
+        charsetString = "";
+    }
+
+    QString dataUrlString = QString("data:%1%2%3,%4")
+            .arg(dataUrlContents.mimeTypeName)
+            .arg(charsetString)
+            .arg(encodingParamter)
+            .arg(QString::fromUtf8(encodedData));
+
+    if(dataUrlContents.charset.toLower() == "utf-8") {
+        return dataUrlString.toUtf8();
+    } else {
+        return dataUrlString.toLatin1();
+    }
 }
 
-QImage DataUrlCodec::imageFromDataUrl(QByteArray dataUrl) {
+DataUrlCodec::DataUrlContents DataUrlCodec::decodeDataUrl(QByteArray dataUrl) {
+    DataUrlContents dataUrlContents;
+
     if(!dataUrl.startsWith("data:")) {
-        return QImage();
+        return dataUrlContents;
     }
 
+    // Remove the data: prefix by removing the first five characters
     dataUrl = dataUrl.right(dataUrl.count() - 5);
 
+    // Split at comma to separate the preamble from the actual data
+    // data:image/png;charset=utf-8;base64,<data>
     QList<QByteArray> dataUrlParts = dataUrl.split(',');
 
-    // data:image/png;charset=utf-8;base64,<data>
+    // If there is no separation between preamle and data, the url is
+    // invalid
     if(dataUrlParts.count() < 2) {
-        return QImage();
+        return dataUrlContents;
     }
 
     // Split into data info and data
     QByteArray dataInfo = dataUrlParts[0];
-    QByteArray data = dataUrlParts[1];
+    dataUrlContents.data = dataUrlParts[1];
 
-    bool base64Encoded = false;
-    bool utf8Charset = false;
-    QString mimeTypeName = "text/plain";
-
+    // Interpret the single preamble parts
     QList<QByteArray> dataInfoParts = dataInfo.split(';');
     foreach(QByteArray dataInfoPart, dataInfoParts) {
         if(dataInfoPart == "base64") {
-            base64Encoded = true;
+            dataUrlContents.base64Encoded = true;
         } else
         if(dataInfoPart.startsWith("charset=")) {
             dataInfoPart = dataInfoPart.right(dataInfoPart.count() - 8);
-            if(dataInfoPart.toLower() == "utf-8") {
-                utf8Charset = true;
-            }
+            dataUrlContents.charset = QString::fromUtf8(dataInfoPart.toLower());
         } else {
-            mimeTypeName = QString::fromUtf8(dataInfoPart);
+            dataUrlContents.mimeTypeName = QString::fromUtf8(dataInfoPart);
         }
     }
 
-    if(base64Encoded) {
-        data = QByteArray::fromBase64(data);
+    // Decode data depending on whether it has been base64 or percent encoded
+    if(dataUrlContents.base64Encoded) {
+        dataUrlContents.data = QByteArray::fromBase64(dataUrlContents.data);
     } else {
-        data = QByteArray::fromPercentEncoding(data);
+        dataUrlContents.data = QByteArray::fromPercentEncoding(dataUrlContents.data);
     }
 
-    if(!mimeTypeName.startsWith("image/")) {
+    return dataUrlContents;
+}
+
+QByteArray DataUrlCodec::dataUrlFromImage(QImage image,
+                                          const char *format,
+                                          int quality) {
+    DataUrlContents dataUrlContents;
+    QBuffer buffer(&dataUrlContents.data);
+    buffer.open(QIODevice::WriteOnly);
+    if(buffer.isOpen()) {
+        image.save(&buffer, format, quality);
+        buffer.close();
+    }
+    return encodeDataUrl(dataUrlContents);
+}
+
+QImage DataUrlCodec::imageFromDataUrl(QByteArray dataUrl) {
+    DataUrlContents dataUrlContents = decodeDataUrl(dataUrl);
+
+    if(!dataUrlContents.mimeTypeName.startsWith("image/")) {
         return QImage();
     }
 
-    return QImage::fromData(data);
+    return QImage::fromData(dataUrlContents.data);
 }
 
 } // Util

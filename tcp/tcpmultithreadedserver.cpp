@@ -144,8 +144,7 @@ void MultithreadedServer::setDefaultSslConfiguration() {
     // that relies on SSL with the default configuration set. You can
     // generate your own key and self-signed certificate:
     //
-    // $ openssl req -x509 -newkey rsa:2048 -keyout server.key \
-    //               -nodes -days 365 -out server.crt
+    // $ openssl req -x509 -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
 
     QSslConfiguration sslConfiguration;
     QByteArray defaultKey =
