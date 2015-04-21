@@ -33,14 +33,16 @@ namespace Http {
 
 Request::Request()
     : Logger("WebServer::Http::Request") {
+    setDefaults();
 }
 
 Request::Request(const QByteArray &rawRequest)
     : Logger("WebServer::Http::Request") {
+    setDefaults();
     deserialize(rawRequest);
 }
 
-bool Request::valid() const {
+bool Request::isValid() const {
     return _valid;
 }
 
@@ -130,14 +132,19 @@ QByteArray Request::takeLine(QByteArray& rawRequest) {
     return line;
 }
 
-void Request::deserialize(QByteArray rawRequest) {
+void Request::setDefaults() {
     _headers.clear();
     _parameters.clear();
-    _valid = true;
+    _valid = false;
     _method = "";
     _uniqueResourceIdentifier = "";
     _version = "";
+    _body = "";
+    _queryString = "";
+    _fragment = "";
+}
 
+void Request::deserialize(QByteArray rawRequest) {
     // Read ahead the first line in the request
     QByteArray rawRequestLine = takeLine(rawRequest);
     QStringList requestLine = QString::fromUtf8(rawRequestLine)
@@ -148,8 +155,6 @@ void Request::deserialize(QByteArray rawRequest) {
         // string, the request uri and the HTTP version. If we were
         // strict, we shouldn't even accept anything larger than four
         // strings, but we're permissive here.
-        _valid = false;
-        log(QString("Invalid request line: %1 parts").arg(requestLine.count()));
         return;
     }
 
@@ -179,6 +184,7 @@ void Request::deserialize(QByteArray rawRequest) {
 
     // By definition, all that follows after a \r\n\r\n is the body of the request.
     _body = QByteArray(rawRequest);
+    _valid = true;
 }
 
 void Request::deserializeHeader(const QByteArray& rawHeader) {

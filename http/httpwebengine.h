@@ -51,11 +51,17 @@ public:
     void addResource(Resource *resource);
 
 private:
+    Http::Request acquireSocket(QSslSocket *sslSocket);
+    void releaseSocket(QSslSocket *sslSocket);
+
+    bool awaitsSslHandshake(QSslSocket *sslSocket);
     Resource *matchResource(QString uniqueResourceIdentifier);
 
     QMap<QSslSocket*, Request> _pendingRequests;
-    QMutex _resourcesMutex;
     QSet<Resource*> _resources;
+
+    QMutex _pendingRequestsMutex;
+    QMutex _resourcesMutex;
 };
 
 }

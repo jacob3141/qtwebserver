@@ -64,7 +64,11 @@ void ServerThread::handleNewConnection(int socketHandle) {
     connect(sslSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
     connect(sslSocket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslErrors(QList<QSslError>)));
     connect(sslSocket, SIGNAL(modeChanged(QSslSocket::SslMode)), this, SLOT(modeChanged(QSslSocket::SslMode)));
+    connect(sslSocket, SIGNAL(encrypted()), this, SLOT(encrypted()));
+    connect(sslSocket, SIGNAL(encryptedBytesWritten(qint64)), this, SLOT(encryptedBytesWritten(qint64)));
+
     sslSocket->setSocketDescriptor(socketHandle);
+    sslSocket->setSslConfiguration(_multithreadedServer.sslConfiguration());
 
     Responder *responder = _multithreadedServer.responder();
     if(responder) {
@@ -79,6 +83,7 @@ void ServerThread::clientDataAvailable() {
     setState(NetworkServiceThreadStateBusy);
 
     QSslSocket* sslSocket = (QSslSocket*)sender();
+
     Responder *responder = _multithreadedServer.responder();
     if(responder) {
         responder->respond(sslSocket);
@@ -100,6 +105,11 @@ void ServerThread::clientClosedConnection() {
 }
 
 void ServerThread::error(QAbstractSocket::SocketError error) {
+    QSslSocket* sslSocket = dynamic_cast<QSslSocket*>(sender());
+    if(sslSocket) {
+        log(sslSocket->errorString(), Log::Error);
+    }
+
     QString errorString = "Unknown error";
     switch(error) {
     case QAbstractSocket::ConnectionRefusedError:
@@ -198,6 +208,14 @@ void ServerThread::modeChanged(QSslSocket::SslMode mode) {
         log("SSL socket mode changed to server mode.");
         break;
     }
+}
+
+void ServerThread::encrypted() {
+    log("SSL Socket entered encrypted state.");
+}
+
+void ServerThread::encryptedBytesWritten(qint64 bytes) {
+    log(QString("Encrypted bytes written: %1").arg(bytes));
 }
 
 } // namespace Tcp

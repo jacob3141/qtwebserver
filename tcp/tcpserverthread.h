@@ -72,6 +72,8 @@ private slots:
     void error(QAbstractSocket::SocketError error);
     void sslErrors(QList<QSslError> errors);
     void modeChanged(QSslSocket::SslMode mode);
+    void encrypted();
+    void encryptedBytesWritten(qint64 bytes);
 
 signals:
     void stateChanged(NetworkServiceThreadState state);

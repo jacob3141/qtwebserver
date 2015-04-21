@@ -48,7 +48,7 @@ public:
      * using any other methods.
      * @returns true, if the request has been valid, false otherwise.
      */
-    bool valid() const;
+    bool isValid() const;
 
     /** @returns the method for this request. */
     QString method() const;
@@ -83,6 +83,7 @@ public:
     bool isComplete() const;
 
 private:
+    void setDefaults();
     void deserialize(QByteArray rawRequest);
     void deserializeHeader(const QByteArray& rawHeader);
     QByteArray takeLine(QByteArray& rawRequest);

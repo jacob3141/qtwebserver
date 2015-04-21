@@ -41,18 +41,12 @@ WebEngine::WebEngine(QObject *parent) :
 }
 
 void WebEngine::respond(QSslSocket* sslSocket) {
-    QByteArray rawRequest = sslSocket->readAll();
-
-    Http::Request httpRequest;
-    if(_pendingRequests.contains(sslSocket)) {
-        httpRequest = _pendingRequests.value(sslSocket);
-        httpRequest.appendBodyData(rawRequest);
-        _pendingRequests.insert(sslSocket, httpRequest);
-    } else {
-        httpRequest = Http::Request(rawRequest);
-        _pendingRequests.insert(sslSocket, httpRequest);
+    if(awaitsSslHandshake(sslSocket)) {
+        sslSocket->startServerEncryption();
+        return;
     }
 
+    Http::Request httpRequest = acquireSocket(sslSocket);
     if(httpRequest.isComplete()) {
         Http::Response httpResponse;
 
@@ -60,14 +54,33 @@ void WebEngine::respond(QSslSocket* sslSocket) {
         if(resource != 0) {
             resource->deliver(httpRequest, httpResponse);
         } else {
-            // Resource not found
             httpResponse.setStatusCode(NotFound);
         }
 
         write(sslSocket, httpResponse.toByteArray());
+
         sslSocket->close();
-        _pendingRequests.remove(sslSocket);
+        releaseSocket(sslSocket);
     }
+}
+
+Http::Request WebEngine::acquireSocket(QSslSocket *sslSocket) {
+    MutexLocker mutexLocker(_pendingRequestsMutex); Q_UNUSED(mutexLocker);
+    Http::Request httpRequest;
+    if(_pendingRequests.contains(sslSocket)) {
+        httpRequest = _pendingRequests.value(sslSocket);
+        httpRequest.appendBodyData(sslSocket->readAll());
+        _pendingRequests.insert(sslSocket, httpRequest);
+    } else {
+        httpRequest = Http::Request(sslSocket->readAll());
+        _pendingRequests.insert(sslSocket, httpRequest);
+    }
+    return httpRequest;
+}
+
+void WebEngine::releaseSocket(QSslSocket *sslSocket) {
+    MutexLocker mutexLocker(_pendingRequestsMutex); Q_UNUSED(mutexLocker);
+    _pendingRequests.remove(sslSocket);
 }
 
 void WebEngine::clientHasConnected(QSslSocket* sslSocket) {
@@ -86,6 +99,22 @@ void WebEngine::addResource(Resource *resource) {
 
     resource->setParent(this);
     _resources.insert(resource);
+}
+
+bool WebEngine::awaitsSslHandshake(QSslSocket *sslSocket) {
+    // If the connection is already encrypted a handshake doesn't make
+    // sense
+    if(sslSocket->isEncrypted()) {
+        return false;
+    }
+
+    // Since there is no way to unambigously tell that the data coming
+    // from a client is unencrypted or not, we try to peek the data and
+    // see whether we can successfully initiate an SSL handshake.
+    // If that also fails, the request is probably broken anyways.
+    QByteArray peekBytes = sslSocket->peek(32768);
+    Http::Request request(peekBytes);
+    return !request.isValid();
 }
 
 Resource *WebEngine::matchResource(QString uniqueResourceIdentifier) {

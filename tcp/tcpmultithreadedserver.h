@@ -32,6 +32,7 @@
 // Qt includes
 #include <QTcpServer>
 #include <QVector>
+#include <QSslConfiguration>
 
 namespace QtWebServer {
 
@@ -87,6 +88,9 @@ public:
     /** Sets the responder for this server. */
     void setResponder(Responder *responder);
 
+    void setSslConfiguration(QSslConfiguration sslConfiguration);
+    QSslConfiguration sslConfiguration() const;
+
 protected:
     /**
      * @brief incomingConnection
@@ -95,12 +99,16 @@ protected:
     void incomingConnection(qintptr socketDescriptor);
 
 private:
+    void setDefaultSslConfiguration();
+
     ThreadGuard<Responder*> _responder;
     ThreadGuard<int> _serverTimeoutSeconds;
 
     // Scheduler
     int _nextRequestDelegatedTo;
     QVector<ServerThread*> _serverThreads;
+
+    ThreadGuard<QSslConfiguration> _sslConfiguration;
 };
 
 } // namespace Tcp
