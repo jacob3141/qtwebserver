@@ -107,7 +107,7 @@ bool WebEngine::probeAwaitsSslHandshake(QSslSocket *sslSocket) {
     QByteArray peekBytes = sslSocket->peek(32768);
     Http::Request request(peekBytes);
 
-    // If the data is garbage, it is likely to be encrypted*///////////////////////////////////////////////////////////////*//////////////////////**///////*/
+    // If the data is garbage, it is likely to be encrypted
     return !request.isValid();
 }
 
