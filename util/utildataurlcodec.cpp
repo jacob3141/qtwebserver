@@ -27,7 +27,6 @@
 // Qt includes
 #include <QMimeDatabase>
 #include <QMimeType>
-#include <QImage>
 #include <QBuffer>
 
 namespace QtWebServer {
@@ -41,6 +40,10 @@ DataUrlCodec::~DataUrlCodec() {
 }
 
 QByteArray DataUrlCodec::encodeDataUrl(DataUrlContents dataUrlContents) {
+    if(dataUrlContents.data.isEmpty()) {
+        return QByteArray();
+    }
+
     if(dataUrlContents.mimeTypeName.isEmpty()) {
         QMimeDatabase mimeDatabase;
         QMimeType mimeType = mimeDatabase.mimeTypeForData(dataUrlContents.data);
@@ -107,12 +110,12 @@ DataUrlCodec::DataUrlContents DataUrlCodec::decodeDataUrl(QByteArray dataUrl) {
         if(dataInfoPart == "base64") {
             dataUrlContents.base64Encoded = true;
         } else
-        if(dataInfoPart.startsWith("charset=")) {
-            dataInfoPart = dataInfoPart.right(dataInfoPart.count() - 8);
-            dataUrlContents.charset = QString::fromUtf8(dataInfoPart.toLower());
-        } else {
-            dataUrlContents.mimeTypeName = QString::fromUtf8(dataInfoPart);
-        }
+            if(dataInfoPart.startsWith("charset=")) {
+                dataInfoPart = dataInfoPart.right(dataInfoPart.count() - 8);
+                dataUrlContents.charset = QString::fromUtf8(dataInfoPart.toLower());
+            } else {
+                dataUrlContents.mimeTypeName = QString::fromUtf8(dataInfoPart);
+            }
     }
 
     // Decode data depending on whether it has been base64 or percent encoded
@@ -135,6 +138,7 @@ QByteArray DataUrlCodec::dataUrlFromImage(QImage image,
         image.save(&buffer, format, quality);
         buffer.close();
     }
+
     return encodeDataUrl(dataUrlContents);
 }
 
@@ -146,6 +150,32 @@ QImage DataUrlCodec::imageFromDataUrl(QByteArray dataUrl) {
     }
 
     return QImage::fromData(dataUrlContents.data);
+}
+
+QByteArray DataUrlCodec::dataUrlFromPixmap(QPixmap pixmap,
+                                           const char* format,
+                                           int quality) {
+    DataUrlContents dataUrlContents;
+    QBuffer buffer(&dataUrlContents.data);
+    buffer.open(QIODevice::WriteOnly);
+    if(buffer.isOpen()) {
+        pixmap.save(&buffer, format, quality);
+        buffer.close();
+    }
+
+    return encodeDataUrl(dataUrlContents);
+}
+
+QPixmap DataUrlCodec::pixmapFromDataUrl(QByteArray dataUrl) {
+    DataUrlContents dataUrlContents = decodeDataUrl(dataUrl);
+
+    if(!dataUrlContents.mimeTypeName.startsWith("image/")) {
+        return QPixmap();
+    }
+
+    QPixmap pixmap;
+    pixmap.loadFromData(dataUrlContents.data);
+    return pixmap;
 }
 
 } // Util

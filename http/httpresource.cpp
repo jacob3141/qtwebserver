@@ -79,6 +79,7 @@ QMap<QString, QString> Resource::uriParameters(QString uniqueIdentifier) {
             uriParameterMap.insert(key, value);
         }
     }
+
     return uriParameterMap;
 }
 

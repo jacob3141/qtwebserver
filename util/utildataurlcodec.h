@@ -23,9 +23,12 @@
 
 #pragma once
 
+// Qt includes
 #include <QByteArray>
 #include <QString>
 #include <QFile>
+#include <QImage>
+#include <QPixmap>
 
 namespace QtWebServer {
 
@@ -54,21 +57,52 @@ public:
      * Takes the provided data and creates a data URL.
      * When no mime type has been provided, it will try to guess
      * the mimetype from the provided data.
-     * @param data The binary data to be encoded.
-     * @param mimeType Explicit mimetype.
-     * @param encodeBase64 Encode as base64 string, percent encoding otherwise.
      * @returns the UTF-8 encoded data URL.
      */
     static QByteArray encodeDataUrl(DataUrlContents dataUrlContents);
 
+    /**
+     * Decodes the data from the provided data url.
+     * @param dataUrl The data url that should be decoded.
+     * @returns the decoded data.
+     */
     static DataUrlContents decodeDataUrl(QByteArray dataUrl);
 
+    /**
+     * Convenience method to encode an image to a data url.
+     * @param image The image that shall be encoded.
+     * @param format The format, @see QImage::save() for more info.
+     * @param quality Compression quality, @see QImage::save() for more info.
+     * @returns the encoded image data url.
+     */
     static QByteArray dataUrlFromImage(QImage image,
                                        const char* format = 0,
                                        int quality = -1);
 
+    /**
+     * Reads an image from the data url.
+     * @param dataUrl The data url to read from.
+     * @returns the image.
+     */
     static QImage imageFromDataUrl(QByteArray dataUrl);
 
+    /**
+     * Convenience method to encode a pixmap to a data url.
+     * @param image The pixmap that shall be encoded.
+     * @param format The format, @see QPixmap::save() for more info.
+     * @param quality Compression quality, @see QPixmap::save() for more info.
+     * @returns the encoded pixmap data url.
+     */
+    static QByteArray dataUrlFromPixmap(QPixmap pixmap,
+                                        const char* format = 0,
+                                        int quality = -1);
+
+    /**
+     * Reads a pixmap from the data url.
+     * @param dataUrl The data url to read from.
+     * @returns the pixmap.
+     */
+    static QPixmap pixmapFromDataUrl(QByteArray dataUrl);
 };
 
 } // namespace Util
