@@ -23,6 +23,7 @@
 
 // Own includes
 #include "httprequest.h"
+#include "util/utilformurlcodec.h"
 
 // Qt includes
 #include <QStringList>
@@ -58,12 +59,8 @@ QString Request::version() const {
     return _version;
 }
 
-QString Request::queryString() const {
-    return _queryString;
-}
-
-QMap<QString, QString> Request::parameters() const {
-    return _parameters;
+QMap<QString, QByteArray> Request::urlParameters() const {
+    return _urlParameters;
 }
 
 QMap<QString, QString> Request::headers() const {
@@ -134,14 +131,12 @@ QByteArray Request::takeLine(QByteArray& rawRequest) {
 
 void Request::setDefaults() {
     _headers.clear();
-    _parameters.clear();
+    _urlParameters.clear();
     _valid = false;
     _method = "";
     _uniqueResourceIdentifier = "";
     _version = "";
     _body = "";
-    _queryString = "";
-    _fragment = "";
 }
 
 void Request::deserialize(QByteArray rawRequest) {
@@ -150,7 +145,7 @@ void Request::deserialize(QByteArray rawRequest) {
     QStringList requestLine = QString::fromUtf8(rawRequestLine)
                                 .split(QRegExp("\\s+"));
 
-    if(requestLine.size() < 3) {
+    if(requestLine.count() < 3) {
         // The request line has to contain three strings: The method
         // string, the request uri and the HTTP version. If we were
         // strict, we shouldn't even accept anything larger than four
@@ -161,16 +156,8 @@ void Request::deserialize(QByteArray rawRequest) {
     _method = requestLine.at(0).toLower();
 
     QStringList splittedURI = requestLine.at(1).split('?', QString::SkipEmptyParts);
-    _queryString = "";
-    if(splittedURI.size() > 1) {
-        _queryString = splittedURI.at(1);
-        QStringList queryParameterAssignmentList = _queryString.split('&', QString::SkipEmptyParts);
-        foreach(QString queryParameterAssignment, queryParameterAssignmentList) {
-            QStringList assignment = queryParameterAssignment.split('=', QString::SkipEmptyParts);
-            if(assignment.size() > 1) {
-                _parameters[assignment.at(0)] = assignment.at(1);
-            }
-        }
+    if(splittedURI.count() > 1) {
+        _urlParameters = Util::FormUrlCodec::decodeFormUrl(splittedURI.at(1).toUtf8());
     }
 
     _uniqueResourceIdentifier = splittedURI.at(0);

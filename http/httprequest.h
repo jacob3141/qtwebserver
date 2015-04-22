@@ -59,11 +59,8 @@ public:
     /** @returns the HTTP version for this request. */
     QString version() const;
 
-    /** @returns the query string for this request. */
-    QString queryString() const;
-
     /** @returns url parameters. */
-    QMap<QString, QString> parameters() const;
+    QMap<QString, QByteArray> urlParameters() const;
 
     /** @returns a map of request headers (name and value). **/
     QMap<QString, QString> headers() const;
@@ -89,13 +86,11 @@ private:
     QByteArray takeLine(QByteArray& rawRequest);
 
     QByteArray _body;
-    QString _queryString;
-    QString _fragment;
     QString _method;
     QString _uniqueResourceIdentifier;
     QString _version;
     bool _valid;
-    QMap<QString, QString> _parameters;
+    QMap<QString, QByteArray> _urlParameters;
     QMap<QString, QString> _headers;
 };
 

@@ -50,9 +50,6 @@ public:
         bool base64Encoded;
     };
 
-    DataUrlCodec();
-    ~DataUrlCodec();
-
     /**
      * Takes the provided data and creates a data URL.
      * When no mime type has been provided, it will try to guess
@@ -103,6 +100,10 @@ public:
      * @returns the pixmap.
      */
     static QPixmap pixmapFromDataUrl(QByteArray dataUrl);
+
+private:
+    DataUrlCodec();
+    ~DataUrlCodec();
 };
 
 } // namespace Util

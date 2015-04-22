@@ -42,7 +42,8 @@ SOURCES += \
     util/utilassetsresource.cpp \
     http/httpresponse.cpp \
     http/httpheaders.cpp \
-    util/utildataurlcodec.cpp
+    util/utildataurlcodec.cpp \
+    util/utilformurlcodec.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -61,7 +62,8 @@ HEADERS += \
     util/utilassetsresource.h \
     http/httpresponse.h \
     http/httpheaders.h \
-    util/utildataurlcodec.h
+    util/utildataurlcodec.h \
+    util/utilformurlcodec.h
 
 RESOURCES +=
 
