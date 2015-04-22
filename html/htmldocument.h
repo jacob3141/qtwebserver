@@ -60,7 +60,7 @@ public:
      * @param resourceName The physical resource name.
      * @returns true, if the partial could appended.
      */
-    bool appendPartial(QDomElement domElesment, QString resourceName);
+    bool appendPartial(QDomElement domElement, QString resourceName);
 
     /**
      * Search the document recursively for the given class. For performance
