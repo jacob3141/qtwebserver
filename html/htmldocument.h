@@ -58,9 +58,17 @@ public:
      * Appends a partial to the specific element in the DOM tree.
      * @param domElement The element that this partial will be added to.
      * @param resourceName The physical resource name.
-     * @returns true, if the partial could appended.
+     * @returns true, if the partial could be appended.
      */
     bool appendPartial(QDomElement domElement, QString resourceName);
+
+    /**
+     * Parses and append the given HTML to the DOM.
+     * @param domElement The DOM element the parsed HTML shall be added to.
+     * @param html The html code that shall be added.
+     * @returns true, if the html code could be appended.
+     */
+    bool appendHtml(QDomElement domElement, QString html);
 
     /**
      * Search the document recursively for the given class. For performance

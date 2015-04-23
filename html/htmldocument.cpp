@@ -74,20 +74,26 @@ QDomElement Document::body() {
 
 bool Document::appendPartial(QDomElement domElement, QString resourceName) {
     QFile partialFile(resourceName);
-    QDomDocument domDocument;
     partialFile.open(QFile::ReadOnly);
-    if(!partialFile.isOpen()) {
+    if(partialFile.isOpen()) {
+        bool success = appendHtml(domElement, partialFile.readAll());
+        partialFile.close();
+        return success;
+    }
+    return false;
+}
+
+bool Document::appendHtml(QDomElement domElement, QString html) {
+    QDomDocument domDocument;
+    bool parseHtml = domDocument.setContent(html);
+
+    if(!parseHtml) {
         return false;
     }
-    bool parsePartialContent = domDocument.setContent(partialFile.readAll());
-    partialFile.close();
 
-    if(!parsePartialContent) {
-        return false;
-    }
-
-    domElement.appendChild(domDocument.documentElement());
-    return true;
+    // From the Qt documentation on appendChild:
+    // Returns a new reference to newChild on success or a null node on failure.
+    return !domElement.appendChild(domDocument.documentElement()).isNull();
 }
 
 QList<QDomElement> Document::elementsByClass(QString className) const {
