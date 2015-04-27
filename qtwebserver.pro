@@ -43,7 +43,9 @@ SOURCES += \
     http/httpresponse.cpp \
     http/httpheaders.cpp \
     util/utildataurlcodec.cpp \
-    util/utilformurlcodec.cpp
+    util/utilformurlcodec.cpp \
+    css/cssdocument.cpp \
+    css/cssruleset.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -63,7 +65,9 @@ HEADERS += \
     http/httpresponse.h \
     http/httpheaders.h \
     util/utildataurlcodec.h \
-    util/utilformurlcodec.h
+    util/utilformurlcodec.h \
+    css/cssdocument.h \
+    css/cssruleset.h
 
 RESOURCES +=
 
