@@ -37,6 +37,11 @@ namespace QtWebServer {
 
 namespace Http {
 
+/**
+ * @class WebEngine
+ * @author Jacob Dawid
+ * Web engine that reads and writes data to sockets and manages resources.
+ */
 class WebEngine :
     public QObject,
     public Tcp::Responder {
@@ -44,17 +49,60 @@ class WebEngine :
 public:
     WebEngine(QObject *parent = 0);
 
+    /**
+     * Reads available data from sockets and responds properly.
+     * @param sslSocket The socket that shall be responded to.
+     */
     void respond(QSslSocket *sslSocket);
+
+    /**
+     * Registers a new resource.
+     * @param resource The resource to be registered.
+     */
     void addResource(Resource *resource);
 
 private:
+    /**
+     * Acquires a socket and keeps it in an internal list for pending reponses,
+     * if the list does not already contain it. This can be required due to
+     * several reasons, for example if not all data has been read from the
+     * socket yet.
+     * @param sslSocket The socket that shall be kept acquired.
+     * @returns the actual request.
+     */
     Http::Request acquireSocket(QSslSocket *sslSocket);
+
+    /** Releases a socket from the internal list. */
     void releaseSocket(QSslSocket *sslSocket);
 
+    /**
+     * Peeks (ie. reads, but does not remove data from the read buffer) the
+     * incoming data and tries to determine heuristically, whether the socket
+     * awaits an SSL handshake.
+     * @param sslSocket The socket to probe.
+     * @returns true, when the socket seems to await an SSL handshake.
+     */
     bool probeAwaitsSslHandshake(QSslSocket *sslSocket);
+
+    /**
+     * Tries to match a resource from the passed unique resource identifier.
+     * @param uniqueResourceIdentifier The identifier that shall be matched.
+     * @returns the first occurrence of a matched resource.
+     */
     Resource *matchResource(QString uniqueResourceIdentifier);
 
+    /**
+     * Reads all available data from a socket.
+     * @param sslSocket The socket to read from.
+     * @returns the data that has been read.
+     */
     QByteArray readFromSocket(QSslSocket *sslSocket);
+
+    /**
+     * Writes all data to the given socket.
+     * @param sslSocket The socket to write to.
+     * @param raw The data that shall be written.
+     */
     void writeToSocket(QSslSocket *sslSocket, QByteArray raw);
 
     QMap<QSslSocket*, Request> _pendingRequests;

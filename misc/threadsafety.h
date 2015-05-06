@@ -67,6 +67,13 @@ private:
     ThreadGuard(const ThreadGuard&) {}
 
     T _r;
+
+    // There is a reason we are holding a pointer instead of a reference:
+    // Sometimes const getter methods would lock the mutex to retrieve the
+    // guarded value. Strictly speaking, this would also alter the object,
+    // so retrieving a value would also mean getters would lose their constness.
+    // While correct, this behaviour doesn't make sense, so we keep a pointer
+    // here as a workaround.
     QMutex *_mutex;
 };
 

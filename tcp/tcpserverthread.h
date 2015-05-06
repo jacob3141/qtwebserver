@@ -44,7 +44,9 @@ namespace Tcp {
  * @author Jacob Dawid
  * @date 23.11.2013
  */
-class ServerThread : public QThread, public Logger {
+class ServerThread :
+    public QThread,
+    public Logger {
     friend class MultithreadedServer;
     Q_OBJECT
 public:
@@ -65,17 +67,33 @@ public:
     NetworkServiceThreadState state();
 
 private slots:
+    /** Handles a new incoming connection. */
     void handleNewConnection(int socketHandle);
+
+    /** Handles data from a client. */
     void clientDataAvailable();
+
+    /** Handles a client that has closed the connection. */
     void clientClosedConnection();
 
+
+    /** Handles socket error messages. */
     void error(QAbstractSocket::SocketError error);
+
+    /** Handles SSL error messages. */
     void sslErrors(QList<QSslError> errors);
+
+    /** Handles SSL mode changed. */
     void modeChanged(QSslSocket::SslMode mode);
+
+    /** Handles an SSL socket's encrypted signal. */
     void encrypted();
+
+    /** Handles the information when encrypted bytes have been written. */
     void encryptedBytesWritten(qint64 bytes);
 
 signals:
+    /** Will be emitted whenever the state of this thread changes. */
     void stateChanged(NetworkServiceThreadState state);
 
 private:
@@ -88,7 +106,6 @@ private:
     void setState(NetworkServiceThreadState state);
 
     MultithreadedServer& _multithreadedServer;
-
     ThreadGuard<NetworkServiceThreadState> _networkServiceThreadState;
 };
 

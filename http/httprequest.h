@@ -36,6 +36,12 @@ namespace QtWebServer {
 
 namespace Http {
 
+/**
+ * @class Request
+ * @author Jacob Dawid
+ * Basic HTTP request class. Parses a raw HTTP request and splits it into its
+ * single components.
+ */
 class Request :
     public Logger {
 public:

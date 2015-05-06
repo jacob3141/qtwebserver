@@ -36,6 +36,13 @@ namespace QtWebServer {
 
 namespace Http {
 
+/**
+ * @class Resource
+ * Basic class for a HTTP resource. A resource is an abstract concept of an
+ * endpoint reachable by an unique resource identifier (URI, in short).
+ * Within QtWebServer the HTTP resource defines the response behaviour, ie.
+ * you are supposed to subclass this class and reimplement its virtual methods.
+ */
 class Resource :
     public QObject {
     Q_OBJECT
@@ -52,6 +59,11 @@ public:
      */
     virtual bool match(QString uniqueIdentifier);
 
+    /**
+     * Parses the passed unique identifier and returns a map of uri parameters.
+     * @param uniqueIdentifier The unique identifier to parse.
+     * @returns a map of uri parameters parsed from the give identifier.
+     */
     QMap<QString, QString> uriParameters(QString uniqueIdentifier);
 
     /**
@@ -71,10 +83,13 @@ public:
      */
     void setUniqueIdentifier(QString uniqueIdentifer);
 
+    /** @returns the resource's content type. */
     QString contentType();
 
+    /** Sets the content type. */
     void setContentType(QString contentType);
 
+    /** Defines the resource's response behaviour. */
     virtual void deliver(const Http::Request& request, Http::Response& response) = 0;
 
 private:

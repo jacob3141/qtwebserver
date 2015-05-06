@@ -33,6 +33,11 @@ namespace QtWebServer {
 
 namespace Http {
 
+/**
+ * @class IODeviceResource
+ * @author Jacob Dawid
+ * Links a resource with an io device, for example a QFile.
+ */
 class IODeviceResource :
     public Resource {
     Q_OBJECT

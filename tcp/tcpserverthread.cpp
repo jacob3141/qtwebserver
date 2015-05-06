@@ -34,10 +34,10 @@ namespace QtWebServer {
 
 namespace Tcp {
 
-ServerThread::ServerThread(MultithreadedServer &multithreadedServer)
-    : QThread(0),
-      Logger(QString("WebServer:NetworkServiceThread (%1)").arg((long)this)),
-      _multithreadedServer(multithreadedServer) {
+ServerThread::ServerThread(MultithreadedServer &multithreadedServer) :
+    QThread(0),
+    Logger(QString("WebServer:NetworkServiceThread (%1)").arg((long)this)),
+        _multithreadedServer(multithreadedServer) {
     _networkServiceThreadState = NetworkServiceThreadStateIdle;
 }
 

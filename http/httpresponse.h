@@ -78,10 +78,24 @@ public:
      */
     void setBody(QByteArray body);
 
+    /**
+     * Set header value.
+     * @param header The HTTP header to be set.
+     * @param headerValue The HTTP header's value.
+     */
     void setHeader(Header header, QString headerValue);
+
+    /**
+     * Set header value.
+     * @param headerName The HTTP header to be set.
+     * @param headerValue The HTTP header's value.
+     */
     void setHeader(QString headerName, QString headerValue);
 
+    /** @returns the value of the specified header. */
     QString header(Header header) const;
+
+    /** @returns the value of the specified header. */
     QString header(QString headerName) const;
 
 private:

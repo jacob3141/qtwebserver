@@ -34,8 +34,10 @@ namespace Util {
 
 class FormUrlCodec {
 public:
+    /** Encodes the form data into an URL. */
     static QByteArray encodeFormUrl(QMap<QString, QByteArray> formData);
 
+    /** Decodes the form data from an URL. */
     static QMap<QString, QByteArray> decodeFormUrl(QByteArray formUrl);
 
 private:
