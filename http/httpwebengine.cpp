@@ -41,49 +41,83 @@ WebEngine::WebEngine(QObject *parent) :
 }
 
 void WebEngine::respond(QSslSocket* sslSocket) {
+    // Probe if the client awaits an SSL handshake first before reading any
+    // data.
     if(probeAwaitsSslHandshake(sslSocket)) {
         sslSocket->startServerEncryption();
         return;
     }
 
+    // Acquire the socket so we remember it if we should receive more data for
+    // this request later.
     Http::Request httpRequest = acquireSocket(sslSocket);
+
+    // Check if the request is valid and complete.
     if(httpRequest.isValid() && httpRequest.isComplete()) {
+        // Create a response object.
         Http::Response httpResponse;
 
+        // Match the unique resource identifier on a resource.
         Resource *resource = matchResource(httpRequest.uniqueResourceIdentifier());
         if(resource != 0) {
+            // If we found a resource, let it deliver the response.
             resource->deliver(httpRequest, httpResponse);
         } else {
+            // Otherwise generate a 404.
             httpResponse.setStatusCode(NotFound);
         }
 
+        // Write the complete response to the socket.
         writeToSocket(sslSocket, httpResponse.toByteArray());
+
+        // This is kind of weird, but seems to perform a disconnect in
+        // opposition to close.
         sslSocket->disconnectFromHost();
 
+        // We're done with this request, so release the corresponding socket.
         releaseSocket(sslSocket);
     }
 }
 
 Http::Request WebEngine::acquireSocket(QSslSocket *sslSocket) {
+    // The list of pending requests may be accessed from multiple server
+    // threads, so we have to make sure to lock properly.
     MutexLocker mutexLocker(_pendingRequestsMutex); Q_UNUSED(mutexLocker);
+
     Http::Request httpRequest;
+
+    // Check if we have acquired that socket already.
     if(_pendingRequests.contains(sslSocket)) {
+        // Get the current request in progress.
         httpRequest = _pendingRequests.value(sslSocket);
+
+        // Append the data from the socket.
         httpRequest.appendBodyData(sslSocket->readAll());
+
+        // Save back the request in case there is more data to come.
         _pendingRequests.insert(sslSocket, httpRequest);
     } else {
+        // Create a completely new request object.
         httpRequest = Http::Request(sslSocket->readAll());
+
+        // Save it in the list of pending requests.
         _pendingRequests.insert(sslSocket, httpRequest);
     }
     return httpRequest;
 }
 
 void WebEngine::releaseSocket(QSslSocket *sslSocket) {
+    // The list of pending requests may be accessed from multiple server
+    // threads, so we have to make sure to lock properly.
     MutexLocker mutexLocker(_pendingRequestsMutex); Q_UNUSED(mutexLocker);
+
+    // Remove all requests concerning this socket.
     _pendingRequests.remove(sslSocket);
 }
 
 void WebEngine::addResource(Resource *resource) {
+    // The list of pending requests may be accessed from multiple server
+    // and other threads, so we have to make sure to lock properly.
     MutexLocker mutexLocker(_resourcesMutex); Q_UNUSED(mutexLocker);
     if(resource == 0) {
         return;
@@ -112,12 +146,16 @@ bool WebEngine::probeAwaitsSslHandshake(QSslSocket *sslSocket) {
 }
 
 Resource *WebEngine::matchResource(QString uniqueResourceIdentifier) {
+    // The list of pending requests may be accessed from multiple server
+    // and other threads, so we have to make sure to lock properly.
     MutexLocker mutexLocker(_resourcesMutex); Q_UNUSED(mutexLocker);
+
     foreach(Resource *resource, _resources) {
         if(resource->match(uniqueResourceIdentifier)) {
             return resource;
         }
     }
+
     return 0;
 }
 

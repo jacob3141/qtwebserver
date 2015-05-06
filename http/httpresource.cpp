@@ -38,20 +38,27 @@ Resource::Resource(QString uniqueIdentifier,
 }
 
 bool Resource::match(QString uniqueIdentifier) {
-    QStringList splittedUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
+    // Split both the unique identifier of this resource the one in question,
+    // so we can compare those.
+    QStringList splittedReferenceUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
     QStringList splittedRequestedUri = uniqueIdentifier.split("/", QString::SkipEmptyParts);
 
     int count = splittedRequestedUri.count();
-    if(splittedUri.count() != count) {
+
+    // In case we have a different depth, the unique identifiers cannot match.
+    if(splittedReferenceUri.count() != count) {
         return false;
     }
 
+    // Compare each part of the passed unique identifier.
     for(int depth = 0; depth < count; depth++) {
-        if(splittedUri.at(depth).startsWith("{") && splittedUri.at(depth).endsWith("}")) {
+        // In case we have a variable, we do not need an exact match.
+        if(splittedReferenceUri.at(depth).startsWith("{") && splittedReferenceUri.at(depth).endsWith("}")) {
             continue;
         }
 
-        if(splittedUri.at(depth) != splittedRequestedUri.at(depth)) {
+        // Otherwise, we expect the unique idenfier parts to match exactly.
+        if(splittedReferenceUri.at(depth) != splittedRequestedUri.at(depth)) {
             return false;
         }
     }
@@ -60,17 +67,24 @@ bool Resource::match(QString uniqueIdentifier) {
 }
 
 QMap<QString, QString> Resource::uriParameters(QString uniqueIdentifier) {
-    QStringList splittedUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
+    // Split both the unique identifier of this resource the one in question,
+    // so we can compare those.
+    QStringList splittedReferenceUri = this->uniqueIdentifier().split("/", QString::SkipEmptyParts);
     QStringList splittedRequestedUri = uniqueIdentifier.split("/", QString::SkipEmptyParts);
+
+    // Create a parameter map.
     QMap<QString, QString> uriParameterMap;
 
     int count = splittedRequestedUri.count();
-    if(splittedUri.count() != count) {
+
+    // In case we have a different depth, the unique identifiers cannot match.
+    if(splittedReferenceUri.count() != count) {
         return uriParameterMap;
     }
 
+    // Compare each part of the passed unique identifier.
     for(int depth = 0; depth < count; depth++) {
-        QString uriSegment = splittedUri.at(depth);
+        QString uriSegment = splittedReferenceUri.at(depth);
         if(uriSegment.startsWith("{") && uriSegment.endsWith("}")) {
             // Truncate the { and }
             uriSegment = uriSegment.mid(1, uriSegment.count() - 2);

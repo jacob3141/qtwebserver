@@ -38,13 +38,15 @@ Response::Response()
 }
 
 QByteArray Response::toByteArray() {
-
     QByteArray response = "";
+
+    // HTTP response header line.
     response += QString("HTTP/1.1 %1 %2\r\n")
             .arg(_statusCode)
             .arg(Http::reasonPhrase(_statusCode))
             .toUtf8();
 
+    // Append HTTP headers.
     QStringList headerNames = _headers.keys();
     foreach(QString headerName, headerNames) {
         response += QString("%1: %2\r\n")
@@ -53,7 +55,10 @@ QByteArray Response::toByteArray() {
                 .toUtf8();
     }
 
+    // Add empty line to mark the end of the header.
     response += "\r\n";
+
+    // Append the response body.
     response += _body;
 
     return response;
