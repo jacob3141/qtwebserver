@@ -64,7 +64,7 @@ public:
     void removeAsset(QString id);
 
 protected:
-    void respond(const Http::Request& request,
+    void deliver(const Http::Request& request,
                  Http::Response& response);
 private:
     QMap<QString, QString> _assetsPathMap;

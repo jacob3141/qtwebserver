@@ -47,7 +47,7 @@ void AssetsResource::removeAsset(QString id) {
     _assetsPathMap.remove(id);
 }
 
-void AssetsResource::respond(const Http::Request& request,
+void AssetsResource::deliver(const Http::Request& request,
                     Http::Response& response) {
     QString id = uriParameters(request.uniqueResourceIdentifier()).value("id");
 
