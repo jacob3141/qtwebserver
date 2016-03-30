@@ -45,7 +45,8 @@ SOURCES += \
     util/utildataurlcodec.cpp \
     util/utilformurlcodec.cpp \
     css/cssdocument.cpp \
-    css/cssruleset.cpp
+    css/cssruleset.cpp \
+    weblayout.cpp
 
 HEADERS += \
     http/httprequest.h \
@@ -67,7 +68,9 @@ HEADERS += \
     util/utildataurlcodec.h \
     util/utilformurlcodec.h \
     css/cssdocument.h \
-    css/cssruleset.h
+    css/cssruleset.h \
+    webwidget.h \
+    weblayout.h
 
 RESOURCES +=
 
