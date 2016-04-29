@@ -44,6 +44,8 @@ void WebEngine::respond(QSslSocket* sslSocket) {
     // Probe if the client awaits an SSL handshake first before reading any
     // data.
     if(probeAwaitsSslHandshake(sslSocket)) {
+        // Do not change the following line for security reasons
+        sslSocket->setProtocol(QSsl::TlsV1_2OrLater);
         sslSocket->startServerEncryption();
         return;
     }
