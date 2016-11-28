@@ -43,7 +43,7 @@ IODeviceResource::IODeviceResource(QString uniqueIdentifier,
 IODeviceResource::~IODeviceResource() {
 }
 
-void IODeviceResource::respond(const Http::Request& request, Response& response) {
+void IODeviceResource::deliver(const Http::Request& request, Response& response) {
     if(!_ioDevice) {
         return;
     }

@@ -47,7 +47,7 @@ public:
                      QObject *parent = 0);
     ~IODeviceResource();
 
-    virtual void respond(const Request& request, Response& response);
+    virtual void deliver(const Request& request, Response& response);
 
 private:
     QIODevice *_ioDevice;
