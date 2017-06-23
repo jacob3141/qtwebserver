@@ -66,6 +66,7 @@ void WebEngine::respond(QSslSocket* sslSocket) {
             resource->deliver(httpRequest, httpResponse);
         } else {
             // Otherwise generate a 404.
+            _notFoundPage->deliver(httpRequest, httpResponse);
             httpResponse.setStatusCode(NotFound);
         }
 
@@ -127,6 +128,11 @@ void WebEngine::addResource(Resource *resource) {
 
     resource->setParent(this);
     _resources.insert(resource);
+}
+
+void WebEngine::addNotFoundPage(Resource *resource)
+{
+    _notFoundPage = resource;
 }
 
 bool WebEngine::probeAwaitsSslHandshake(QSslSocket *sslSocket) {
