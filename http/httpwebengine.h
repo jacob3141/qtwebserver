@@ -61,6 +61,12 @@ public:
      */
     void addResource(Resource *resource);
 
+    /**
+     * Registers error page themplate
+     * @param resource The resource to be registered.
+     */
+    void addNotFoundPage(Resource *resource);
+
 private:
     /**
      * Acquires a socket and keeps it in an internal list for pending reponses,
@@ -110,6 +116,7 @@ private:
 
     QMutex _pendingRequestsMutex;
     QMutex _resourcesMutex;
+    Resource* _notFoundPage;
 };
 
 }
