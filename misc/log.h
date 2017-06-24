@@ -37,7 +37,9 @@ class Log {
 public:
     enum LoggingMode {
         LoggingModeNone,
-        LoggingModeConsole
+        LoggingModeConsole,
+        LoggingToDebug,
+        LoggingToFile
     };
 
     enum EntryType {
@@ -51,6 +53,7 @@ public:
 
     LoggingMode loggingMode();
     void setLoggingMode(LoggingMode loggingMode);
+    void setLoggingFile(QString logfile);
 
 protected:
     void log(QString name, QString message, EntryType entryType);
@@ -61,6 +64,7 @@ private:
     ThreadGuard<LoggingMode> _loggingMode;
 
     static Log* _instance;
+    QString _logFile;
 };
 
 } // namespace QtWebServer
