@@ -27,6 +27,10 @@
 // Standard includes
 #include <iostream>
 
+#include <QFile>
+#include <QDebug>
+#include <QDateTime>
+
 namespace QtWebServer {
 
 QtWebServer::Log* QtWebServer::Log::_instance;
@@ -46,28 +50,64 @@ void Log::setLoggingMode(Log::LoggingMode loggingMode) {
     _loggingMode = loggingMode;
 }
 
+void Log::setLoggingFile(QString logfile)
+{
+    QFile file(logfile);
+
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << "Can`t log to file " << logfile;
+        exit(EXIT_FAILURE);
+    }
+    _logFile = logfile;
+}
+
 void Log::log(QString name, QString message, EntryType entryType) {
     if(loggingMode() == LoggingModeNone) {
         return;
     }
 
+    QString logMessage;
+
     switch (entryType) {
     case Verbose:
-        std::cout << "[" << name.toStdString() << "] "
-                  << message.toStdString() << std::endl;
+        logMessage = "V: ["+name+"] "+message;
         break;
     case Information:
-        std::cout << "[" << name.toStdString() << "] "
-                  << message.toStdString() << std::endl;
+        logMessage = "I: ["+name+"] "+message;
         break;
     case Warning:
-        std::cout << "[" << name.toStdString() << "] "
-                  << message.toStdString() << std::endl;
+        logMessage = "W: ["+name+"] "+message;
         break;
     case Error:
-        std::cout << "\033[1;31m[" << name.toStdString() << "] "
-                  << message.toStdString() << "\033[0m" << std::endl;
+        logMessage = "E: ["+name+"] "+message;
         break;
+    }
+
+    if(loggingMode() == LoggingModeConsole)
+    {
+        std::cout << logMessage.toStdString() << std::endl;
+    }
+
+    if(loggingMode() == LoggingToDebug)
+    {
+        qDebug() << logMessage;
+    }
+
+    if(loggingMode() == LoggingToFile)
+    {
+        QFile logFile(_logFile);
+        if(logFile.open(QIODevice::ReadWrite))
+        {
+            QTextStream stream(&logFile);
+            stream << QDateTime::currentDateTime().toString() << " " << logMessage << endl;
+            logFile.close();
+        }
+        else
+        {
+            qDebug() << "Can`t log to file " << _logFile;
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
