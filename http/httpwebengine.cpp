@@ -37,7 +37,8 @@ namespace Http {
 
 WebEngine::WebEngine(QObject *parent) :
     QObject(parent),
-    Responder() {
+    Responder(),
+    _notFoundPage(Q_NULLPTR) {
 }
 
 void WebEngine::respond(QSslSocket* sslSocket) {
@@ -66,7 +67,13 @@ void WebEngine::respond(QSslSocket* sslSocket) {
             resource->deliver(httpRequest, httpResponse);
         } else {
             // Otherwise generate a 404.
-            _notFoundPage->deliver(httpRequest, httpResponse);
+            if (_notFoundPage) {
+                _notFoundPage->deliver(httpRequest, httpResponse);
+            } else {
+                // if the 404 page was not set, generate simple HTML response
+                httpResponse.setBody(QByteArray("<h1>404 Not found</h1>"));
+                httpResponse.setHeader(ContentType, "text/html");
+            }
             httpResponse.setStatusCode(NotFound);
         }
 
