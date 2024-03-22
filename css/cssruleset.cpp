@@ -86,7 +86,7 @@ void RuleSet::addDeclaration(QString property,
 }
 
 void RuleSet::addDeclarations(QString declarations) {
-    QStringList splitDeclarations = declarations.split(";", QString::SkipEmptyParts);
+    QStringList splitDeclarations = declarations.split(";", Qt::SkipEmptyParts);
     foreach(QString declaration, splitDeclarations) {
         if(declaration.contains(':')) {
             declaration = declaration.trimmed();

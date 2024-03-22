@@ -27,6 +27,7 @@
 
 // Qt includes
 #include <QStringList>
+#include <QRegularExpression>
 
 namespace QtWebServer {
 
@@ -143,7 +144,7 @@ void Request::deserialize(QByteArray rawRequest) {
     // Read ahead the first line in the request
     QByteArray rawRequestLine = takeLine(rawRequest);
     QStringList requestLine = QString::fromUtf8(rawRequestLine)
-                                .split(QRegExp("\\s+"));
+                                .split(QRegularExpression("\\s+"));
 
     if(requestLine.count() < 3) {
         // The request line has to contain three strings: The method
@@ -155,7 +156,7 @@ void Request::deserialize(QByteArray rawRequest) {
 
     _method = requestLine.at(0).toLower();
 
-    QStringList splittedURI = requestLine.at(1).split('?', QString::SkipEmptyParts);
+    QStringList splittedURI = requestLine.at(1).split('?', Qt::SkipEmptyParts);
     if(splittedURI.count() > 1) {
         _urlParameters = Util::FormUrlCodec::decodeFormUrl(splittedURI.at(1).toUtf8());
     }
